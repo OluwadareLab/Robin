@@ -1,0 +1,14 @@
+body {
+  padding: 2% 10% 0 10%;
+}
+.lb-sm {
+  font-size: 18px;
+}
+
+.lb-md {
+  font-size: 24px;
+}
+
+.lb-lg {
+  font-size: 30px;
+}
