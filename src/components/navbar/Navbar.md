@@ -1,0 +1,5 @@
+Navbar example:
+
+```js
+<Navbar />
+```

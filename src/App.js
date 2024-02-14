@@ -4,12 +4,16 @@ import './css/master_style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
 import { WebRoutes } from './Route.js';
+import { AppNavbar } from "./components/navbar/Navbar";
+import { Footer } from "./components/Footer/footer";
 
 
 function App() {
   return (
     <>
+      <AppNavbar/>
       <WebRoutes/>
+      <Footer/>
     </>
     
   );

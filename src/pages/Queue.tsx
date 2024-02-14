@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { apiPaths } from "../api/apiConfig";
-import { useParams } from "react-router-dom";
+import { apiPaths } from "../api/apiConfig.js";
+import { useNavigate, useParams } from "react-router-dom";
+import { paths } from "../config.mjs";
 
 interface QueuePageProps {
   // Additional props can be added here
@@ -11,6 +12,7 @@ interface QueuePageProps {
 const QueuePage: React.FC<QueuePageProps> = () => {
   const [position, setPosition] = useState<number | null>(null);
   const params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQueuePosition = async () => {
@@ -18,9 +20,14 @@ const QueuePage: React.FC<QueuePageProps> = () => {
         setPosition(response.data.queueNum);
       });
     };
-
     fetchQueuePosition();
   }, []); // Empty dependency array ensures the effect runs once on mount
+
+  useEffect(()=>{
+    if(position == -1){
+      navigate(paths.results + "/" + params.id);
+    }
+  }, [position])
 
   return (
     <div className="container-fluid h-100 d-flex align-items-center justify-content-center">

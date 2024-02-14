@@ -1,5 +1,5 @@
 import React, { HTMLInputTypeAttribute } from "react";
-import { RequiredAsterisk } from "./RequiredAsterisk.tsx";
+import { RequiredAsterisk } from "../../misc/RequiredAsterisk.tsx";
 
 /**
  * @description the type for a form field
@@ -8,10 +8,25 @@ import { RequiredAsterisk } from "./RequiredAsterisk.tsx";
  * @prop {HTMLInputTypeAttribute} inputType: the type of the input
  * @prop {number} size how big should the label be. 1 being small, 10 being big
  */
-type FormFieldProps = {
+export type FormFieldProps = {
+    /** the title of the label for this field
+     * @default 
+    */
     title?: string;
+    /**
+     * whether the field is required or not
+     * @default false
+     */
     required?: boolean;
+    /**
+     * the html input type of the field
+     * @default text
+     */
     inputType?: HTMLInputTypeAttribute;
+    /**
+     * the name of the html input field
+     * 
+     */
     name?: string
 }
 
@@ -27,7 +42,7 @@ type FormFieldProps = {
 export const FormField = (props: FormFieldProps) => {
     const type = props.inputType ? props.inputType : "text";
     const title = props.title ? props.title : "";
-    const required = typeof(props.required) != undefined ? props.required : true;
+    const required = typeof(props.required) != 'undefined' ? props.required : true;
     const id = `formInput_${title}`;
     return (
         <div

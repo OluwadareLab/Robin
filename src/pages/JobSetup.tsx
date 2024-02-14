@@ -1,12 +1,13 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import config from '../config.js';
-import { paths } from '../config.js';
+import config from '../config.mjs';
+import { paths } from '../config.mjs';
 import axios from 'axios';
-import { BtnLink } from '../components/BtnLink.js';
-import { FormField } from '../components/FormField.tsx';
-import { BtnConfirm } from '../components/BtnConfirm.tsx';
+import { BtnLink } from '../components/buttons/BtnLink';
+import { FormField } from '../components/Form/FormField/FormField';
+import { BtnConfirm } from '../components/buttons/BtnConfirm.tsx';
 import { apiPaths } from '../api/apiConfig.js';
+import { Form } from '../components/Form/Form.tsx';
 
 /**
  * @description the data type that we get from the user filling out the form
@@ -26,32 +27,28 @@ export const JobSetupPage = () => {
     style={{padding: ".5% 0 .5% 0"}}
     >
     <h3 style={{color:"#708090"}}>provide job information</h3>
-        <form id="jobSetupForm" onSubmit={onSubmitJobInfo}>
-            <FormField 
-            title='Job Title' 
-            name='jobTitle'
-            required={true}>
-            </FormField>
+    <Form 
+    fields={[
+            {
+            title:'Job Title' ,
+            name:'jobTitle',
+            required:true,
+            },
 
-            <FormField 
-            name="description"
-            title='Description' 
-            required={true}>
-            </FormField>
+            {
+            name:"description",
+            title:'Description', 
+            required:true
+            },
 
-            <FormField 
-            name='email'
-            title='Email' 
-            required={false}
-            inputType={'email'}
-            >
-
-            </FormField>
-
-      
-        </form>
-
-        <BtnConfirm/>
+            {
+            name:'email',
+            title:'Email',
+            required:false,
+            inputType:'email'
+            }]}
+        onSubmit={onSubmitJobInfo}
+            />
     </div>
     )
 

@@ -1,0 +1,5 @@
+FileUpload example:
+
+```js
+<FileUpload/>
+```

@@ -1,5 +1,5 @@
 import { apiPaths } from './apiConfig.js';
-import config from '../config.js';
+import config from '../config.mjs';
 import express from 'express';
 import sqlite3 from 'sqlite3';
 import fileUpload from "express-fileupload";
@@ -7,18 +7,17 @@ import multer from 'multer'
 import bodyParser from 'body-parser';
 import * as fs from 'fs';
 import cors from 'cors';
-
+import { STATUSES } from './apiConfig.js';
 
 const upload = multer({ dest: config.dataFolderPath });
 
-const STATUSES = {
-    NO_DATA: "no_data",
-    HAS_SOME_DATA: "some_data_has_been_uploaded",
-    HAS_DATA_IN_QUE_WAITING: "waiting_in_que",
-    DONE: "done"
-}
+
+/**
+ * @description the sqlite3 database
+ */
 const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
 
+//TODO: check if this line is needed
 createDb();
 
 /** @description the express api application */
@@ -79,6 +78,20 @@ function getQueuePos(id, status){
  *
  *---------------------------------------------**/
 
+app.get(apiPaths.allJobsInfo,  async (req, response) => {
+    
+    try {
+        //const title = req.body.title;
+        
+        response.json({ jobs: await getAllJobs(), status: 200 });
+        console.log(`tried to fetch job info`);
+            
+    } catch (error) {
+        response.json({ status: 400, error: "failed fetching job info" });
+    }
+
+})
+
 app.get(apiPaths.quePosition, async (req, response) => {
     //
     const timeout = setTimeout(() => {
@@ -88,13 +101,35 @@ app.get(apiPaths.quePosition, async (req, response) => {
         const id = req.query.id;
         //const title = req.body.title;
         clearTimeout(timeout);
-        const pos = await getQueuePos(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
+        console.log(await getJobStatus(id));
+        const pos = await getJobStatus(id) === STATUSES.DONE ? -1 : await getQueuePos(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
         response.json({ queueNum: pos, status: 200 });
         console.log(`Job #${id}, in queue at ${pos}.`);
             
     } catch (error) {
         response.json({ status: 400, error: "Issue parsing your data. please provide a request in the form {title:\"something\", description:\"somthing\", email:\"Optional@optional.com\"" });
     }
+})
+
+/**
+ * @description a get request to /jobUploads returns the info on all uploaded files to that job
+ */
+app.get(apiPaths.jobUploads, async (req, response) => {
+    try{
+        const id = req.query.id;
+        const path = generateJobDataFolderPath(id);
+        if (fs.existsSync(path)) {
+            const files = fs.readdirSync(path);
+            console.log(files);
+            response.json({"files":files, status:200});
+        } else {
+            response.json({status: 400, error: "Job with provided id does not exist", "files":[]});
+        }
+       
+    }catch (error) {
+        response.json({ status: 400, error: "Issue finding your data: please provide a query of id:yourid", "files":[] });
+    }
+    
 })
 
 
@@ -149,8 +184,8 @@ const uploadData = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             const id = req.body.id;
-            const path = config.dataFolderPath + '/job_' + id;
-            if (!fs.existsSync(path)) fs.mkdirSync(path);
+            const path = generateJobDataFolderPath(id);
+            if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
             cb(null, path);
             return path + "/";
         },
@@ -178,18 +213,15 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
     }, 10000);
     try {
         const id = req.body.id;
+        try {
+            updateJobStatus(id, STATUSES.HAS_SOME_DATA);
+        } catch (error) {
+            console.log(`Failed to update database status of job_${id}: ${error}.`);
+        }
+        
         response.json({ status: 200 });
         console.log("File uploaded to job #" + id);
         clearTimeout(timeout);
-
-        try {
-            db.run(`
-            UPDATE jobs
-            SET status = "${STATUSES.HAS_SOME_DATA}"
-            WHERE ROWID=${id}`)
-        } catch (error) {
-            console.log(`Failed to update database status of job_${id}: ${error}.`)
-        }
        
     } catch (err) {
         response.json({ status: 400, error: "Issue parsing your data. please provide a request in the form {id:#number, files:file}", err:err });
@@ -197,11 +229,79 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
 
 })
 
+/**
+ * @description the post finalise a job as ready for processing and submitted
+ * expects a request in the form of
+ * {
+ *  id:int
+ * }
+ */
+app.post(apiPaths.jobSubmit, async(req, response) =>{
+    try {
+        const id = req.body.id;
+        try {
+            updateJobStatus(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
+            response.json({ status: 200 });
+            //TODO: add to work que once backend is done
+            //for now just mock something taking a while and then resolve it.
+            setTimeout(() => {
+                updateJobStatus(id, STATUSES.DONE);
+            }, 60000);
+        } catch (error) {
+            response.json({ status: 400, err:error });
+        }
+    } catch (err){
+        response.json({ status: 400, err:err });
+    }
+})
+
+/**
+ * 
+ * @param {number} jobId the id of the job in the db
+ * @param {STATUSES} newStatus the new status to upadate to
+ */
+function updateJobStatus(jobId, newStatus){
+    db.run(`
+            UPDATE jobs
+            SET status = "${newStatus}"
+            WHERE ROWID=${jobId}`)
+}
+
+/**
+ * 
+ * @param {number} jobId the id of the job in the db
+ * @param {STATUSES} newStatus the new status to upadate to
+ */
+function getJobStatus(jobId){
+    return new Promise(resolve =>{
+        db.all(`
+            SELECT status
+            FROM jobs
+            WHERE ROWID=${jobId}`, (err, res) => {
+                resolve(res[0].status);
+            })
+    })
+    
+}
+
+function getAllJobs(){
+    return new Promise(resolve =>{
+        db.all(`
+        SELECT *
+        FROM jobs
+        `, (err, res) => {
+            resolve(res);
+        })
+    })
+}
 
 function addJob(title, description, email = null, status = STATUSES.NO_DATA) {
+    var pad = function(num) { return ('00'+num).slice(-2) };
+    var date;
+    date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     db.run(
-        `INSERT INTO jobs (title, description, email, status)
-         VALUES ("${title}","${description}","${email}","${status}");
+        `INSERT INTO jobs (title, description, email, status, date)
+         VALUES ("${title}","${description}","${email}","${status}", "${date}");
     `)
 }
 
@@ -220,3 +320,18 @@ function createDb() {
 /**
  * Data storage methods
  */
+
+
+
+/**
+ * Util
+ */
+
+/**
+ * @description get the path to a job's data folder
+ * @param {number} jobid the id of the job
+ * @returns {string} the path to the jobs data folder (string)
+ */
+function generateJobDataFolderPath(jobid){
+    return config.dataFolderPath +'/job_' + jobid + "/data/";
+}

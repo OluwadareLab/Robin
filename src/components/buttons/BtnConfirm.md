@@ -1,0 +1,5 @@
+BtnConfirm example:
+
+```js
+<BtnConfirm/>
+```

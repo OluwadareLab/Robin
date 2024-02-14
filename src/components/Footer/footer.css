@@ -1,0 +1,13 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Align to the left */
+  width: 100%;
+  background-color: #f8f9fa; /* Light gray background color */
+  padding-left: 10px;
+
+}
+
+.uccs-logo {
+  max-width: 200px; /* Increased logo size */
+}
