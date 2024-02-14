@@ -26,7 +26,7 @@ type FileUploadProps = {
  */
 const FileUploadComponent = (props: FileUploadProps) => {
 
-  const id = props.id;
+  const id:number = props.id;
   const fileTypes = props.fileTypes || ".cool, .hic, .bed, .bedme, .mcool";
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -34,7 +34,7 @@ const FileUploadComponent = (props: FileUploadProps) => {
   const [uploadData, setUploadData] = useState([]);
 
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e:any) => {
     const files = Array.from(e.target.files);
 
     const regEx = new RegExp(fileTypes.replace(/\s/g, '').replace(/./g, "|"));
@@ -67,7 +67,7 @@ const FileUploadComponent = (props: FileUploadProps) => {
 
     const formData = new FormData();
     //id must be added first due to some annoying things
-    formData.append(`id`, id);
+    formData.append(`id`, id.toString());
 
     // Append each selected file to FormData
     selectedFiles.forEach((file) => {
@@ -121,8 +121,7 @@ const FileUploadComponent = (props: FileUploadProps) => {
             role="progressbar"
             style={{ width: `${uploadProgress}%` }}
             aria-valuenow={uploadProgress}
-            aria-valuemin="0"
-            aria-valuemax="100"
+     
           >
             {uploadProgress}%
           </div>

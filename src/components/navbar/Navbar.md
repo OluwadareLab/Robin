@@ -1,5 +1,5 @@
-Navbar example:
+AppNavbar example:
 
 ```js
-<Navbar />
+<AppNavbar />
 ```

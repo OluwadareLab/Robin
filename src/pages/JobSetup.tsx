@@ -5,9 +5,9 @@ import { paths } from '../config.mjs';
 import axios from 'axios';
 import { BtnLink } from '../components/buttons/BtnLink';
 import { FormField } from '../components/Form/FormField/FormField';
-import { BtnConfirm } from '../components/buttons/BtnConfirm.tsx';
+import { BtnConfirm } from '../components/buttons/BtnConfirm';
 import { apiPaths } from '../api/apiConfig.js';
-import { Form } from '../components/Form/Form.tsx';
+import { Form } from '../components/Form/Form';
 
 /**
  * @description the data type that we get from the user filling out the form

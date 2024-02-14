@@ -1,5 +1,5 @@
 import React, { HTMLInputTypeAttribute } from "react";
-import { RequiredAsterisk } from "../../misc/RequiredAsterisk.tsx";
+import { RequiredAsterisk } from "../../misc/RequiredAsterisk";
 
 /**
  * @description the type for a form field

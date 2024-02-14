@@ -2,11 +2,11 @@ import React from 'react';
 import {Routes, BrowserRouter as Router, Route } from 'react-router-dom';
 import { HomePage } from './pages/Home.js';
 import { UploadPage } from './pages/Upload.js'
-import { JobSetupPage } from './pages/JobSetup.tsx';
+import { JobSetupPage } from './pages/JobSetup';
 import { paths } from './config';
-import {QueuePage} from './pages/Queue.tsx';
-import { ChromatinLoopAnalysisResultsPage } from './pages/Results.tsx';
-import { ViewAllJobsPage } from './pages/ViewAllJobs.tsx';
+import {QueuePage} from './pages/Queue';
+import { ChromatinLoopAnalysisResultsPage } from './pages/Results';
+import { ViewAllJobsPage } from './pages/ViewAllJobs';
 
 export const WebRoutes = () => (
     <Router>

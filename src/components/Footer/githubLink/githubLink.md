@@ -1,0 +1,5 @@
+GitHubLink example:
+
+```js
+<GitHubLink />
+```

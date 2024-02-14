@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
+import { HiGlassComponent } from '../components/visualizationTools/HiGlass/HIGlass';
 
 interface AnalysisResult {
   method: string;
@@ -32,6 +33,7 @@ export const ChromatinLoopAnalysisResultsPage: React.FC = (props: ChromatinLoopA
       <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
         {analysisResults.map(result => (
           <Tab key={result.method} eventKey={result.method} title={result.method}>
+            {result.method === "HiGlass" ? <HiGlassComponent/> : ""}
             {props.example? <div>example</div>:""}
           </Tab>
         ))}
