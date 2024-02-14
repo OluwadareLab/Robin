@@ -11,8 +11,20 @@ const config = {
     /** @description the api path */
     apiPath:"http://127.0.0.1:8080",
 
+    /** @description the path of the actual web server */
+    webPath:"http://localhost:3000",
+
     /** @description the link to the project's github */
-    github:"https://github.com/mattieFM/MohitProjWeb"
+    github:"https://github.com/mattieFM/MohitProjWeb",
+
+    /** the number of milliseconds the que page will update every x */
+    queuePageUpdateFrequency: 10000,
+
+    email:"comprehensiveloopcaller@gmail.com",
+    emailServer:"gmail",
+    emailPass:"comprehensivecallerazjnzxwehaganznedjaAfzjndx njzA",
+    emailMsgBody:"",
+
 
 }
 

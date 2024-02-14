@@ -1,7 +1,6 @@
 import React from "react";
-import { BtnLink } from "../buttons/BtnLink";
 import { Navbar, Nav } from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { paths } from "../../config.mjs";
 
 type NavbarProps = {

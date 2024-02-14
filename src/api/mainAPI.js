@@ -2,6 +2,8 @@ import { apiPaths } from './apiConfig.js';
 import config from '../config.mjs';
 import express from 'express';
 import sqlite3 from 'sqlite3';
+import mongoose from 'mongoose';
+import {Job} from './models/job.js';
 import fileUpload from "express-fileupload";
 import multer from 'multer'
 import bodyParser from 'body-parser';
@@ -16,6 +18,13 @@ const upload = multer({ dest: config.dataFolderPath });
  * @description the sqlite3 database
  */
 const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
+
+/**
+ * the mongodb database for our job que
+ * im using mongo for the que since we don't need an sql database for a linier que
+ */
+mongoose.createConnection('mongodb://localhost:27017/jobQueue')
+mongoose.connect('mongodb://localhost:27017/jobQueue');
 
 //TODO: check if this line is needed
 createDb();
@@ -69,6 +78,7 @@ function getQueuePos(id, status){
     })
     
 }
+
 
 /**----------------------------------------------
  *                
@@ -237,21 +247,21 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
  * }
  */
 app.post(apiPaths.jobSubmit, async(req, response) =>{
+    const id = req.body.id;
     try {
-        const id = req.body.id;
-        try {
-            updateJobStatus(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
-            response.json({ status: 200 });
-            //TODO: add to work que once backend is done
-            //for now just mock something taking a while and then resolve it.
-            setTimeout(() => {
-                updateJobStatus(id, STATUSES.DONE);
-            }, 60000);
-        } catch (error) {
-            response.json({ status: 400, err:error });
-        }
-    } catch (err){
-        response.json({ status: 400, err:err });
+        updateJobStatus(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
+        
+        //TODO: add to work que once backend is done
+        //for now just mock something taking a while and then resolve it.
+        const job = await getJob(id);
+        console.log(`got job obj ${JSON.stringify(job)}`);
+
+        const newJob = await Job.create({...job, id:id});
+        response.json({ status: 200 });
+
+    } catch (error) {
+        console.log(error)
+        response.json({ status: 400, err:error });
     }
 })
 
@@ -260,7 +270,7 @@ app.post(apiPaths.jobSubmit, async(req, response) =>{
  * @param {number} jobId the id of the job in the db
  * @param {STATUSES} newStatus the new status to upadate to
  */
-function updateJobStatus(jobId, newStatus){
+export function updateJobStatus(jobId, newStatus){
     db.run(`
             UPDATE jobs
             SET status = "${newStatus}"
@@ -279,6 +289,23 @@ function getJobStatus(jobId){
             FROM jobs
             WHERE ROWID=${jobId}`, (err, res) => {
                 resolve(res[0].status);
+            })
+    })
+    
+}
+
+/**
+ * get a job obj
+ * @param {number} jobId the job iid
+ * @param {STATUSES} newStatus the new status to upadate to
+ */
+function getJob(jobId){
+    return new Promise(resolve =>{
+        db.all(`
+            SELECT *
+            FROM jobs
+            WHERE ROWID=${jobId}`, (err, res) => {
+                resolve(res[0]);
             })
     })
     
@@ -308,7 +335,7 @@ function addJob(title, description, email = null, status = STATUSES.NO_DATA) {
 function createDb() {
     db.serialize(() => {
         try {
-            //db.run("CREATE TABLE jobs (title TEXT, description TEXT, email TEXT, status TINYTEXT)");
+            //db.run("CREATE TABLE jobs (title TEXT, description TEXT, email TEXT, status TINYTEXT, date TIMESTAMP)");
         } catch (error) {
             console.log("Table already exists!");
         }

@@ -1,33 +1,47 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { apiPaths } from "../api/apiConfig.js";
+import { STATUSES, apiPaths } from "../api/apiConfig.js";
 import { useNavigate, useParams } from "react-router-dom";
-import { paths } from "../config.mjs";
+import config, { paths } from "../config.mjs";
+import { Job } from "../api/models/job.js";
 
 interface QueuePageProps {
   // Additional props can be added here
 }
 
 const QueuePage: React.FC<QueuePageProps> = () => {
+  let counter = 0
   const [position, setPosition] = useState<number | null>(null);
+  let interval;
   const params = useParams();
   const navigate = useNavigate();
 
+
+  const updateQuePos = () =>{
+    axios.get(apiPaths.quePosition + "?id=" + params.id).then((response) => {
+      setPosition(response.data.queueNum);
+    });
+  }
   useEffect(() => {
     const fetchQueuePosition = async () => {
-      axios.get(apiPaths.quePosition + "?id=" + params.id).then((response) => {
-        setPosition(response.data.queueNum);
-      });
+      updateQuePos();
+      //todo: make this stop firing once we leave the page
+      interval = setInterval(()=>{
+        updateQuePos();
+      },config.queuePageUpdateFrequency);
+      
     };
     fetchQueuePosition();
   }, []); // Empty dependency array ensures the effect runs once on mount
 
   useEffect(()=>{
     if(position == -1){
+      clearInterval(interval);
       navigate(paths.results + "/" + params.id);
     }
-  }, [position])
+  }, [position, interval, navigate])
+
 
   return (
     <div className="container-fluid h-100 d-flex align-items-center justify-content-center">
