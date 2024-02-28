@@ -23,3 +23,10 @@ body {
   clear: both;
 }
 
+body {
+  padding-bottom: 120px;
+}
+
+#root {
+  padding-bottom: 120px;
+}

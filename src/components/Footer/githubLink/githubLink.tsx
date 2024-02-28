@@ -1,7 +1,7 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
 import config from '../../../config.mjs';
-const gitlogo = '../../../images/git.png';
+import gitlogo from '../../../images/git.png';
 
 /** a simple link to the projet github */
 export const GitHubLink: React.FC = () => {

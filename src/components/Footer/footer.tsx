@@ -3,12 +3,12 @@ import "./footer.css"
 import {GitHubLink} from './githubLink/githubLink'
 import { Col, Row } from 'react-bootstrap';
 
-const uccsLogo = '../../images/UCCS_Logo.png';
+import uccsLogo  from '../../images/UCCS_Logo.png';
 
 /** a simple footer for the website */
 export const Footer: React.FC = () => {
   return (
-    <footer className="footer">
+    <footer className="footer" style={{marginTop:"auto"}} >
       <Row>
         <Col >
           <div style={{ float: 'left' }}>
