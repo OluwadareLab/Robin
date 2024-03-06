@@ -1,2 +1,4 @@
 generating h3k27ac recovery
 generating plots for lasca
+./h3k27ac/h3k27ac.sh: line 15:  1821 Segmentation fault      Rscript Recovery_HiChIP_Loops.R --RefFile=$refFile5K --InpFile=$inputFile --headerRef FALSE --headerInp FALSE --QcolInp=0 --chrRef TRUE --chrInp TRUE --midRef FALSE --midInp FALSE --binsizeRef=$resolution --binsizeInp=$resolution --offset=50 --OutDir=$outputDir --LabelRef="H3K27ac_$resolution" --LabelInp="$name"
+done generating plots
