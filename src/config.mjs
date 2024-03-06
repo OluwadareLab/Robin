@@ -1,5 +1,5 @@
 const config = {
-    projectName: "Comprehensive Loop-Caller",
+    projectName: "Robin: Compherative analysis and visualization of loop perdictions ",
     projectDescription: "An online tool for visualization and anaylisis of chromtin loops.",
 
     /**
