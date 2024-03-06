@@ -19,7 +19,7 @@ dataPath=$storagePath\\job_$jobId\\data
 #i/o paths
 inputFile=$dataPath\\$fileName
 outputDir=$outputPath\\$name
-logPath=$outputPath\\log
+logPath=$storagePath\\job_$jobId\\log
 logFile=$logPath\\run.log
 mkdir -p $logPath
 

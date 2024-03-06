@@ -13,7 +13,7 @@ bigName=$5
 jobPath=$storagePath\\job_$jobId
 outputPath=$storagePath\\job_$jobId\\out
 dataPath=$storagePath\\job_$jobId\\data
-logPath=$outputPath\\log
+logPath=$storagePath\\job_$jobId\\log
 logFile=$logPath\\rem_$bigName.log
 
 #i/o paths
@@ -41,7 +41,7 @@ echo maxFrac $maxFrac >> $logFile
 
 rem=$(python -c "print($maxFrac / float($maxCount))")
 
-outFile=$outputPath\\rem_$bigName.txt
+outFile=$outputPath\\$name\\rem_$bigName.txt
 touch $outFile
 echo $rem > $outFile
 

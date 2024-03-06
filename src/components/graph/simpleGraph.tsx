@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import config from "../../config.mjs";
-//import textfile from "../../../callers/exampleData/Recovery_lascaTest_H3K27ac_offset_50.txt";
+
+import textfile from "../../../callers/exampleData/Recovery_lascaTest_H3K27ac_offset_50.txt";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,22 +47,22 @@ ChartJS.register(
 
 
 
-// async function setupData(setData){
-//   const rawData = await (await fetch(textfile)).text();
-//   const formattedData: {x:number,y:number}[] = [];
-//   rawData.split("\n").forEach(line=>{
-//     const splitLine = line.split(/\s+/);
-//     formattedData.push(
-//       {
-//         "x":parseFloat(splitLine[0]),
-//         "y":parseFloat(splitLine[1])
-//       }
-//     )
-//   })
-//   setData(formattedData)
+async function setupData(setData){
+  const rawData = await (await fetch(textfile)).text();
+  const formattedData: {x:number,y:number}[] = [];
+  rawData.split("\n").forEach(line=>{
+    const splitLine = line.split(/\s+/);
+    formattedData.push(
+      {
+        "x":parseFloat(splitLine[0]),
+        "y":parseFloat(splitLine[1])
+      }
+    )
+  })
+  setData(formattedData)
 
   
-// }
+}
 
 const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0)`;
 

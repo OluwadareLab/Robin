@@ -45,7 +45,7 @@ export const ChromatinLoopAnalysisResultsPage: React.FC = (props: ChromatinLoopA
 
   const examplePage = 
   <>
-    <Graph></Graph>
+    <GraphComponent ></GraphComponent>
   </>
 
   return (
