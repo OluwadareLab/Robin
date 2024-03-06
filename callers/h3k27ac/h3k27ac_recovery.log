@@ -1,0 +1,20 @@
+generating h3k27ac recovery
+generating plots for lasca
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    shift
+
+The following object is masked from ‘package:IRanges’:
+
+    shift
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    first, second
+
+Error: File 'F:\MohitProjectWeb\mohitprojweb\data\job_30\data/lasca_5000.txt' does not exist or is non-readable. getwd()=='/mnt/f/MohitProjectWeb/mohitprojweb/callers/h3k27ac'
+Execution halted
+done generating plots

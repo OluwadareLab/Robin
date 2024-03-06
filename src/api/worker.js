@@ -6,6 +6,8 @@ import { STATUSES } from './apiConfig.js';
 import {updateJobStatus} from './mainAPI.js'
 import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
+import { exec } from 'child_process';
+import * as fs from 'fs'
 
 var transporter = nodemailer.createTransport({
   service: config.emailServer,
@@ -31,7 +33,8 @@ cron.schedule('* * * * *', async () => {
     if (pendingJobs.length > 0 && !jobIsRunning) {
       jobIsRunning=true;
       const job = pendingJobs[0];
-
+      const jobID = job.id;
+      //email send
       if(job.email){
         //if user provided emial
         var mailOptions = {
@@ -50,16 +53,52 @@ cron.schedule('* * * * *', async () => {
         });
       }
 
-      console.log(`Executing job: ${job.task}`);
-      // Your task execution logic here
-      // For example, you can execute Python scripts using child_process.exec or similar methods
-      // Once the task is completed, update the job status to 'completed'
+      //---------------------
+      //main execution of job
+      //---------------------
+      console.log(`Executing job: ${job.id}`);
+      
+      const path = `${config.dataFolderPath}/job_${job.id}/data`;
+      console.log(path)
+      const files = fs.readdirSync(path);
+      console.log(`files in dir ${files}`)
+      console.log(files);
+      // Replace 'script.sh' with the path to your .sh script
+
+      const jobInfo = files.map(file=>{
+        const splitFile = file.split("_")
+        return {
+          resolution: parseInt(splitFile[1]),
+          tool: splitFile[0],
+          fileName:file,
+        }
+      })
+
+      jobInfo.forEach(job=>{
+        exec(`bash ${config.callersScriptPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool}`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error executing script: ${error}`);
+            return;
+          }
+          if (stderr) {
+            console.error(`Script stderr: ${stderr}`);
+            return;
+          }
+          console.log(`Script output: ${stdout}`);
+        });
+      })
+
+      
+      
+
       job.status = STATUSES.DONE;
       await job.save();
       console.log(`Job completed: ${job.task}`);
       updateJobStatus(job.id, STATUSES.DONE)
       jobIsRunning=false;
 
+
+      //email send
       if(job.email){
         //if user provided emial
         var mailOptions = {

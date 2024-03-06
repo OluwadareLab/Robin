@@ -5,6 +5,7 @@ import { STATUSES, apiPaths } from "../api/apiConfig.js";
 import { useNavigate, useParams } from "react-router-dom";
 import config, { paths } from "../config.mjs";
 import { Job } from "../api/models/job.js";
+import Bookmark from "../components/bookmarkComponent/bookmark";
 
 interface QueuePageProps {
   // Additional props can be added here
@@ -57,9 +58,14 @@ const QueuePage: React.FC<QueuePageProps> = () => {
             ) : (
               <>
                 <h1>Processing Now</h1>
-                <p>We will redirect you to your results when they are done</p>
+                <p>We will redirect you to your results when they are done.</p>
+            
               </>
             )}
+            <p>
+              Feel free to bookmark this page and check back to see your results.
+            </p>
+            <Bookmark/>
           </div>
         ) : (
           <div

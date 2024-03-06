@@ -126,10 +126,19 @@ const ToolForm: React.FC = () => {
                                     className='input-sm form-control'
                                     id="resolutionInput"
                                     type="number"
+                                    list="resolutions"
                                     placeholder="IE: 1000, 5000..."
                                     value={resolution.resolution}
                                     onChange={(e) => handleResolutionChange(toolIndex, resolutionIndex, e)}
                                 />
+                                <datalist id="resolutions">
+                                    <option value="1000"/>
+                                    <option value="5000"/>
+                                    <option value="250000"/>
+                                    <option value="500000"/>
+                                </datalist>
+                              
+                                
                             </div>
 
                             <div className='col-sm-6'>

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import { HiGlassComponent } from '../components/visualizationTools/HiGlass/HIGlass';
-import GraphComponent from '../components/graph/simpleGraph';
+import {GraphComponent} from '../components/graph/simpleGraph';
 import { Graph } from '../components/graph/exampleGraph';
 
 interface AnalysisResult {
   method: string;
   data: number[];
+  component: ReactElement<any, any>
 }
 
 type ChromatinLoopAnalysisResultsPageProps = {
@@ -16,28 +17,42 @@ type ChromatinLoopAnalysisResultsPageProps = {
 
 export const ChromatinLoopAnalysisResultsPage: React.FC = (props: ChromatinLoopAnalysisResultsPageProps) => {
   const [activeTab, setActiveTab] = useState<string>('method1');
-  const [analysisResults, setAnalysisResults] = useState<AnalysisResult[]>([
-    { method: 'Apa_Score', data: [10, 20, 30, 40, 50] },
-    { method: 'rnapii', data: [50, 40, 30, 20, 10] },
-    { method: 'h3k27ac', data: [25, 30, 35, 40, 45] },
-    { method: 'ctcf', data: [25, 30, 35, 40, 45] },
-    { method: 'Overlap', data: [25, 30, 35, 40, 45] }
-  ]);
 
-  const handleTabSelect = (tab: string) => {
+  const handleTabSelect = (tab:any) => {
     setActiveTab(tab);
+
+    return true
   };
+
+  const normalPage = 
+  <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
+    <Tab key="Apa_Score" eventKey="Apa_Score" title="APA Score">
+        Apa
+    </Tab>
+    <Tab key="RNAPII" eventKey="RNAPII" title="rnapii">
+        rnapii
+    </Tab>
+    <Tab key="h3k27ac" eventKey="h3k27ac" title="h3k27ac">
+        h3k27ac
+    </Tab>
+    <Tab key="ctcf" eventKey="ctcf" title="ctcf">
+      ctcf
+    </Tab>
+    <Tab key="higlass" eventKey="higlass" title="higlass">
+      higlass
+    </Tab>
+  </Tabs>
+
+  const examplePage = 
+  <>
+    <Graph></Graph>
+  </>
 
   return (
     <div>
-      <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
-        {analysisResults.map(result => (
-          <Tab key={result.method} eventKey={result.method} title={result.method}>
-            
-            {props.example? <Graph key={result.method}/>:""}
-          </Tab>
-        ))}
-      </Tabs>
+      
+          {props.example? examplePage : normalPage}
+      
     </div>
   );
 };

@@ -1,0 +1,5 @@
+Bookmark example:
+
+```js
+<Bookmark />
+```

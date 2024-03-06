@@ -25,6 +25,9 @@ const config = {
     emailPass:"comprehensivecallerazjnzxwehaganznedjaAfzjndx njzA",
     emailMsgBody:"",
 
+    /** the path to the callers run script */
+    callersScriptPath: "./callers/run.sh"
+
 
 }
 
