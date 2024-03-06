@@ -32,20 +32,22 @@ mkdir -p $jobPath/data/
 mkdir -p $jobPath/out/
 
 
-# #plot all recovery methods
+#plot all recovery methods
 ./h3k27ac/h3k27ac.sh $fileName $resolution $jobId $name &
 ./RNAPii/rnapii.sh $fileName $resolution $jobId $name &
 ./ctcf/ctcf.sh $fileName $resolution $jobId $name &
 wait
 
 #find all files
-h3k27acOut=$(ls -R $outputPath | grep -i h3k.*${resolution}_)
-rnapiiOut=$(ls -R $outputPath | grep -i rnapii.*${resolution}_)
-ctcfOut=$(ls -R $outputPath | grep -i ctcf.*${resolution}_)
+h3k27acOut=$(ls -R $outputDir | grep -i h3k.*${resolution}_.*offset | awk '{print $1}')
+rnapiiOut=$(ls -R $outputDir | grep -i rnapii.*${resolution}_.*offset | awk '{print $1}')
+ctcfOut=$(ls -R $outputDir | grep -i ctcf.*${resolution}_.*offset | awk '{print $1}')
 
 echo h3k27ac done: $h3k27acOut >> $logFile
 echo rnapii done: $rnapiiOut >> $logFile
 echo ctcf done: $ctcfOut >> $logFile
+
+wait
 
 #Find REM values
 

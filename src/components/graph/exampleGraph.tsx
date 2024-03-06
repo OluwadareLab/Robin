@@ -22,6 +22,7 @@ ChartJS.register(
 );
 
 export const options = {
+  radius: 0,
   responsive: true,
   plugins: {
     legend: {

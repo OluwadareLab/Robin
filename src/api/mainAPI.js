@@ -88,6 +88,63 @@ function getQueuePos(id, status){
  *
  *---------------------------------------------**/
 
+// get job results
+app.get(apiPaths.jobResults, (req, res) => {
+    // Path to the file to be sent
+    const id = req.query.id;
+    const path = generateJobOutFolderPath(id);
+    const tools = fs.readdirSync(path);
+
+    const data = {
+    }
+    
+    tools.forEach(tool=>{
+        const toolPath = `${path}/${tool}`
+        const resultFiles = fs.readdirSync(toolPath);
+
+        data[tool] = {
+            "toolName":tool,
+            rnapiiResults: [],
+            h3k27acResults: [],
+            ctcfResults: [],
+            remResults: [],
+        }
+        
+       resultFiles.forEach(file=>{
+            let fileObj = {
+                resultFileName:file,
+                toolName:file.split("_")[1].split(".")[0],
+                method:file.split("_")[2].split(".")[0],
+                data:fs.readFileSync(`${toolPath}/${file}`, 'utf8'),
+                resolution:file.split("_")[3]
+            }
+            if((/^rem\_/i.test(file))){
+                data[tool].remResults.push(fileObj)
+            } else if((/rnapii\_/i.test(file))){
+                data[tool].rnapiiResults.push(fileObj)
+            } else if((/h3k27ac\_/i.test(file))){
+                data[tool].h3k27acResults.push(fileObj)
+            } else if((/ctcf\_/i.test(file))){
+                data[tool].ctcfResults.push(fileObj)
+            }  
+        })
+    })
+
+  
+    // Check if the file exists
+
+      // If the file exists, set the appropriate headers
+      res.set({
+        'Content-Type': 'text/plain', // Set appropriate content type
+        'Content-Disposition': 'attachment; filename=file.txt', // Set filename for download
+      });
+  
+      // Create a read stream from the file and pipe it to the response
+      res.send({results:data})
+ 
+  });
+
+
 app.get(apiPaths.allJobsInfo,  async (req, response) => {
     
     try {
@@ -361,4 +418,13 @@ function createDb() {
  */
 function generateJobDataFolderPath(jobid){
     return config.dataFolderPath +'/job_' + jobid + "/data/";
+}
+
+/**
+ * @description get the path to a job's output folder
+ * @param {number} jobid the id of the job
+ * @returns {string} the path to the jobs output folder (string)
+ */
+function generateJobOutFolderPath(jobid){
+    return config.dataFolderPath +'/job_' + jobid + "/out/";
 }

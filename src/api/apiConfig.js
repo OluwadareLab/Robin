@@ -7,6 +7,8 @@ const apiPaths = {
     jobData: "/jobData",
     /** @description the path for the get request for where the user is in the queue */
     quePosition: "/queue",
+    /** @description the path for the get request for job results */
+    jobResults: "/jobResults",
     /** @description the path for a get request for info on the uploads the user has made */
     jobUploads:"/jobUploads",
     /** @description the path for submitting a job */

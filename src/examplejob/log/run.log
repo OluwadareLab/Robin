@@ -1,0 +1,6 @@
+begin log
+Running on job_1
+h3k27ac done: Recovery_lasca_H3K27ac_5000_offset_50.txt
+rnapii done: Recovery_lasca_RNAPII_5000_offset_50.txt
+ctcf done: Recovery_LASCA_CTCF_5000_offset_50.txt
+rem done: Recovery_LASCA_CTCF_5000_offset_50.txt

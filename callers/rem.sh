@@ -39,9 +39,16 @@ echo maxCount $maxCount >> $logFile
 echo maxFrac $maxFrac >> $logFile
 
 
-rem=$(python -c "print($maxFrac / float($maxCount))")
+if [ -z "${maxCount}" ]; then
+    maxCount=1
+fi
+if [ -z "${maxFrac}" ]; then
+    maxFrac=0
+fi
 
-outFile=$outputPath\\$name\\rem_$bigName.txt
+rem=$(python -c "print(max($maxFrac,0) / float($maxCount))")
+
+outFile=$outputPath\\$name\\rem_${bigName}_${resolution}_.txt
 touch $outFile
 echo $rem > $outFile
 
