@@ -15,7 +15,7 @@ type ChromatinLoopAnalysisResultsPageProps = {
     example?: boolean;
 }
 
-export const ChromatinLoopAnalysisResultsPage: React.FC = (props: ChromatinLoopAnalysisResultsPageProps) => {
+export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisResultsPageProps) => {
   const [activeTab, setActiveTab] = useState<string>('method1');
 
   const handleTabSelect = (tab:any) => {

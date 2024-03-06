@@ -1,8 +1,10 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Accordion, AccordionBody, AccordionCollapse, AccordionHeader, AccordionItem, Card } from 'react-bootstrap';
 import { STATUSES } from '../../api/apiConfig.js';
 import { BtnLink } from '../buttons/BtnLink';
 import { paths } from '../../config.mjs';
+import { Graph } from '../graph/exampleGraph';
+import { ChromatinLoopAnalysisResultsPage } from '../../pages/Results';
 
 type JobProps = {
   id: number;
@@ -17,7 +19,21 @@ export const JobDisplay = (props:JobProps) => {
   return (
     <Card>
       <Card.Body>
+        
         <Card.Title>{props.title}</Card.Title>
+        {props.status === STATUSES.DONE ?
+        <Accordion>
+          <AccordionItem eventKey='preview'>
+            <Accordion.Header>preview</Accordion.Header>
+              <AccordionBody>
+                <ChromatinLoopAnalysisResultsPage example={true}/>
+              </AccordionBody>
+          </AccordionItem>
+        </Accordion>
+        
+
+        :""}
+        <hr></hr>
         <Card.Text>ID: {props.id}</Card.Text>
         <Card.Text>Status: {props.status}</Card.Text>
         <Card.Text>Description: {props.description}</Card.Text>
