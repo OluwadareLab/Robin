@@ -1,2 +1,0 @@
-generating RNAPII recovery
-./RNAPii/rnapii.sh: line 10:  1834 Segmentation fault      Rscript Recovery_HiChIP_Loops.R --RefFile=$refFile5K --InpFile=$inputFile --headerRef FALSE --headerInp FALSE --QcolInp=0 --chrRef TRUE --chrInp TRUE --midRef FALSE --midInp FALSE --binsizeRef=$resolution --binsizeInp=$resolution --offset=50 --OutDir=$outputDir --LabelRef="RNAPII_$resolution" --LabelInp="$name"

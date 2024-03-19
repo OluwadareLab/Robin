@@ -7,7 +7,8 @@ import { paths } from './config';
 import {QueuePage} from './pages/Queue';
 import { ChromatinLoopAnalysisResultsPage } from './pages/Results';
 import { ViewAllJobsPage } from './pages/ViewAllJobs';
-import ToolForm from './pages/temp';
+import ToolForm from './pages/toolUploadPage';
+import { ProtienReferenceUploadPage } from './pages/uploadProtienReferencePage';
 
 export const WebRoutes = () => (
     <Router>
@@ -21,7 +22,8 @@ export const WebRoutes = () => (
             <Route path={`${paths.about}`} element={<div>about</div>}/>
             <Route path={`${paths.github}`} element={<div>https://github.com/mattieFM/MohitProjWeb</div>}/>
             <Route path={`${paths.jobs}`} element={<ViewAllJobsPage/>}/>
-            <Route path={`/temp`} element={<ToolForm/>}/>
+            <Route path={`${paths.referenceUpload}/:id`} element={<ProtienReferenceUploadPage/>}/>
+            <Route path={`/temp/:id`} element={<ProtienReferenceUploadPage/>}/>
         </Routes>
     </Router>
 );

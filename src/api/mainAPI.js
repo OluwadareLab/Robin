@@ -59,7 +59,7 @@ app.use(
 //     limits: { fileSize: 50 * 1024 * 1024 },
 //   }));
 app.get('/', (req, res) => res.json({ welcome: "Hello World" }));
-app.listen(8080);
+app.listen(config.apiPort);
 
 
 /**
@@ -104,9 +104,7 @@ app.get(apiPaths.jobResults, (req, res) => {
 
         data[tool] = {
             "toolName":tool,
-            rnapiiResults: [],
-            h3k27acResults: [],
-            ctcfResults: [],
+            results: [],
             remResults: [],
         }
         
@@ -120,13 +118,9 @@ app.get(apiPaths.jobResults, (req, res) => {
             }
             if((/^rem\_/i.test(file))){
                 data[tool].remResults.push(fileObj)
-            } else if((/rnapii\_/i.test(file))){
-                data[tool].rnapiiResults.push(fileObj)
-            } else if((/h3k27ac\_/i.test(file))){
-                data[tool].h3k27acResults.push(fileObj)
-            } else if((/ctcf\_/i.test(file))){
-                data[tool].ctcfResults.push(fileObj)
-            }  
+            } else {
+                data[tool].results.push(fileObj)
+            }
         })
     })
 

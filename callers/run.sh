@@ -12,15 +12,15 @@ jobId=$3
 name=$4
 
 #basic paths
-jobPath=$storagePath\\job_$jobId
-outputPath=$storagePath\\job_$jobId\\out
-dataPath=$storagePath\\job_$jobId\\data
+jobPath=$storagePath/job_$jobId
+outputPath=$storagePath/job_$jobId/out
+dataPath=$storagePath/job_$jobId/data
 
 #i/o paths
-inputFile=$dataPath\\$fileName
-outputDir=$outputPath\\$name
-logPath=$storagePath\\job_$jobId\\log
-logFile=$logPath\\run.log
+inputFile=$dataPath/$fileName
+outputDir=$outputPath/$name
+logPath=$storagePath/job_$jobId/log
+logFile=$logPath/run.log
 mkdir -p $logPath
 
 
@@ -29,7 +29,7 @@ echo "begin log" > $logFile
 echo "Running on job_$jobId" >> $logFile
 
 mkdir -p $jobPath/data/
-mkdir -p $jobPath/out/
+mkdir -p $jobPath/out/$name
 
 
 #plot all recovery methods

@@ -10,17 +10,17 @@ name=$4
 bigName=$5
 
 #basic paths
-jobPath=$storagePath\\job_$jobId
-outputPath=$storagePath\\job_$jobId\\out
-dataPath=$storagePath\\job_$jobId\\data
-logPath=$storagePath\\job_$jobId\\log
-logFile=$logPath\\rem_$bigName.log
+jobPath=$storagePath/job_$jobId
+outputPath=$storagePath/job_$jobId/out
+dataPath=$storagePath/job_$jobId/data
+logPath=$storagePath/job_$jobId/log
+logFile=$logPath/rem_$bigName.log
 
 #i/o paths
 
-outputDir=$outputPath\\$name
+outputDir=$outputPath/$name
 
-inputFile=$outputDir\\$fileName
+inputFile=$outputDir/$fileName
 
 
 touch $logFile
@@ -48,7 +48,7 @@ fi
 
 rem=$(python -c "print(max($maxFrac,0) / float($maxCount))")
 
-outFile=$outputPath\\$name\\rem_${bigName}_${resolution}_.txt
+outFile=$outputPath/$name/rem_${bigName}_${resolution}_.txt
 touch $outFile
 echo $rem > $outFile
 

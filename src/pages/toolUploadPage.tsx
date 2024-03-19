@@ -6,6 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { apiPaths } from '../api/apiConfig';
 import { paths } from '../config.mjs';
+import { InstructionHeader } from '../components/misc/instructionHeader';
+import { EntryWithRemove } from '../components/userInputComponents/removablelistbtn/EntryWithRemove';
+
 
 export interface ToolData {
     name: string;
@@ -22,14 +25,7 @@ const ToolForm: React.FC = () => {
     const navigate = useNavigate();
 
     function onSubmit(){
-        axios.post(apiPaths.jobSubmit, {id:params.id}).then((response) => {
-            if(response.status===200)
-            navigate(paths.queue+"/"+params.id);
-        else {
-            alert("something went wrong." + response.data.err);
-        }
-          });
-        
+        navigate(paths.referenceUpload+"/"+params.id); 
     }
     
     const [toolData, setToolData] = useState<ToolData[]>([{ name: '', file: null, resolutions: [] }]);
@@ -92,31 +88,23 @@ const ToolForm: React.FC = () => {
     const params = useParams();
 
     return (
-        <div>
+        <div className="container-sm w-75"
+        style={{padding: ".5% 0 .5% 0"}}
+        >
+            <InstructionHeader title="Upload Tool Data Files"/>
             {toolData.map((tool, toolIndex) => (
                 <div key={toolIndex}>
-                    <div className='form-group row mt-4'>
-                        <div className='col-2'>
-                            <label htmlFor='nameInput' className='col-form-label'>Tool Name<RequiredAsterisk active={true} /></label>
-                        </div>
-                        <div className='col-sm-8' >
-                            <input
-                                className='input-sm input-sm form-control'
-                                id="nameInput"
-                                type="text"
-                                name="name"
-                                placeholder="IE: Lasca, CLoops, etc..."
-                                value={tool.name}
-                                onChange={(e) => handleInputChange(toolIndex, e)}
-                            />
-                        </div>
-                        <div className='col-sm-2'>
-                            <button className="btn btn-secondary" onClick={()=>handleRemoveToolData(toolIndex)}>Remove</button>
-                        </div>
-                        <hr />
-                    </div>
+                     <EntryWithRemove
+                        fieldLabel='Tool Name'
+                        fieldIsRequired={true}
+                        handleInputChange={async (e) => handleInputChange(toolIndex, e)}
+                        handleRemoveToolData={async () => handleRemoveToolData(toolIndex)}
+                        placeholder="IE: Lasca, CLoops, etc..."
+                        value={tool.name}
+                        key={toolIndex}
 
-
+                    />
+     
                     {tool.resolutions.map((resolution, resolutionIndex) => (
 
                         <div key={resolutionIndex} className='form-group row'>
@@ -161,8 +149,8 @@ const ToolForm: React.FC = () => {
             ))}
             <button className="btn btn-primary" onClick={handleAddToolData}>Add New Tool Data</button>
             <hr></hr>
-            <FileUploadDisplay toolData={toolData} fileTypes='.tsx' id={params.id? parseInt(params.id) : 0}/>
-            <button className="btn btn-primary" onClick={onSubmit}>Next</button>
+            <FileUploadDisplay toolData={toolData} fileTypes='.tsx' id={params.id? parseInt(params.id) : 0 } cb={onSubmit}/>
+            
         </div>
 
     );

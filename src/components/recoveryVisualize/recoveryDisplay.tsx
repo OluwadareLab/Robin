@@ -45,10 +45,7 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
               
             }
             clrs={props.clrs}
-            labels={props.barData
-              .filter(obj=>RegExp(props.regex, 'i').test(obj.method))
-              .filter((c,i,ar) => i == 0 || ar[i].toolName !== ar[i-1].toolName)
-              .map(value=>`${value.toolName}`)}
+            labels={[""]}
           
           />
           </>

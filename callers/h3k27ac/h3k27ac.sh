@@ -9,13 +9,13 @@ jobId=$3
 name=$4
 
 #basic paths
-jobPath=$storagePath\\job_$jobId
-outputPath=$storagePath\\job_$jobId\\out
-dataPath=$storagePath\\job_$jobId\\data
+jobPath=$storagePath/job_$jobId
+outputPath=$storagePath/job_$jobId/out
+dataPath=$storagePath/job_$jobId/data
 
 #i/o paths
-inputFile=$dataPath\\$fileName
-outputDir=$outputPath\\$name
+inputFile=$dataPath/$fileName
+outputDir=$outputPath/$name
 
 #the reference file for 5k input
 refFile5K=./referenceFiles/h3k27ac_5k.txt

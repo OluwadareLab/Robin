@@ -3,7 +3,7 @@ import axios, { AxiosProgressEvent } from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import config from '../../config.mjs';
 import { apiPaths } from '../../api/apiConfig.js';
-import {ToolData} from '../../pages/temp'
+import {ToolData} from '../../pages/toolUploadPage.js'
 
 
 axios.defaults.baseURL = config.apiPath;
@@ -21,7 +21,16 @@ type FileUploadProps = {
   id:number
 
   /** @description an array of the files to be uploaded */
-  toolData:(ToolData)[]
+  toolData?:(ToolData)[]
+
+  /** if provided this will ignore tool data and just use this list */
+  files?:File[],
+
+  /** if provided overrides the names of file in the files arr */
+  fileNames?:string[],
+
+  /** a callback to call when the upload is done */
+  cb:()=>void
 }
 
 /**
@@ -29,22 +38,13 @@ type FileUploadProps = {
  * @param {} props props.fileTypes as string ".type1 .type2 etc...."
  * @returns 
  */
-const FileUploadDisplay = (props: FileUploadProps) => {
+export const FileUploadDisplay = (props: FileUploadProps) => {
 
   const id:number = props.id;
   const fileTypes = props.fileTypes || ".cool, .hic, .bed, .bedme, .mcool";
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [uploadData, setUploadData] = useState([]);
-
-
-  const handleFileChange = (e:any) => {
-    const files = Array.from(e.target.files);
-
-    const regEx = new RegExp(fileTypes.replace(/\s/g, '').replace(/./g, "|"));
-    // Filter files with allowed extensions
-    const allowedFiles = files.filter((file:any) => regEx.test(file.name));
-  };
 
   useEffect(() => {
     const fetchQueuePosition = async () => {
@@ -59,28 +59,39 @@ const FileUploadDisplay = (props: FileUploadProps) => {
   }, [uploadComplete, id]); // Empty dependency array ensures the effect runs once on mount
 
   const handleUpload = () => {
+    const formData = new FormData();
+
+      //id must be added first due to some annoying things
+      formData.append(`id`, id.toString());
+      
     const apiEndpoint = apiPaths.jobData;
+    if(props.files){
+      let i = 0;
+      props.files.forEach(file=>{
+        formData.append(`files`, file, props.fileNames ? props.fileNames[i++] : file.name);
+      })      
+    } else {
 
     // Ensure there are files to upload
-    if (props.toolData.length === 0) {
+    if (props?.toolData.length === 0) {
       alert('Please select at least one valid file before uploading.');
       return;
     }
 
-    const formData = new FormData();
-    //id must be added first due to some annoying things
-    formData.append(`id`, id.toString());
+   
 
-    // Append each selected file to FormData
-    props.toolData.forEach((tool) => {
-        tool.resolutions.forEach(res=>{
-            if(res.file){
-                const extention = res.file.name.split('.').pop();
-                formData.append(`files`, res.file, `${tool.name}_${res.resolution}.${extention}`);
-            }
-        })
+    props?.toolData.forEach((tool) => {
+      tool.resolutions.forEach(res=>{
+          if(res.file){
+              const extention = res.file.name.split('.').pop();
+              formData.append(`files`, res.file, `${tool.name}_${res.resolution}.${extention}`);
+          }
+      })
       
     });
+    }
+    // Append each selected file to FormData
+    
 
     // Axios request with progress event
     axios.post(apiEndpoint, formData, {
@@ -100,6 +111,7 @@ const FileUploadDisplay = (props: FileUploadProps) => {
         setTimeout(() => {
           setUploadComplete(false);
           setUploadProgress(0);
+          props.cb();
         }, 2000);
       })
       .catch(error => {
@@ -130,7 +142,7 @@ const FileUploadDisplay = (props: FileUploadProps) => {
       )}
 
       <button className="btn btn-lg btn-secondary cf" onClick={handleUpload} style={{width:"25%"}}>
-        Upload
+        Upload And Submit
       </button>
       </div>
 

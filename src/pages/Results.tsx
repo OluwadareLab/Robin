@@ -33,6 +33,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const [jobResults, setJobResults]  = useState<{toolname:string, files:{resultFileName:string, data:string}[]}[]>([]);
   const [datasets, setDatasets] = useState<any[]>([]);
   const [ctcfDatasets, setCtcfDatasets] = useState<any[]>([]);
+  const [recoveryDatasets, setRecoveryDatasets] = useState<{string:any[]}>({});
   const [rnapiiDatasets, setRnapiiDatasets] = useState<any[]>([]);
   const [h3k27acDatasets, setH3k27acDatasets] = useState<any[]>([]);
   const [remValues, setRemValues] = useState<any[]>([]);
@@ -66,54 +67,37 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
     <Tab key="Apa_Score" eventKey="Apa_Score" title="APA Score">
         Apa
     </Tab>
-    <Tab key="RNAPII" eventKey="RNAPII" title="rnapii">
-      <RecoveryComponent 
-      topTitle={"RNAPII"}
-      lineData={rnapiiDatasets}
-      clrs={clrs}
-      bottomTitle={"RNAPII Recovery"}
-      barData={getRecoveryMax(rnapiiDatasets)}
-      regex={"rnapii"}
-      />
-      <RemDisplay 
-        barData={remValues} 
-        bottomTitle={"RNAPII (REM)"}
-        regex={"rnapii"}
-        clrs={clrs}
-      ></RemDisplay>
-    </Tab>
-    <Tab key="h3k27ac" eventKey="h3k27ac" title="h3k27ac">
-      <RecoveryComponent 
-        topTitle={"H3K27AC"}
-        lineData={h3k27acDatasets}
-        clrs={clrs}
-        bottomTitle={"H3K27AC Recovery"}
-        barData={getRecoveryMax(h3k27acDatasets)}
-        regex={"h3k27ac"}
-        />
-        <RemDisplay 
-        barData={remValues} 
-        bottomTitle={"H3K27AC (REM)"}
-        regex={"h3k27ac"}
-        clrs={clrs}
-        ></RemDisplay>
-    </Tab>
-    <Tab key="ctcf" eventKey="ctcf" title="ctcf">
-      <RecoveryComponent 
-          topTitle={"CTCF"}
-          lineData={ctcfDatasets}
-          clrs={clrs}
-          bottomTitle={"CTCF Recovery"}
-          barData={getRecoveryMax(ctcfDatasets)}
-          regex={"ctcf"}
-      />
-      <RemDisplay 
-        barData={remValues} 
-        bottomTitle={"CTCF (REM)"}
-        regex={"ctcf"}
-        clrs={clrs}
-      ></RemDisplay>
-    </Tab>
+
+    
+      {Object.keys(recoveryDatasets).map(key=>{
+        const recoveryMethodArr = recoveryDatasets[key];
+        const barData = getRecoveryMax(recoveryMethodArr);
+        const data = recoveryMethodArr;
+        console.log(barData);
+        
+
+        return (
+          <Tab key={`${recoveryMethodArr[0].method}`} eventKey={`${recoveryMethodArr[0].method}`} title={`${recoveryMethodArr[0].method}`}>
+            <RecoveryComponent
+              topTitle={`${recoveryMethodArr[0].method}`}
+              bottomTitle={`${recoveryMethodArr[0].method} Recovery`}
+              clrs={clrs}
+              regex={`${recoveryMethodArr[0].method}`}
+              barData={barData}
+              lineData={data}
+            />
+            <RemDisplay
+              barData={remValues}
+              bottomTitle={`${recoveryMethodArr[0].method} (REM)`}
+              clrs={clrs}
+              regex={`${recoveryMethodArr[0].method}`}
+            />
+          </Tab>
+        )
+      }
+      )
+      }
+    
     <Tab key="higlass" eventKey="higlass" title="higlass">
       higlass
     </Tab>
@@ -153,9 +137,7 @@ async function setupDataSets (){
     }
 
     //clear all datasets as we update
-    let tempCtcfDatasets: any[] = []
-    let tempRnapiiDatasets: any[] = []
-    let tempH3k27acDatasets: any[] = []
+    let tempDatasets:any = {}
     let tempRemData: any[] = []
 
     const toolsNames = Object.keys(results);
@@ -168,20 +150,24 @@ async function setupDataSets (){
         toolName:string
       } = results[name];
 
-      toolData.ctcfResults.map(result=>result.data=convertToXYDataset(result.data));
-      toolData.rnapiiResults.map(result=>result.data=convertToXYDataset(result.data));
-      toolData.h3k27acResults.map(result=>result.data=convertToXYDataset(result.data));
 
+      toolData.results.map(result=>result.data=convertToXYDataset(result.data));
+      
+
+      console.log(toolData)
       //append all datasets
-      tempCtcfDatasets = [...tempCtcfDatasets, ...toolData.ctcfResults];
-      tempRnapiiDatasets = [...tempRnapiiDatasets, ...toolData.rnapiiResults];
-      tempH3k27acDatasets = [...tempH3k27acDatasets, ...toolData.h3k27acResults];
+      toolData.results.forEach(obj=>{
+        if(!tempDatasets[obj.method]) tempDatasets[obj.method] = [];
+        tempDatasets[obj.method].push(obj);
+      })
+
       tempRemData = [...tempRemData, ...toolData.remResults];
+      console.log(toolData)
+     
     })
 
-    setCtcfDatasets(tempCtcfDatasets);
-    setRnapiiDatasets(tempRnapiiDatasets);
-    setH3k27acDatasets(tempH3k27acDatasets);
+    console.log(tempDatasets)
+    setRecoveryDatasets(tempDatasets);
     setRemValues(tempRemData);
     
       

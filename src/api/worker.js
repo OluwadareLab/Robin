@@ -8,6 +8,7 @@ import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
 import { exec } from 'child_process';
 import * as fs from 'fs'
+import { promises } from 'dns';
 
 var transporter = nodemailer.createTransport({
   service: config.emailServer,
@@ -25,6 +26,8 @@ mongoose.connect('mongodb://localhost:27017/jobQueue');
 let jobIsRunning = false;
 // Schedule a task to run every minute
 cron.schedule('* * * * *', async () => {
+  let recoveryProtiens;
+  let jobID;
   try {
     console.log("trying to find pending jobs")
     const pendingJobs = await Job.find({ status: STATUSES.HAS_DATA_IN_QUE_WAITING });
@@ -33,7 +36,7 @@ cron.schedule('* * * * *', async () => {
     if (pendingJobs.length > 0 && !jobIsRunning) {
       jobIsRunning=true;
       const job = pendingJobs[0];
-      const jobID = job.id;
+      jobID = job.id;
       //email send
       if(job.email){
         //if user provided emial
@@ -65,7 +68,9 @@ cron.schedule('* * * * *', async () => {
       console.log(files);
       // Replace 'script.sh' with the path to your .sh script
 
-      const jobInfo = files.map(file=>{
+
+      //all the tool data
+      const jobInfo = files.filter(file=>!file.startsWith("reference_")).map(file=>{
         const splitFile = file.split("_")
         return {
           resolution: parseInt(splitFile[1]),
@@ -74,27 +79,47 @@ cron.schedule('* * * * *', async () => {
         }
       })
 
-      jobInfo.forEach(job=>{
-        exec(`bash ${config.callersScriptPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool}`, (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error executing script: ${error}`);
-            return;
-          }
-          if (stderr) {
-            console.error(`Script stderr: ${stderr}`);
-            return;
-          }
-          console.log(`Script output: ${stdout}`);
-        });
+      //all the protien reference files
+      recoveryProtiens = files.filter(file=>file.startsWith("reference_")).map(file=>{
+        const splitFile = file.split("_")
+        return {
+          protein: splitFile[1],
+          fileName:file,
+        }
       })
 
-      
-      
+
+      let promises = [];
+      jobInfo.forEach(job=>{
+        //run recovery scrips
+
+        recoveryProtiens.forEach(referenceFile=>{
+          promises.push(new Promise(res=>{
+            const child = exec(`bash ${config.callersRecovereyScripPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${referenceFile.fileName} ${referenceFile.protein}`, (error, stdout, stderr) => {
+              if (error) {
+                console.error(`Error executing script: ${error}`);
+                res();
+              }
+              if (stderr) {
+                console.error(`Script stderr: ${stderr}`);
+                res();
+              }
+              console.log(`Script output: ${stdout}`);
+              res();
+            });
+  
+            child.on("disconnect",()=>{
+              res();
+            });
+          }))
+        })
+      })
+
+      await Promise.all(promises);
 
       job.status = STATUSES.DONE;
       await job.save();
-      console.log(`Job completed: ${job.task}`);
-      updateJobStatus(job.id, STATUSES.DONE)
+      console.log(`Job started running`);
       jobIsRunning=false;
 
 
@@ -116,10 +141,51 @@ cron.schedule('* * * * *', async () => {
           }
         });
       }
+    promises = [];
+    try {
+      console.log("running rem")
+      const pathOut = `${config.dataFolderPath}/job_${jobID}/out`;
+      console.log(pathOut)
+      const files = fs.readdirSync(pathOut, {recursive:true});
+      const recoveryFiles = files.filter(file=>file.includes("Recovery"));
+      console.log(recoveryFiles)
+      console.log(files)
+      console.log(pathOut)
+  
+      recoveryFiles.forEach(referenceFile=>{
+        promises.push(new Promise(resolve=>{
+          const method = referenceFile.split("_")[2];
+          const toolname = referenceFile.split("_")[1];
+          const res = referenceFile.split("_")[3];
+          const split=referenceFile.split("/")
+          referenceFile=split[split.length-1];
+          console.log(`running: for rem: bash ${config.callersRemScriptPath} ${referenceFile} ${res} ${jobID} ${toolname} ${toolname}_${method}`);
+          const child = exec(`bash ${config.callersRemScriptPath} ${referenceFile} ${res} ${jobID} ${toolname} ${toolname}_${method}`, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing script: ${error}`);
+            }
+            if (stderr) {
+              console.error(`Script stderr: ${stderr}`);
+            }
+            resolve();
+            console.log(`Script output: ${stdout}`);
+          })
+        }));
+        
+      })
+      await Promise.all(promises);
+      updateJobStatus(jobID, STATUSES.DONE);
+    } catch (error) {
+      console.log(error);
+    }
     } else {
       console.log('No pending jobs');
     }
+    
   } catch (error) {
     console.error('Error executing job:', error);
   }
+
+
+  
 });

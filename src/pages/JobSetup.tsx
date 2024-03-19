@@ -8,6 +8,7 @@ import { FormField } from '../components/Form/FormField/FormField';
 import { BtnConfirm } from '../components/buttons/BtnConfirm';
 import { apiPaths } from '../api/apiConfig.js';
 import { Form } from '../components/Form/Form';
+import { InstructionHeader } from '../components/misc/instructionHeader';
 
 /**
  * @description the data type that we get from the user filling out the form
@@ -26,7 +27,7 @@ export const JobSetupPage = () => {
     <div className="container-sm w-50"
     style={{padding: ".5% 0 .5% 0"}}
     >
-    <h3 style={{color:"#708090"}}>provide job information</h3>
+    <InstructionHeader title='provide job information'/>
     <Form 
     fields={[
             {

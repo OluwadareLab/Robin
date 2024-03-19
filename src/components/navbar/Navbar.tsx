@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar, Nav } from 'react-bootstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { paths } from "../../config.mjs";
+import { Logo } from "../logo/logo";
 
 type NavbarProps = {
 
@@ -12,8 +13,8 @@ export const AppNavbar: React.FC = (props: NavbarProps) => {
 
     return (
         <Router>
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand href={paths.home}>[Logo]</Navbar.Brand>
+            <Navbar bg="" expand="lg" style={{padding:0, margin:0}}>
+                <Navbar.Brand  style={{display:"inline-block", width:"50px"}} href={paths.home} ><Logo/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">

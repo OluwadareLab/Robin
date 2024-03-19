@@ -1,0 +1,83 @@
+generating h3k27ac recovery for lasca
+generating plots for lasca with reference: ../h3k27ac/referenceFiles/h3k27ac_10k.txt
+
+Attaching package: 'data.table'
+
+The following object is masked from 'package:GenomicRanges':
+
+    shift
+
+The following object is masked from 'package:IRanges':
+
+    shift
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, second
+
+
+ Computing loop overlap - input number of loops : 1000 fraction of reference loops covered : 0.00421078203129745 
+ Computing loop overlap - input number of loops : 2000 fraction of reference loops covered : 0.00773326315363281 
+ Computing loop overlap - input number of loops : 3000 fraction of reference loops covered : 0.0116606271635929 
+ Computing loop overlap - input number of loops : 4000 fraction of reference loops covered : 0.0117820920298804 
+ Computing loop overlap - input number of loops : 5000 fraction of reference loops covered : 0.0120250217624552 
+ Computing loop overlap - input number of loops : 6000 fraction of reference loops covered : 0.012348928072555 
+ Computing loop overlap - input number of loops : 7000 fraction of reference loops covered : 0.0126121019495111 
+ Computing loop overlap - input number of loops : 8000 fraction of reference loops covered : 0.0129157641152297 
+ Computing loop overlap - input number of loops : 9000 fraction of reference loops covered : 0.0130979614146608 
+ Computing loop overlap - input number of loops : 10000 fraction of reference loops covered : 0.0134623560135231 
+ Computing loop overlap - input number of loops : 11000 fraction of reference loops covered : 0.0136040650241918 
+ Computing loop overlap - input number of loops : 12000 fraction of reference loops covered : 0.0136850416017167 
+ Computing loop overlap - input number of loops : 13000 fraction of reference loops covered : 0.0140899244893415 
+ Computing loop overlap - input number of loops : 14000 fraction of reference loops covered : 0.0141709010668664 
+ Computing loop overlap - input number of loops : 15000 fraction of reference loops covered : 0.0147984695426848 
+ Computing loop overlap - input number of loops : 16000 fraction of reference loops covered : 0.0150413992752596 
+ Computing loop overlap - input number of loops : 17000 fraction of reference loops covered : 0.0151831082859283 
+ Computing loop overlap - input number of loops : 18000 fraction of reference loops covered : 0.0157297001842217 
+ Computing loop overlap - input number of loops : 19000 fraction of reference loops covered : 0.0159928740611778 
+ Computing loop overlap - input number of loops : 20000 fraction of reference loops covered : 0.0160536064943215 
+ Computing loop overlap - input number of loops : 21000 fraction of reference loops covered : 0.0164787335263275 
+ Computing loop overlap - input number of loops : 22000 fraction of reference loops covered : 0.01651922181509 
+ Computing loop overlap - input number of loops : 23000 fraction of reference loops covered : 0.0168228839808086 
+ Computing loop overlap - input number of loops : 24000 fraction of reference loops covered : 0.0170253254246209 
+ Computing loop overlap - input number of loops : 25000 fraction of reference loops covered : 0.0170253254246209 
+ Computing loop overlap - input number of loops : 26000 fraction of reference loops covered : 0.017288499301577 
+ Computing loop overlap - input number of loops : 27000 fraction of reference loops covered : 0.0174909407453894 
+ Computing loop overlap - input number of loops : 28000 fraction of reference loops covered : 0.0174909407453894 
+ Computing loop overlap - input number of loops : 29000 fraction of reference loops covered : 0.0178148470554892 
+ Computing loop overlap - input number of loops : 30000 fraction of reference loops covered : 0.0181185092212078 
+ Computing loop overlap - input number of loops : 31000 fraction of reference loops covered : 0.0181185092212078 
+ Computing loop overlap - input number of loops : 32000 fraction of reference loops covered : 0.0183007065206389 
+ Computing loop overlap - input number of loops : 33000 fraction of reference loops covered : 0.0184626596756888 
+ Computing loop overlap - input number of loops : 34000 fraction of reference loops covered : 0.0184626596756888 
+ Computing loop overlap - input number of loops : 35000 fraction of reference loops covered : 0.0186246128307387 
+ Computing loop overlap - input number of loops : 36000 fraction of reference loops covered : 0.0187460776970261 
+ Computing loop overlap - input number of loops : 37000 fraction of reference loops covered : 0.0187460776970261 
+ Computing loop overlap - input number of loops : 38000 fraction of reference loops covered : 0.0187865659857886 
+ Computing loop overlap - input number of loops : 39000 fraction of reference loops covered : 0.0187865659857886 
+ Computing loop overlap - input number of loops : 40000 fraction of reference loops covered : 0.0187865659857886 
+ Computing loop overlap - input number of loops : 41000 fraction of reference loops covered : 0.0190902281515072 
+ Computing loop overlap - input number of loops : 42000 fraction of reference loops covered : 0.0190902281515072 
+ Computing loop overlap - input number of loops : 43000 fraction of reference loops covered : 0.0194343786059882 
+ Computing loop overlap - input number of loops : 44000 fraction of reference loops covered : 0.0196165759054194 
+ Computing loop overlap - input number of loops : 45000 fraction of reference loops covered : 0.0196165759054194 
+ Computing loop overlap - input number of loops : 46000 fraction of reference loops covered : 0.0201226795149503 
+ Computing loop overlap - input number of loops : 47000 fraction of reference loops covered : 0.0201631678037128 
+ Computing loop overlap - input number of loops : 48000 fraction of reference loops covered : 0.0201631678037128 
+ Computing loop overlap - input number of loops : 49000 fraction of reference loops covered : 0.0203048768143814 
+ Computing loop overlap - input number of loops : 50000 fraction of reference loops covered : 0.0203048768143814 
+ Computing loop overlap - input number of loops : 51000 fraction of reference loops covered : 0.0204870741138126 
+ Computing loop overlap - input number of loops : 52000 fraction of reference loops covered : 0.0208717128570561 
+ Computing loop overlap - input number of loops : 53000 fraction of reference loops covered : 0.0208717128570561 
+ Computing loop overlap - input number of loops : 54000 fraction of reference loops covered : 0.0208919570014373 
+ Computing loop overlap - input number of loops : 55000 fraction of reference loops covered : 0.0211146425896309 
+ Computing loop overlap - input number of loops : 56000 fraction of reference loops covered : 0.0211146425896309 
+ Computing loop overlap - input number of loops : 57000 fraction of reference loops covered : 0.0212361074559184 
+ Computing loop overlap - input number of loops : 58000 fraction of reference loops covered : 0.021377816466587 
+ Computing loop overlap - input number of loops : 59000 fraction of reference loops covered : 0.021377816466587 
+ Computing loop overlap - input number of loops : 60000 fraction of reference loops covered : 0.0214992813328745 
+ Computing loop overlap - input number of loops : 61000 fraction of reference loops covered : 0.0215600137660182 
+ Computing loop overlap - input number of loops : 62000 fraction of reference loops covered : 0.0215600137660182 
+ Computing loop overlap - input number of loops : 63000 fraction of reference loops covered : 0.0216814786323056 
+ Computing loop overlap - input number of loops : 64000 fraction of reference loops covered : 0.021883920076118 
+ Computing loop overlap - input number of loops : 64975 fraction of reference loops covered : 0.021883920076118 ./callers/recovery/recovery.sh: line 28: ho: command not found
