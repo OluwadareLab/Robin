@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
-    "module": "es6",
-    "target": "es5",
+    "skipLibCheck": true,
+    "module": "esnext",
+    "target": "esnext",
     "jsx": "react",
     "allowJs": true,
-    "moduleResolution":"node",
-    
+    "moduleResolution":"node",  
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
   "files": ["src/index.ts"]
 }

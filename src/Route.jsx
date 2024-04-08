@@ -1,7 +1,7 @@
 import React from 'react';
 import {Routes, BrowserRouter as Router, Route } from 'react-router-dom';
-import { HomePage } from './pages/Home.js';
-import { UploadPage } from './pages/Upload.js'
+import { HomePage } from './pages/Home';
+import { UploadPage } from './pages/Upload'
 import { JobSetupPage } from './pages/JobSetup';
 import { paths } from './config';
 import {QueuePage} from './pages/Queue';
@@ -9,7 +9,7 @@ import { ChromatinLoopAnalysisResultsPage } from './pages/Results';
 import { ViewAllJobsPage } from './pages/ViewAllJobs';
 import ToolForm from './pages/toolUploadPage';
 import { ProtienReferenceUploadPage } from './pages/uploadProtienReferencePage';
-import { HiGlassComponent } from './components/visualizationTools/HiGlass/HIGlass';
+import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass/HIGlass';
 
 export const WebRoutes = () => (
     <Router>
@@ -24,7 +24,7 @@ export const WebRoutes = () => (
             <Route path={`${paths.github}`} element={<div>https://github.com/mattieFM/MohitProjWeb</div>}/>
             <Route path={`${paths.jobs}`} element={<ViewAllJobsPage/>}/>
             <Route path={`${paths.referenceUpload}/:id`} element={<ProtienReferenceUploadPage/>}/>
-            <Route path={`/temp/`} element={<HiGlassComponent/>}/>
+            <Route path={`/temp/`} element={<HiGlassComponentWrapper/>}/>
         </Routes>
     </Router>
 );
