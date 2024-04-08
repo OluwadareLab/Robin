@@ -2,5 +2,5 @@
 	path = src/components/visualizationTools/higlass
 	url = https://github.com/mattieFM/higlass.git
 [submodule "src/components/visualizationTools/higlass"]
-	path = src/components/visualizationTools/higlass
+	path = src/components/visualizationTools/HiGlass/higlass
 	url = https://github.com/mattieFM/higlass.git
