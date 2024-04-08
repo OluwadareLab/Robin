@@ -1,0 +1,3 @@
+[submodule "higlass"]
+	path = src/components/visualizationTools/higlass
+	url = https://github.com/mattieFM/higlass.git
