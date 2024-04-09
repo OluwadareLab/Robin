@@ -4,6 +4,18 @@ export abstract class UTIL {
     static lastClr: any | undefined;
     static timesSpun: number = 0;
 
+    /**
+     * @description get a set of random {x,y} value dicts
+     * @param length length of the array
+     * @param range math.random will be multiplied by this.
+     */
+    static getRandomXyDataset(length=100,range=100){
+        return Array.from({ length: length }, () => ({
+            x: Math.random()*range,
+            y: Math.random()*range,
+          }));
+    }
+
     static getColor(){
         if(this.lastClr){
             return this.getComplementaryColor() || "";

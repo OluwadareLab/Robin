@@ -3,5 +3,6 @@
         "hglib",
         "NOTRUN",
         "TINYTEXT"
-    ]
+    ],
+    "r.lsp.promptToInstall": false
 }

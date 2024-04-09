@@ -34,6 +34,9 @@ const config = {
     /** the path to the callers rem script */
     callersRemScriptPath: "./callers/rem.sh",
 
+    /** the path to the callers loop_size detection script */
+    callersLoopSizeScriptPath: "./callers/loop_size/loop_size_runner.sh",
+
     /** the port where the api is hosted (defined below)*/
     apiPort:undefined
 

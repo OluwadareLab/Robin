@@ -106,6 +106,7 @@ app.get(apiPaths.jobResults, (req, res) => {
             "toolName":tool,
             results: [],
             remResults: [],
+            loopSizeResults:[]
         }
         
        resultFiles.forEach(file=>{
@@ -118,6 +119,12 @@ app.get(apiPaths.jobResults, (req, res) => {
             }
             if((/^rem\_/i.test(file))){
                 data[tool].remResults.push(fileObj)
+            } else if((/^loopsize\_/i.test(file))){
+                const splitData = fileObj.data.split("\n");
+                fileObj.totalLoops =splitData[0].replace('@5KBTotal Loops: ',"");
+                fileObj.avgKbSize = splitData[1].replace("Average Size (kb): ", "");
+                fileObj.avgBinNumersSize = splitData[2].replace("Average Size (# bins): ", "");
+                data[tool].loopSizeResults.push(fileObj)
             } else {
                 data[tool].results.push(fileObj)
             }

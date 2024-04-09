@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref, useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +10,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { UTIL } from '../../util';
+import { DownloadImg } from './downloadImg';
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +28,7 @@ export function BarChart(props: {
     clrs? :string[] | undefined
 
 }) {
+    let chartRef = useRef(null);
     const labels =props.labels;
     const options = {
         responsive: true,
@@ -53,10 +55,14 @@ export function BarChart(props: {
             return ({
                 label: data.name,
                 data: data.data,
+                maxBarThickness: 80,
                 backgroundColor:props.clrs? props.clrs[i++] : UTIL.getColor(),
                 })
         })
     };
 
-  return <Bar options={options} data={data} />;
+  return <>
+    <Bar options={options} data={data} ref={chartRef}/>
+    <DownloadImg chartRef={chartRef}/>
+  </>
 }

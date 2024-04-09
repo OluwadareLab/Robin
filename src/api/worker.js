@@ -68,7 +68,6 @@ cron.schedule('* * * * *', async () => {
       console.log(files);
       // Replace 'script.sh' with the path to your .sh script
 
-
       //all the tool data
       const jobInfo = files.filter(file=>!file.startsWith("reference_")).map(file=>{
         const splitFile = file.split("_")
@@ -88,11 +87,14 @@ cron.schedule('* * * * *', async () => {
         }
       })
 
+      jobInfo.forEach(job=>{
+        //create all folders
+        fs.mkdirSync(`${path}/out/${job.tool}/`, { recursive: true });
+      });
 
       let promises = [];
       jobInfo.forEach(job=>{
         //run recovery scrips
-
         recoveryProtiens.forEach(referenceFile=>{
           promises.push(new Promise(res=>{
             const child = exec(`bash ${config.callersRecovereyScripPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${referenceFile.fileName} ${referenceFile.protein}`, (error, stdout, stderr) => {
@@ -113,6 +115,21 @@ cron.schedule('* * * * *', async () => {
             });
           }))
         })
+
+        //run loop count scripts
+        promises.push(new Promise(resolve=>{
+          console.log(`running: for loop_size: bash ${config.callersLoopSizeScriptPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${job.tool}`);
+          const child = exec(`bash ${config.callersLoopSizeScriptPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${job.tool}`, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing loop_size script: ${error}`);
+            }
+            if (stderr) {
+              console.error(`loop_size Script stderr: ${stderr}`);
+            }
+            resolve();
+            console.log(`loop_size Script output: ${stdout}`);
+          })
+        }))
       })
 
       await Promise.all(promises);
@@ -171,7 +188,6 @@ cron.schedule('* * * * *', async () => {
             console.log(`Script output: ${stdout}`);
           })
         }));
-        
       })
       await Promise.all(promises);
       updateJobStatus(jobID, STATUSES.DONE);

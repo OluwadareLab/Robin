@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import config from "../../config.mjs";
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
+
 
 import {
   Chart as ChartJS,
@@ -13,12 +15,14 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { UTIL } from '../../util';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { DownloadImg } from './downloadImg';
 
 
 
 
 
-type lineChartProps = {
+export type lineChartProps = {
   /**
    * @description the name of the y-axis
    */
@@ -36,6 +40,8 @@ type lineChartProps = {
   title:string
 
   clrs?: string[] | undefined
+
+  radius?: Number
 }
 
 ChartJS.register(
@@ -50,9 +56,11 @@ ChartJS.register(
 const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 1)`;
 
 export const GraphComponent = (props: lineChartProps) => {
+  let radius = props.radius ? props.radius : 0;
+  const chartRef = useRef(null);
 
   const options = {
-    radius: 0,
+    radius: radius,
     responsive: true,
     plugins: {
       legend: {
@@ -101,13 +109,12 @@ export const GraphComponent = (props: lineChartProps) => {
     ))
     
   }
-
   
   return (
-    <div>
-      <h2>Graph</h2>
-      <Line options={options} data={graphData} />
-    </div>
+    <>
+      <Line options={options} data={graphData} ref={chartRef}/>
+      <DownloadImg chartRef={chartRef}/>
+    </>
   );
 };
 

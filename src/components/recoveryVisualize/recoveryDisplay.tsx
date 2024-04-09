@@ -1,6 +1,7 @@
 import { GraphComponent } from "../graph/simpleGraph"
 import { BarChart } from "../graph/barChart"
-import React from "react"
+import React, { useRef } from "react"
+import { DownloadImg } from "../graph/downloadImg"
 
 
 type recoveryComponentTypes = {
@@ -11,7 +12,7 @@ type recoveryComponentTypes = {
   clrs,
   regex
 }
-function formatDataset(dataset){
+export function formatDataset(dataset){
   return dataset.map(dataset=>{
     return (
       {
@@ -23,7 +24,6 @@ function formatDataset(dataset){
 }
 
 export const RecoveryComponent = (props: recoveryComponentTypes) => {
-
     return (
         <>
         <GraphComponent 
@@ -46,7 +46,6 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
             }
             clrs={props.clrs}
             labels={[""]}
-          
           />
           </>
     )
