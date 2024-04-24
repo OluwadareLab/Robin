@@ -8,6 +8,7 @@ import { apiPaths } from '../api/apiConfig';
 import { paths } from '../config.mjs';
 import { InstructionHeader } from '../components/misc/instructionHeader';
 import { EntryWithRemove } from '../components/userInputComponents/removablelistbtn/EntryWithRemove';
+import { ProtienReferenceUploadPage } from './uploadProtienReferencePage';
 
 
 export interface ToolData {
@@ -22,12 +23,36 @@ interface ResolutionData {
 }
 
 const ToolForm: React.FC = () => {
+
     const navigate = useNavigate();
 
     function onSubmit(){
         navigate(paths.referenceUpload+"/"+params.id); 
     }
+
+    /**
+     * @description check if the user can submit the form
+     * @returns boolean
+     */
+    function canSubmit(){
+        //check if any files do not have a name with atleast 2 chars
+        if(files.some(file=>{
+            return file.name.trim().length<2
+        })) {
+            //return early saying no if files do no validate
+            return false;
+        } else if(toolData.some(tool=>{
+            return tool.name.trim().length<2||tool.file==null||tool.resolutions.length < 1;
+        })){
+            //return early if any tools fail to validate
+            return false;
+        }
+
+        //if nothing fails to validate return true.
+        return true;
+    }
     
+    //the tool Data
     const [toolData, setToolData] = useState<ToolData[]>([{ name: '', file: null, resolutions: [] }]);
     const [files, setFiles] = useState<File[]>([]);
 
@@ -91,6 +116,7 @@ const ToolForm: React.FC = () => {
         <div className="container-sm w-75"
         style={{padding: ".5% 0 .5% 0"}}
         >
+            <form>
             <InstructionHeader title="Upload Tool Data Files"/>
             {toolData.map((tool, toolIndex) => (
                 <div key={toolIndex}>
@@ -111,6 +137,7 @@ const ToolForm: React.FC = () => {
                             <label htmlFor='resolutionInput' className='col-2 col-form-label'>Resolution<RequiredAsterisk active={true} /></label>
                             <div className='col-sm-2'>
                                 <input
+                                    required={true}
                                     className='input-sm form-control'
                                     id="resolutionInput"
                                     type="number"
@@ -131,6 +158,7 @@ const ToolForm: React.FC = () => {
 
                             <div className='col-sm-6'>
                                 <input
+                                    required={true}
                                     className='col-sm-2 form-control'
                                     type="file"
                                     name="file"
@@ -149,8 +177,7 @@ const ToolForm: React.FC = () => {
             ))}
             <button className="btn btn-primary" onClick={handleAddToolData}>Add New Tool Data</button>
             <hr></hr>
-            <FileUploadDisplay toolData={toolData} fileTypes='.tsx' id={params.id? parseInt(params.id) : 0 } cb={onSubmit}/>
-            
+            </form>
         </div>
 
     );

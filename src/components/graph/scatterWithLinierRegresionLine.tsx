@@ -41,8 +41,8 @@ export type linierRegressionScatterPlotProps = {
    */
   xAxisTitle:string
 
-  /** the scatter data each additional dataset is considered a different category*/
-  scatterData:{name:string,data:{x:number,y:number}[]}[]
+  /** the scatter data, category can be undefined*/
+  scatterData:{name:string,data:{x:number,y:number}, category:string[]}[]
 
   /** the title that displays above the graph */
   title:string
@@ -66,8 +66,12 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
     let regressionLines: {name:string,data:{x:number,y:number}[]}[] = []
 
     props.scatterData.forEach(dataSet=>{
-      let smallestX=dataSet.data[0].x;
-      let largestX=dataSet.data[0].x;
+      let smallestX=0;
+      let largestX=0;
+      if(dataSet.data[0]){
+        smallestX=dataSet.data[0].x;
+        largestX=dataSet.data[0].x;
+      }
       let data: number[][] = []
       dataSet.data.forEach(coord=>{
         if(coord.x < smallestX) smallestX = coord.x;
@@ -113,6 +117,7 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
 
     };
     const options = {
+      spanGaps:true,
       radius: radius,
       responsive: true,
       plugins: {
@@ -123,13 +128,45 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
           display: true,
           text: props.title,
         },
-      },
-        scales: {
-            y: {
-            beginAtZero: true,
+        zoom: {
+          zoom: {
+            wheel: {
+              enabled: true,
             },
+            pinch: {
+              enabled: true
+            },
+            mode: 'xy',
+          },
+          pan: {
+            enabled: true,
+            mode: 'xy',
+          },
         },
-        };
+        
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: props.xAxisTitle,
+          },
+          type: 'linear',
+        },
+        y: {
+          title: {
+            display: true,
+            text: props.yAxisTitle,
+          },
+          type: 'linear'
+        }
+      },
+      parsing:{
+        xAxisKey: 'x',
+        yAxisKey: 'y'
+      },
+  
+    };
   return <>
     <Chart options={options} data={data} type={'line'} />;
     <DownloadImg chartRef={chartRef}/>

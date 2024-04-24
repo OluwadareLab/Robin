@@ -5,7 +5,7 @@ import { HiGlassComponent } from './higlass/app/scripts/hglib';
 
 export const HiGlassComponentWrapper = () => {
   const container = document.getElementById('higlass-container');
-  const server = "http://localhost:8888/api/v1"
+  const server = "//higlass.io/api/v1" ; //"http://localhost:8888/api/v1"
 
   const config = {
     "editable": true,
@@ -40,10 +40,28 @@ export const HiGlassComponentWrapper = () => {
               "height": 20
             },
             {
-              'type': 'line',
-              "server": '//localhost:8888/api/v1',
-              "tilesetUid": "HOHIJVMsRISjFxRUaI3KNg",
-          }
+              "filetype": "hitile",
+              "server": "//higlass.io/api/v1",
+              "tilesetUid": "TvzFzi-LQle0nt3OlODEdA",
+              "uid": "C0AQg6438sSvKcJPoL_09YGA",
+              "type": "line",
+              "width": 20,
+              "height": 20
+            },
+            {
+              "filetype": "hitile",
+              "server": "//higlass.io/api/v1",
+              "tilesetUid": "TvzFzi-LQle0nt3OlODEdA",
+              "uid": "C0AQg88sSv75347KcJPoL_09YGA",
+              "type": "line",
+              "width": 20,
+              "height": 20
+            },
+          //   {
+          //     'type': 'line',
+          //     "server": '//localhost:8888/api/v1',
+          //     "tilesetUid": "HOHIJVMsRISjFxRUaI3KNg",
+          // }
             
 
           ],

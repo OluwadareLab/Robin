@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios, { AxiosProgressEvent } from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import config from '../../config.mjs';
@@ -31,6 +31,9 @@ type FileUploadProps = {
 
   /** a callback to call when the upload is done */
   cb:()=>void
+
+  /** a function to call to validate whether the button shuold be able to be pressed */
+  conditionalCb?:()=>boolean;
 }
 
 /**
@@ -39,11 +42,14 @@ type FileUploadProps = {
  * @returns 
  */
 export const FileUploadDisplay = (props: FileUploadProps) => {
-
   const id:number = props.id;
   const fileTypes = props.fileTypes || ".cool, .hic, .bed, .bedme, .mcool";
+
+  //this is for asetetics and rendering display suffs
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
+  
+  /** Data for the tools */
   const [uploadData, setUploadData] = useState([]);
 
   useEffect(() => {
@@ -59,67 +65,71 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
   }, [uploadComplete, id]); // Empty dependency array ensures the effect runs once on mount
 
   const handleUpload = () => {
-    const formData = new FormData();
+    if(props.conditionalCb){
+      if(props.conditionalCb()){
+        const formData = new FormData();
 
       //id must be added first due to some annoying things
       formData.append(`id`, id.toString());
       
-    const apiEndpoint = apiPaths.jobData;
-    if(props.files){
-      let i = 0;
-      props.files.forEach(file=>{
-        formData.append(`files`, file, props.fileNames ? props.fileNames[i++] : file.name);
-      })      
-    } else {
+      const apiEndpoint = apiPaths.jobData;
+      if(props.files){
+        let i = 0;
+        props.files.forEach(file=>{
+          formData.append(`files`, file, props.fileNames ? props.fileNames[i++] : file.name);
+        })      
+      } else {
 
-    // Ensure there are files to upload
-    if (props?.toolData.length === 0) {
-      alert('Please select at least one valid file before uploading.');
-      return;
-    }
+      // Ensure there are files to upload
+      console.log(props.toolData)
+      if (props?.toolData.length === 0) {
+        alert('Please select at least one valid file before uploading.');
+        return;
+      }
 
-   
-
-    props?.toolData.forEach((tool) => {
-      tool.resolutions.forEach(res=>{
-          if(res.file){
-              const extention = res.file.name.split('.').pop();
-              formData.append(`files`, res.file, `${tool.name}_${res.resolution}.${extention}`);
-          }
-      })
-      
-    });
-    }
-    // Append each selected file to FormData
-    
-
-    // Axios request with progress event
-    axios.post(apiEndpoint, formData, {
-      onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-        const progress = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        setUploadProgress(progress);
-      },
-    })
-      .then(response => {
-        // Handle API response
-        console.log(response.data);
-        // Set upload complete
-        setUploadComplete(true);
-        // Clear selected files after a short delay
-        setTimeout(() => {
-          setUploadComplete(false);
-          setUploadProgress(0);
-          props.cb();
-        }, 2000);
-      })
-      .catch(error => {
-        // Handle error
-        console.error('Error uploading files:', error);
-        setUploadProgress(0);
-        setUploadComplete(false);
+      props?.toolData.forEach((tool) => {
+        tool.resolutions.forEach(res=>{
+            if(res.file){
+                const extention = res.file.name.split('.').pop();
+                formData.append(`files`, res.file, `${tool.name}_${res.resolution}.${extention}`);
+            }
+        })
+        
       });
+      }
+      // Append each selected file to FormData
+      
+
+      // Axios request with progress event
+      axios.post(apiEndpoint, formData, {
+        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(progress);
+        },
+      })
+        .then(response => {
+          // Handle API response
+          console.log(response.data);
+          // Set upload complete
+          setUploadComplete(true);
+          // Clear selected files after a short delay
+          setTimeout(() => {
+            setUploadComplete(false);
+            setUploadProgress(0);
+            props.cb();
+          }, 2000);
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Error uploading files:', error);
+          setUploadProgress(0);
+          setUploadComplete(false);
+        });
+      }
+    }
+    
   };
 
   return (

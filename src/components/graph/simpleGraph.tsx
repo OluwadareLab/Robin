@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import config from "../../config.mjs";
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
-
-
+import Hammer from "hammerjs";
+import Zoom, * as zoom from 'chartjs-plugin-zoom'
+import ZoomPlugin from 'chartjs-plugin-zoom'
+import "chartjs-plugin-zoom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,6 +47,9 @@ export type lineChartProps = {
 }
 
 ChartJS.register(
+  Zoom,
+  zoom,
+  ZoomPlugin,
   LinearScale,
   PointElement,
   LineElement,
@@ -60,6 +65,7 @@ export const GraphComponent = (props: lineChartProps) => {
   const chartRef = useRef(null);
 
   const options = {
+    spanGaps:true,
     radius: radius,
     responsive: true,
     plugins: {
@@ -70,6 +76,22 @@ export const GraphComponent = (props: lineChartProps) => {
         display: true,
         text: props.title,
       },
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true
+          },
+          mode: 'xy',
+        },
+        pan: {
+          enabled: true,
+          mode: 'xy',
+        },
+      },
+      
     },
     scales: {
       x: {
@@ -90,7 +112,8 @@ export const GraphComponent = (props: lineChartProps) => {
     parsing:{
       xAxisKey: 'x',
       yAxisKey: 'y'
-    }
+    },
+
   };
 
 
@@ -109,6 +132,7 @@ export const GraphComponent = (props: lineChartProps) => {
     ))
     
   }
+  console.log(graphData);
   
   return (
     <>

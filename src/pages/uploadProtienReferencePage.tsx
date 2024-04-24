@@ -17,9 +17,26 @@ export type ReferenceFile = {
     userDefinedFileName:string
 }
 
+type ProtienReferenceUploadPageProps = {
+    renderSubmitBtn?:boolean,
+    /**
+     * @description optional ref to pass to store files 
+     */
+    setRefFiles:(files:File[])=>void,
+    /**
+     * @description optional ref to pass to store file names in
+     */
+    setRefFileNames:(files:string[])=>void,
+}
 
 
-export const ProtienReferenceUploadPage = () =>{
+/**
+ * @description no longer a standalone page, instead a componet of the main upload page
+ * use to upload portien reference files
+ * @param props 
+ * @returns 
+ */
+export const ProtienReferenceUploadPage = (props:ProtienReferenceUploadPageProps) =>{
     const navigate = useNavigate();
     const params = useParams();
     const getDefaultRefFile = () => (JSON.parse(JSON.stringify({id:0,"fileName":""})));
@@ -61,8 +78,20 @@ export const ProtienReferenceUploadPage = () =>{
     }
 
     const getFiles = () =>{
-        setAllFiles(referenceFiles.filter(file=>file.file).map(file=>file.file));
-        setAllFileNames(referenceFiles.filter(file=>file.userDefinedFileName).map(file=>`reference_${file.userDefinedFileName}`));
+        const allFiles = referenceFiles.filter(file=>file.file).map(file=>file.file);
+        const allFileNames = referenceFiles.filter(file=>file.userDefinedFileName).map(file=>`reference_${file.userDefinedFileName}`)
+
+        //set states
+        setAllFiles(allFiles);
+        setAllFileNames(allFileNames);
+
+        //pass data up to any parent listening with its cbs.
+        if(props.setRefFileNames){
+            props.setRefFileNames(allFileNames);
+        }
+        if(props.setRefFiles){
+            props.setRefFiles(allFiles);
+        }
     }
 
     function onSubmit(){
@@ -79,9 +108,6 @@ export const ProtienReferenceUploadPage = () =>{
 
     return (
         <>
-            <div className="container-sm w-75"
-            style={{padding: ".5% 0 .5% 0"}}
-            >
                 <InstructionHeader title="Upload Protein Reference Files"/>
                 
                 {referenceFiles.map(file=>{
@@ -102,20 +128,20 @@ export const ProtienReferenceUploadPage = () =>{
                         </>
                     )
                 })}
-
                 <button className="btn btn-primary" onClick={onAddNewReferenceInput}>Add New Reference File</button>
+                {props.renderSubmitBtn?
+                    <>
+                        
                 
-                <FileUploadDisplay files={allFiles} fileNames={allFileNames} fileTypes='.tsx' id={params.id ? parseInt(params.id) : 0} cb={onSubmit}/>
-                <button 
-                style={{position: "absolute", bottom: 0, right: 0 ,margin: "80px", width:"80px", height:"80px"}} 
-                className="btn btn-primary" 
-                onClick={onSubmit}>
-                    Skip
-                </button>
-                
-            </div>
-            
-
+                        <FileUploadDisplay files={allFiles} fileNames={allFileNames} fileTypes='.tsx' id={params.id ? parseInt(params.id) : 0} cb={onSubmit}/>
+                        <button 
+                        style={{position: "absolute", bottom: 0, right: 0 ,margin: "80px", width:"80px", height:"80px"}} 
+                        className="btn btn-primary" 
+                        onClick={onSubmit}>
+                            Skip
+                        </button>
+                    </>:""
+                }
         </>
     )
 }
