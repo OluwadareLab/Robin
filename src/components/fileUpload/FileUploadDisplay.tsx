@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios, { AxiosProgressEvent } from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import config from '../../config.mjs';
-import { apiPaths } from '../../api/apiConfig.js';
-import {ToolData} from '../../pages/toolUploadPage.js'
+import { apiPaths } from '../../api/apiConfig';
 
+//TODO: move shared models to their own folder and use ts and make them good and stuff
+import { ToolData, fileSet } from '../tempTypes/Types';
 
-axios.defaults.baseURL = config.apiPath;
 
 type FileUploadProps = {
   /**
@@ -29,6 +29,8 @@ type FileUploadProps = {
   /** if provided overrides the names of file in the files arr */
   fileNames?:string[],
 
+  /** @description upload multiple sets of files that are either toolData or name and file */
+  fileSets?:fileSet[]
   /** a callback to call when the upload is done */
   cb:()=>void
 
@@ -60,77 +62,84 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
         setUploadData(response.data.files);
       });
     };
-
     fetchQueuePosition();
-  }, [uploadComplete, id]); // Empty dependency array ensures the effect runs once on mount
+  }, [uploadComplete, id]); 
 
   const handleUpload = () => {
-    if(props.conditionalCb){
-      if(props.conditionalCb()){
+      if(props.conditionalCb ? props.conditionalCb() : true){
+        //for each fileset
+        //setup formdata
         const formData = new FormData();
 
-      //id must be added first due to some annoying things
-      formData.append(`id`, id.toString());
-      
-      const apiEndpoint = apiPaths.jobData;
-      if(props.files){
-        let i = 0;
-        props.files.forEach(file=>{
-          formData.append(`files`, file, props.fileNames ? props.fileNames[i++] : file.name);
-        })      
-      } else {
-
-      // Ensure there are files to upload
-      console.log(props.toolData)
-      if (props?.toolData.length === 0) {
-        alert('Please select at least one valid file before uploading.');
-        return;
-      }
-
-      props?.toolData.forEach((tool) => {
-        tool.resolutions.forEach(res=>{
-            if(res.file){
-                const extention = res.file.name.split('.').pop();
-                formData.append(`files`, res.file, `${tool.name}_${res.resolution}.${extention}`);
-            }
-        })
-        
-      });
-      }
-      // Append each selected file to FormData
-      
-
-      // Axios request with progress event
-      axios.post(apiEndpoint, formData, {
-        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(progress);
-        },
-      })
-        .then(response => {
-          // Handle API response
-          console.log(response.data);
-          // Set upload complete
-          setUploadComplete(true);
-          // Clear selected files after a short delay
-          setTimeout(() => {
-            setUploadComplete(false);
-            setUploadProgress(0);
-            props.cb();
-          }, 2000);
-        })
-        .catch(error => {
-          // Handle error
-          console.error('Error uploading files:', error);
-          setUploadProgress(0);
-          setUploadComplete(false);
+        //id must be added first due to some annoying things
+        formData.append(`id`, id.toString());
+        props.fileSets?.forEach(fileSet=>{
+          console.log(fileSet)
+          //if fileset is tooldata types then parse and add to form data
+          if(fileSet[0]){
+            if(fileSet[0] instanceof ToolData || fileSet[0].resolutions){
+              console.log("toolData found")
+              let toolData = fileSet as ToolData[];
+              toolData.forEach((tool) => {
+                console.log("tool:")
+                console.log(tool)
+                tool.resolutions.forEach(res=>{
+                  console.log("has res")
+                    if(res.file){
+                      console.log("has res file")
+                        const extention = res.file.name.split('.').pop();
+                        formData.append(`files`, res.file, `${tool.name}_${res.resolution}${tool.category?`_${tool.category}`:''}.${extention}`);
+                    }
+                })
+                
+              });
+            } 
+  
+            //if fileset has file prop
+            else if(fileSet[0].file){
+                fileSet.forEach(fileObj=>{
+                  formData.append(`files`, fileObj.file, fileObj.name ? fileObj.name : fileObj.file);
+                })    
+              }
+          }
         });
-      }
-    }
-    
-  };
+
+        //formdata is finished now
+        const apiEndpoint = apiPaths.jobData;
+
+        console.log("FormData contents:");
+        for (const pair of formData.entries()) {
+          console.log(pair[0], pair[1]);
+        }
+        // Axios request with progress event
+        axios.post(apiEndpoint, formData, {
+          onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / (progressEvent.total?progressEvent.total:100)
+            );
+            setUploadProgress(progress);
+          },
+        })
+          .then(response => {
+            // Handle API response
+            console.log(response.data);
+            // Set upload complete
+            setUploadComplete(true);
+            // Clear selected files after a short delay
+            setTimeout(() => {
+              setUploadComplete(false);
+              setUploadProgress(0);
+              props.cb();
+            }, 2000);
+          })
+          .catch(error => {
+            // Handle error
+            console.error('Error uploading files:', error);
+            setUploadProgress(0);
+            setUploadComplete(false);
+          });
+      };
+  }
 
   return (
     <div className="container mt-5">

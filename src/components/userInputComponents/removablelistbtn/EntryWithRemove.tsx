@@ -1,12 +1,11 @@
 import React from "react"
-
 import { RequiredAsterisk } from "../../misc/RequiredAsterisk"
 
 type EntryWithRemoveProps = {
     fieldIsRequired?:boolean | false,
     fieldLabel:string,
-    handleRemoveToolData: (e:any)=>{}
-    handleInputChange: (e:any)=>{}
+    handleRemoveToolData: (e:any)=>void
+    handleInputChange: (e:any)=>void
     value:string
     placeholder:string
 

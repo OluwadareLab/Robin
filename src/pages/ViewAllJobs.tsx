@@ -8,15 +8,20 @@ export const ViewAllJobsPage = () => {
     const [jobs, setJobs] = useState([]);
 
     useEffect(()=>{
-        axios.get(apiPaths.allJobsInfo).then((response) => {
-            if(response.status===200){
-                if(response.data.jobs){
-                    setJobs(response.data.jobs);
+        try {
+            axios.get(apiPaths.allJobsInfo).then((response) => {
+                if(response.status===200){
+                    if(response.data.jobs){
+                        setJobs(response.data.jobs);
+                    }
                 }
-            }
-            console.log(response)
+                console.log(response)
+                
+            })  
+        } catch (error) {
             
-        })
+        }
+        
     }, [])
 
     let id=0;

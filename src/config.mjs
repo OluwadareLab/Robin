@@ -28,6 +28,9 @@ const config = {
     /** the path to the callers run script */
     callersScriptPath: "./callers/run.sh",
 
+    /** the path to the script to convert to hitle and upload to higlass server */
+    higlassUploadPath: "./callers/convertToHitile/converter.sh",
+
     /** the path to the callers run script */
     callersRecovereyScripPath: "./callers/recovery/recovery.sh",
 

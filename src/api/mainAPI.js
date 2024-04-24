@@ -10,6 +10,7 @@ import bodyParser from 'body-parser';
 import * as fs from 'fs';
 import cors from 'cors';
 import { STATUSES } from './apiConfig.js';
+import { resolve } from 'path';
 
 const upload = multer({ dest: config.dataFolderPath });
 
@@ -44,6 +45,7 @@ app.use(
         limit: "50mb",
     })
 );
+
 // for parsing application/xwww-form-urlencoded
 app.use(
     bodyParser.urlencoded({
@@ -71,9 +73,14 @@ app.listen(config.apiPort);
 function getQueuePos(id, status){
     return new Promise((resolve) =>{
         db.all(`SELECT COUNT(status) FROM jobs WHERE status="${status}" AND ROWID<${id}`, (err, res) => {
-            if(typeof(res[0]['COUNT(status)']) != "undefined"){
-                resolve(res[0]['COUNT(status)']);
+            if(res){
+                if(typeof(res[0]['COUNT(status)']) != "undefined"){
+                    resolve(res[0]['COUNT(status)']);
+                }
+            } else {
+                resolve(0);
             }
+            
         });
     })
     
@@ -94,6 +101,15 @@ app.get(apiPaths.jobResults, (req, res) => {
     const id = req.query.id;
     const path = generateJobOutFolderPath(id);
     const tools = fs.readdirSync(path);
+    const inputFiles = fs.readdirSync(generateJobDataFolderPath(id));
+    const categories = {};
+    inputFiles.forEach(file=>{
+        let split = file.split("_");
+        categories[split[0]]=split[split.length-1].split(".")[0];
+    })
+
+    console.log(categories);
+    
 
     const data = {
     }
@@ -101,9 +117,11 @@ app.get(apiPaths.jobResults, (req, res) => {
     tools.forEach(tool=>{
         const toolPath = `${path}/${tool}`
         const resultFiles = fs.readdirSync(toolPath);
-
+        console.log("tool");
+        console.log(tool);
         data[tool] = {
             "toolName":tool,
+            "category":categories[tool],
             results: [],
             remResults: [],
             loopSizeResults:[]
@@ -111,6 +129,7 @@ app.get(apiPaths.jobResults, (req, res) => {
         
        resultFiles.forEach(file=>{
             let fileObj = {
+                "category":categories[tool],
                 resultFileName:file,
                 toolName:file.split("_")[1].split(".")[0],
                 method:file.split("_")[2].split(".")[0],
@@ -245,6 +264,20 @@ app.post(apiPaths.jobInfo, async (req, response) => {
 
 })
 
+
+app.get(apiPaths.getNextID, async (req, response) =>{
+    const timeout = setTimeout(() => {
+        response.json({ id: null, status: 400 });
+        console.log(`nextid call timeout.`)
+    }, 10000);
+    db.all("SELECT COUNT(*) FROM jobs", (err, res) => {
+        const id = res[0]['COUNT(*)']+1;
+        console.log(`found next id at JOBID:${id}`)
+        response.json({ id: id, status: 200 });
+        clearTimeout(timeout);
+    })
+})
+
 /**
  * @description handle uploading data to correct spot
  */
@@ -341,14 +374,20 @@ export function updateJobStatus(jobId, newStatus){
  * @param {STATUSES} newStatus the new status to upadate to
  */
 function getJobStatus(jobId){
-    return new Promise(resolve =>{
-        db.all(`
-            SELECT status
-            FROM jobs
-            WHERE ROWID=${jobId}`, (err, res) => {
-                resolve(res[0].status);
-            })
-    })
+    try {
+        return new Promise(resolve =>{
+            db.all(`
+                SELECT status
+                FROM jobs
+                WHERE ROWID=${jobId}`, (err, res) => {
+                    if(res) {resolve(res[0].status);}
+                    else { resolve(STATUSES.FAIL);}
+                })
+        })
+    } catch (error) {
+        resolve(STATUSES.FAIL);
+    }
+    
     
 }
 

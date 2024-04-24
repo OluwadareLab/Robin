@@ -11,74 +11,189 @@ export const HiGlassComponentWrapper = () => {
     "editable": true,
     "zoomFixed": false,
     "trackSourceServers": [
-      server
+      "/api/v1",
+      "http://higlass.io/api/v1"
     ],
-    "exportViewUrl": "/api/v1/viewconfs",
+    "exportViewUrl": "/api/v1/viewconfs/",
     "views": [
       {
-        "uid": "aa",
-        "initialXDomain": [
-          0,
-          3100000000
-        ],
-        "genomePositionSearchBox": {
-          "autocompleteServer": server,
-          "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
-          "chromInfoServer": server,
-          "chromInfoId": "hg19",
-          "visible": true
-        },
         "tracks": {
           "top": [
             {
-              "filetype": "hitile",
-              "server": "//higlass.io/api/v1",
-              "tilesetUid": "TvzFzi-LQle0nt3OlODEdA",
-              "uid": "C0AQg88sSvKcJPoL_09YGA",
-              "type": "line",
-              "width": 20,
-              "height": 20
+              "filetype": "cooler",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "e5QaKN16SdWyIWKAidq2Kw",
+              "uid": "I3VHsqI-RxquUSZ3J42LwQ",
+              "type": "linear-heatmap",
+              "options": {
+                "backgroundColor": "#eeeeee",
+                "labelPosition": "bottomRight",
+                "labelLeftMargin": 0,
+                "labelRightMargin": 0,
+                "labelTopMargin": 0,
+                "labelBottomMargin": 0,
+                "labelShowResolution": true,
+                "labelShowAssembly": true,
+                "labelColor": "black",
+                "colorRange": [
+                  "white",
+                  "rgba(245,166,35,1.0)",
+                  "rgba(208,2,27,1.0)",
+                  "black"
+                ],
+                "maxZoom": null,
+                "minWidth": 100,
+                "minHeight": 40,
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "name": "Rao et al. (2014) GM12878 MboI (SRR1658572)"
+              },
+              "width": 1506,
+              "height": 40,
+              "transforms": [
+                {
+                  "name": "ICE",
+                  "value": "weight"
+                },
+                {
+                  "name": "KR",
+                  "value": "KR"
+                },
+                {
+                  "name": "VC",
+                  "value": "VC"
+                },
+                {
+                  "name": "VC_SQRT",
+                  "value": "VC_SQRT"
+                }
+              ]
+            },
+            {
+              "filetype": "beddb",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "N3g_OsVITeulp6cUs2EaJA",
+              "uid": "ZMa4P0gWQdmiDy1VDIvXvQ",
+              "type": "bedlike",
+              "options": {
+                "alternating": false,
+                "annotationStyle": "box",
+                "fillColor": "blue",
+                "fillOpacity": 0.3,
+                "fontSize": "10",
+                "axisPositionHorizontal": "right",
+                "labelColor": "black",
+                "labelPosition": "hidden",
+                "labelLeftMargin": 0,
+                "labelRightMargin": 0,
+                "labelTopMargin": 0,
+                "labelBottomMargin": 0,
+                "minHeight": 20,
+                "maxAnnotationHeight": null,
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "valueColumn": null,
+                "colorEncoding": "itemRgb",
+                "showTexts": false,
+                "colorRange": [
+                  "#000000",
+                  "#652537",
+                  "#bf5458",
+                  "#fba273",
+                  "#ffffe0"
+                ],
+                "colorEncodingRange": false,
+                "separatePlusMinusStrands": true,
+                "annotationHeight": 16,
+                "name": "CTCF motifs (hg19)"
+              },
+              "width": 1506,
+              "height": 126
+            },
+            {
+              "filetype": "beddb",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "OHJakQICQD6gTD7skx4EWA",
+              "uid": "QE9gci95QI6uTPCM-thStQ",
+              "type": "gene-annotations",
+              "options": {
+                "fontSize": 10,
+                "labelColor": "black",
+                "labelBackgroundColor": "#ffffff",
+                "labelPosition": "hidden",
+                "labelLeftMargin": 0,
+                "labelRightMargin": 0,
+                "labelTopMargin": 0,
+                "labelBottomMargin": 0,
+                "minHeight": 24,
+                "plusStrandColor": "blue",
+                "minusStrandColor": "red",
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "showMousePosition": false,
+                "mousePositionColor": "#000000",
+                "geneAnnotationHeight": 16,
+                "geneLabelPosition": "outside",
+                "geneStrandSpacing": 4,
+                "name": "Gene Annotations (hg19)"
+              },
+              "width": 1506,
+              "height": 90
             },
             {
               "filetype": "hitile",
-              "server": "//higlass.io/api/v1",
-              "tilesetUid": "TvzFzi-LQle0nt3OlODEdA",
-              "uid": "C0AQg6438sSvKcJPoL_09YGA",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "PjIJKXGbSNCalUZO21e_HQ",
+              "uid": "QMmSuVnKQj2N8ZSUTAmHEw",
               "type": "line",
-              "width": 20,
-              "height": 20
-            },
-            {
-              "filetype": "hitile",
-              "server": "//higlass.io/api/v1",
-              "tilesetUid": "TvzFzi-LQle0nt3OlODEdA",
-              "uid": "C0AQg88sSv75347KcJPoL_09YGA",
-              "type": "line",
-              "width": 20,
-              "height": 20
-            },
-          //   {
-          //     'type': 'line',
-          //     "server": '//localhost:8888/api/v1',
-          //     "tilesetUid": "HOHIJVMsRISjFxRUaI3KNg",
-          // }
-            
-
+              "options": {
+                "align": "bottom",
+                "labelColor": "[glyph-color]",
+                "labelPosition": "topLeft",
+                "labelLeftMargin": 0,
+                "labelRightMargin": 0,
+                "labelTopMargin": 0,
+                "labelBottomMargin": 0,
+                "labelShowResolution": false,
+                "labelShowAssembly": true,
+                "axisLabelFormatting": "scientific",
+                "axisPositionHorizontal": "right",
+                "barFillColor": "darkgreen",
+                "valueScaling": "linear",
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "labelTextOpacity": 0.4,
+                "barOpacity": 1,
+                "name": "GM12878-E116-H3K27ac.fc.signal"
+              },
+              "width": 1506,
+              "height": 156
+            }
           ],
           "left": [],
           "center": [],
           "right": [],
-          "bottom": []
+          "bottom": [],
+          "whole": [],
+          "gallery": []
         },
+        "initialXDomain": [
+          700247244.6536919,
+          1086268436.85133
+        ],
+        "initialYDomain": [
+          813469769.3277305,
+          854481316.97157
+        ],
         "layout": {
           "w": 12,
           "h": 12,
           "x": 0,
           "y": 0,
-          "i": "aa",
           "moved": false,
           "static": false
-        }
+        },
+        "uid": "CUjr9AslQXSsZablkFOqSw"
       }
     ],
     "zoomLocks": {
@@ -86,6 +201,10 @@ export const HiGlassComponentWrapper = () => {
       "locksDict": {}
     },
     "locationLocks": {
+      "locksByViewUid": {},
+      "locksDict": {}
+    },
+    "valueScaleLocks": {
       "locksByViewUid": {},
       "locksDict": {}
     }

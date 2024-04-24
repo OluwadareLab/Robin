@@ -1,34 +1,23 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import config from '../config.mjs';
-import { paths } from '../config.mjs';
+import { paths } from '../../../config.mjs';
 import axios from 'axios';
-import { BtnLink } from '../components/buttons/BtnLink';
-import { FormField } from '../components/Form/FormField/FormField';
-import { BtnConfirm } from '../components/buttons/BtnConfirm';
-import { apiPaths } from '../api/apiConfig.js';
-import { Form } from '../components/Form/Form';
-import { InstructionHeader } from '../components/misc/instructionHeader';
-
-/**
- * @description the data type that we get from the user filling out the form
- */
-interface jobSetupFormData {
-    title: string;
-    description: string;
-    email?: string;
-}
+import { apiPaths } from '../../../api/apiConfig';
+import { Form } from '../../Form/Form';
+import { InstructionHeader } from '../../misc/instructionHeader';
+import { FormField } from '../../Form/FormField/FormField';
+import { jobSetupFormData } from '../../tempTypes/Types';
 
 
-export const JobSetupPage = () => {
+export const BasicJobInfoInputs = (props:{setData?:(any)=>void}) => {
     let navigate = useNavigate();
 
     return  (
-    <div className="container-sm w-50"
-    style={{padding: ".5% 0 .5% 0"}}
-    >
+    <>
     <InstructionHeader title='provide job information'/>
     <Form 
+    setData={props.setData}
+    fakeForm= {true}
     fields={[
             {
             title:'Job Title' ,
@@ -48,9 +37,9 @@ export const JobSetupPage = () => {
             required:false,
             inputType:'email'
             }]}
-        onSubmit={onSubmitJobInfo}
+            onSubmit={onSubmitJobInfo}
             />
-    </div>
+    </>
     )
 
     /**

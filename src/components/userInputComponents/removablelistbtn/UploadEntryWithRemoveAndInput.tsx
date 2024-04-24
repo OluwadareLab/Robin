@@ -5,13 +5,12 @@ import { RequiredAsterisk } from "../../misc/RequiredAsterisk"
 type UploadEntryWithRemoveAndTitleProps = {
     fieldIsRequired?:boolean | false,
     fieldLabel:string,
-    handleRemoveToolData: (e:any)=>{}
-    handleInputChange: (e:any)=>{}
-    handleFileInputChange: (e:any)=>{}
+    handleRemoveToolData: (e:any)=>void
+    handleInputChange: (e:any)=>void
+    handleFileInputChange: (e:any)=>void
     value:string
     placeholder:string
     entryValue:string
-
 }
 
 

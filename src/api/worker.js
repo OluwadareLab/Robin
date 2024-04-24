@@ -130,6 +130,20 @@ cron.schedule('* * * * *', async () => {
             console.log(`loop_size Script output: ${stdout}`);
           })
         }))
+
+        promises.push(new Promise(resolve=>{
+          console.log(`running: for converting tools to hitle and uploading to higlass server: bash ${config.higlassUploadPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${job.tool}`);
+          const child = exec(`bash ${config.higlassUploadPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool}`, (error, stdout, stderr) => {
+            if (error) {
+              console.error(`Error executing script: ${error}`);
+            }
+            if (stderr) {
+              console.error(`Script stderr: ${stderr}`);
+            }
+            resolve();
+            console.log(`Script output: ${stdout}`);
+          })
+        }))
       })
 
       await Promise.all(promises);

@@ -7,7 +7,8 @@ nvm install --lts
 nvm use --lts
 npm install
 mongod --dbpath ./data
-and then install python
+apt-get install python
+npm run start-api-worker
 
 Note: this will be fixed when I care enough to fix it. but for now running 3 more commands to set up npm is not bad.
 

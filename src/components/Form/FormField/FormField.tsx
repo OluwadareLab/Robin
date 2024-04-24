@@ -1,4 +1,4 @@
-import React, { HTMLInputTypeAttribute } from "react";
+import React, { HTMLInputTypeAttribute, useState } from "react";
 import { RequiredAsterisk } from "../../misc/RequiredAsterisk";
 
 /**
@@ -28,6 +28,9 @@ export type FormFieldProps = {
      * 
      */
     name?: string
+
+    /** @description optional cb to pass value up */
+    setValue?:(e)=>void
 }
 
 
@@ -40,6 +43,7 @@ export type FormFieldProps = {
  * @returns 
  */
 export const FormField = (props: FormFieldProps) => {
+    const [value, setValue] = useState<string>("");
     const type = props.inputType ? props.inputType : "text";
     const title = props.title ? props.title : "";
     const required = typeof(props.required) != 'undefined' ? props.required : true;
@@ -71,6 +75,8 @@ export const FormField = (props: FormFieldProps) => {
                         name={props.name}
                         type = {type}
                         id = {id}
+                        value={value}
+                        onChange={e=>{setValue(e.target.value); if(props.setValue) props.setValue(e.target.value)}}
                         required = {required}
                         maxLength={100}
                         className="textinput form-control"

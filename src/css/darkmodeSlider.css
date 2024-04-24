@@ -1,0 +1,172 @@
+/*
+    Copyright (c) 2020 - present, DITDOT Ltd. - MIT Licence
+    https://www.ditdot.hr/en
+    https://github.com/ditdot-dev/dark-mode-example
+*/
+  
+  /* MODE SWITCH */
+  
+  .mode-switch {
+    grid-area: 2/3/3/5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: .6em;
+  }
+  
+  .mode-label {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    visibility: var(--visibility);
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: lightblue;
+    border-radius: 34px;
+    transition: 0.6s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #1e38ff;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .slider-icon {
+    transform: rotate(250deg);
+    position: absolute;
+    right: 6px;
+    top: 7px;
+  }
+  
+  /* MAIN SVG */
+  
+  .main-svg-wrapper {
+    grid-area: 4/1/-1/7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .main-svg {
+    width: max(150px, 30vw);
+    height: min(300px, 30vh);
+  }
+  
+  .head {
+     animation: var(--animation-main);
+  }
+  
+  /*ANIMATION */
+  
+  /*  Rocket logo animation is based on the CSS Motion Path properties 
+      (offset-*) which are not supported by Safari browsers.
+      A possible solution for animation along a motion path is Greensock
+      MotionPathPlugin https://greensock.com/motionpath 
+  */
+  
+  @keyframes rocket {
+    from {
+      offset-distance: 0%;
+    }
+    to {
+      offset-distance: 100%;
+    }
+  }
+  
+  /*main svg animation */
+  
+  @keyframes rotating {
+    from {
+      transform: rotate(0deg);
+      transform-origin: 50% 30%;
+    }
+    20% {
+      transform: rotate(20deg);
+      transform-origin: 50% 30%;
+    }
+  
+    40% {
+      transform: rotate(-20deg);
+      transform-origin: 50% 30%;
+    }
+  
+    60% {
+      transform: rotate(20deg);
+      transform-origin: 50% 30%;
+    }
+  
+    80% {
+      transform: rotate(-20deg);
+      transform-origin: 50% 30%;
+    }
+  
+    to {
+      transform: rotate(0deg);
+      transform-origin: 50% 30%;
+    }
+  }
+  
+  /*dark-mode*/
+  
+  .dark-mode {
+    --visibility: hidden;
+    --filter: invert(100%);
+    --animation-main: rotating 10s ease-out infinite;
+    --offset-distance: 0%;
+    --offset-rotate: auto 45deg;
+    --animation-logo: rocket 6s linear infinite;
+  }
+  
+  .dark-mode .background {
+    background-color: #fff;
+  }
+  
+  .dark-mode .overlay{
+    background-color: rgba(255, 255, 255, 0);
+    transition: all .18s ease-in;
+  }
+  
+  @media only screen and (max-width: 320px) {
+    .list-item {
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+  }
+  
