@@ -1,0 +1,77 @@
+services:
+  mongodb:
+    image: mongo:4.4.18
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - db-data:/data/db
+    networks:
+      - backend
+  higlass:
+    image: "higlass/higlass-docker"
+    ports:
+      - "8889:80"
+    volumes:
+      - db-data-higlass-data:/data
+      - db-data-higlass-tmp:/tmp
+    networks:
+      - backend
+  web_api:
+    build: 
+      context: .
+      dockerfile: dockerfile.server  # Specify the name of the Dockerfile
+    ports:
+      - "8086:8086" #8086 is the internal port hosted on inside the docker
+    depends_on:
+      - higlass
+      - mongodb
+    volumes:
+      - web_data:/storage/store/Robin_ComprehensiveLoopCaller/
+    networks:
+      - backend
+  web:
+    build: 
+      context: .
+      dockerfile: dockerfile.client  # Specify the name of the Dockerfile
+    ports:
+      - "3006:3006" #3006 is the internal port hosted on inside the docker
+    depends_on:
+      - higlass
+      - mongodb
+      - web_api
+    volumes:
+      - web_data:/storage/store/Robin_ComprehensiveLoopCaller/
+    networks:
+      - backend
+
+volumes:
+  web_data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: /storage/store/Robin_ComprehensiveLoopCaller
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /storage/store/Robin_ComprehensiveLoopCaller/data
+
+  db-data-higlass-tmp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /storage/store/Robin_ComprehensiveLoopCaller/data/higlassTempData/
+
+  db-data-higlass-data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: /storage/store/Robin_ComprehensiveLoopCaller/data/higlassTracks/
+
+networks:
+  backend:

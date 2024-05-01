@@ -1,0 +1,56 @@
+# Use an appropriate base image
+FROM ubuntu:latest
+
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    apt-get install -y wget && \
+    apt-get install -y software-properties-common dirmngr && \
+    apt-get install -y libcurl4-openssl-dev 
+
+# Add R repository and key
+RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+
+RUN add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" 
+
+# Install R
+RUN apt-get update && \
+    apt install r-base r-base-dev -y
+
+# install R deps
+RUN Rscript -e "install.packages('data.table')"
+RUN Rscript -e "install.packages('optparse')"
+RUN Rscript -e "install.packages('BiocManager')"
+RUN Rscript -e "BiocManager::install('GenomicRanges')"
+
+# Install curl and other necessary system dependencies
+RUN apt-get update && apt-get install -y curl software-properties-common
+
+#node 
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Verify Node.js installation
+RUN node -v && npm -v
+
+
+RUN apt-get install -y python
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
+
+
+#install base project deps
+RUN mkdir /app/
+WORKDIR /app/
+RUN mkdir /higlasDeps/
+COPY ./package.json /app/package.json
+COPY ./src/components/visualizationTools/HiGlass/higlass/package.json /app/higlasDeps/package.json
+COPY ./src/components/visualizationTools/HiGlass/higlass/package-lock.json /app/higlasDeps/package-lock.json
+RUN npm install
+
+#install nested higlass deps
+WORKDIR /app/higlasDeps/
+RUN npm clean-install --legacy-peer-deps
+
+WORKDIR /storage/store/Robin_ComprehensiveLoopCaller/
+CMD [ "npm", "start" ]

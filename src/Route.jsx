@@ -9,7 +9,7 @@ import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass
 import { OneStepJobUploadPage } from './pages/OneStepJobPage';
 
 export const WebRoutes = () => (
-    <Router>
+    <Router basename="robin/">
         <Routes>
             <Route exact path={paths.home} element={<HomePage />}/>
             <Route path={`${paths.setup}/:id`} element={<OneStepJobUploadPage />}/>

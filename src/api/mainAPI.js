@@ -4,6 +4,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 import mongoose from 'mongoose';
 import {Job} from './models/job.js';
+import {url} from "./mongo.config.js";
 import fileUpload from "express-fileupload";
 import multer from 'multer'
 import bodyParser from 'body-parser';
@@ -20,12 +21,8 @@ const upload = multer({ dest: config.dataFolderPath });
  */
 const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
 
-/**
- * the mongodb database for our job que
- * im using mongo for the que since we don't need an sql database for a linier que
- */
-mongoose.createConnection('mongodb://localhost:27017/jobQueue')
-mongoose.connect('mongodb://localhost:27017/jobQueue');
+mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongooseErr:"+error));
+console.log(url);
 
 //TODO: check if this line is needed
 createDb();
@@ -103,10 +100,16 @@ app.get(apiPaths.jobResults, (req, res) => {
     const tools = fs.readdirSync(path);
     const inputFiles = fs.readdirSync(generateJobDataFolderPath(id));
     const categories = {};
+    //higlass tileset ids
+    //{uid:string,type:TrackType}[]
+    const tilesetUids = [];
+    //{resolution:number,fileCombo:string,data:venData}
+    const overlapData = []
     inputFiles.forEach(file=>{
         let split = file.split("_");
-        categories[split[0]]=split[split.length-1].split(".")[0];
     })
+
+    
 
     console.log(categories);
     
@@ -115,6 +118,47 @@ app.get(apiPaths.jobResults, (req, res) => {
     }
     
     tools.forEach(tool=>{
+        //parse venn folder differently
+        if(tool=="venn") {
+            // the folders within the ven folder for each resolution's options
+            let resolutionSubfolders =  fs.readdirSync(`${path}/${tool}`);
+            resolutionSubfolders.forEach(resolution=>{
+                //the folders for each combination of tools in this resolution
+                let combinationSubFolders =  fs.readdirSync(`${path}/${tool}/${resolution}`);
+                combinationSubFolders.forEach(combinationFolder=>{
+                    let combinationFile = fs.readdirSync(`${path}/${tool}/${resolution}/${combinationFolder}`)
+                    .filter(fileName=>fileName.endsWith("csv"))[0];
+
+                    if(combinationFile){
+                        let combinationFileContent = fs.readFileSync(
+                            `${path}/${tool}/${resolution}/${combinationFolder}/${combinationFile}`,
+                            { encoding: 'utf8', flag: 'r' }
+                        )
+
+                        let combinationObj = {
+                            resolution:resolution,
+                            fileCombo:combinationFolder,
+                            data:combinationFileContent
+                        };
+
+                        overlapData.push(combinationObj);                        
+                    }
+                })
+            })
+
+            return;
+        };
+        //do not think that the higlassId text file is a folder
+        if(tool.includes("higlassIds")){ 
+            let fileData = fs.readFileSync(`${path}/${tool}`,{ encoding: 'utf8', flag: 'r' });
+            fileData.split("\n").forEach(line=>{
+                let splitLine = line.split(":");
+                let uid = splitLine[1];
+                let type = splitLine[0];
+                tilesetUids.push({uid:uid,type:type});
+            })
+            return;
+        }
         const toolPath = `${path}/${tool}`
         const resultFiles = fs.readdirSync(toolPath);
         console.log("tool");
@@ -140,10 +184,12 @@ app.get(apiPaths.jobResults, (req, res) => {
                 data[tool].remResults.push(fileObj)
             } else if((/^loopsize\_/i.test(file))){
                 const splitData = fileObj.data.split("\n");
-                fileObj.totalLoops =splitData[0].replace('@5KBTotal Loops: ',"");
-                fileObj.avgKbSize = splitData[1].replace("Average Size (kb): ", "");
-                fileObj.avgBinNumersSize = splitData[2].replace("Average Size (# bins): ", "");
-                data[tool].loopSizeResults.push(fileObj)
+                if(splitData[0]&&splitData[1]){
+                    fileObj.totalLoops =splitData[0].replace('@5KBTotal Loops: ',"");
+                    fileObj.avgKbSize = splitData[1].replace("Average Size (kb): ", "");
+                    fileObj.avgBinNumersSize = splitData[2].replace("Average Size (# bins): ", "");
+                    data[tool].loopSizeResults.push(fileObj)
+                }
             } else {
                 data[tool].results.push(fileObj)
             }
@@ -153,6 +199,12 @@ app.get(apiPaths.jobResults, (req, res) => {
   
     // Check if the file exists
 
+    let sendDataObj = {
+        results:data,
+        tilesetUids:tilesetUids,
+        overlapData:overlapData
+    };
+    console.log(sendDataObj)
       // If the file exists, set the appropriate headers
       res.set({
         'Content-Type': 'text/plain', // Set appropriate content type
@@ -160,7 +212,7 @@ app.get(apiPaths.jobResults, (req, res) => {
       });
   
       // Create a read stream from the file and pipe it to the response
-      res.send({results:data})
+      res.send(sendDataObj)
  
   });
 
@@ -345,10 +397,14 @@ app.post(apiPaths.jobSubmit, async(req, response) =>{
         //TODO: add to work que once backend is done
         //for now just mock something taking a while and then resolve it.
         const job = await getJob(id);
-        console.log(`got job obj ${JSON.stringify(job)}`);
+        console.log(`Subbmiting job obj ${JSON.stringify(job)}`);
 
         const newJob = await Job.create({...job, id:id});
+        updateJobStatus(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
         response.json({ status: 200 });
+        setTimeout(() => {
+            updateJobStatus(id, STATUSES.HAS_DATA_IN_QUE_WAITING);
+        }, 5000);
 
     } catch (error) {
         console.log(error)
@@ -366,6 +422,19 @@ export function updateJobStatus(jobId, newStatus){
             UPDATE jobs
             SET status = "${newStatus}"
             WHERE ROWID=${jobId}`)
+}
+
+export async function getAllJobsWithStatus(status){
+    return new Promise(resolve =>{
+        db.all(`
+        SELECT rowid, *
+        FROM jobs
+        WHERE status=="${status}"
+    `,
+        (err, res)=>{resolve(res)}
+        );
+    })
+    
 }
 
 /**

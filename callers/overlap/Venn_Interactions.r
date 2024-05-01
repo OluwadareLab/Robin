@@ -14,12 +14,47 @@ library(data.table)
 library(optparse)
 library(venn)
 library(VennDiagram)
+library(dplyr)
 
 options(scipen = 10)
 options(datatable.fread.datatable=FALSE)
 
-fillcolors <- c("lightsteelblue", "saddlebrown", "lightpink", "burlywood", "darkgoldenrod", "seagreen")
+#if set to true other than logs the only data that will be written to the drive is the venn diagram percentages in a csv file
+#in practice this just disables writing the venn png to the drive
+onlyOutputPercentageData=TRUE
 
+fillcolors <- c("lightsteelblue", "saddlebrown", "lightpink", "burlywood", "darkgoldenrod", "seagreen")
+cat(sprintf("script begins"))
+
+mapLabels <- function(dataFrame){
+	#loop through all labels
+	n=1
+	for(label in InpLabels){
+		#replace occurence of XN with label where N is 1 base index
+		previousSetName = sprintf("X%d", n)
+		newSetName = label
+		dataFrame <- mutate(dataFrame, 
+		..set..=gsub(previousSetName, newSetName, ..set..)
+		)
+		n <- n+1
+	}
+	dataFrame
+}
+
+writeData <- function(dataSet){
+	partitions <- VennDiagram::get.venn.partitions(dataSet, force.unique = TRUE)
+
+	percentages <- partitions %>% select(..set.., ..count..) %>% mutate(
+		percentage=(
+			..count../sum(partitions$..count..)
+		),
+	)
+	percentages<-mapLabels(percentages)
+	df <- apply(percentages,2,as.character)
+	# Write the data frame to a CSV file
+	vennDataFile <- paste0(opt$OutDir, '/Venn_Loop_Overlap_Slack_Percentages', opt$offset, '.csv')
+	write.csv(df, vennDataFile)
+}
 #=====================
 OverlapLoop <- function(Inpdata1, Inpdata2, boundary=1, offset=0, uniqov=TRUE, IDX=FALSE) {
 
@@ -155,7 +190,10 @@ if ((opt$RefSample > 0) & (opt$RefSample <= length(InpFileList))) {
 		vennPlotFile <- paste0(opt$OutDir, '/Venn_Loop_Overlap_Slack', opt$offset, '_', opt$RefSample, '.png')
 		width_val <- 500 * length(InpFileList)
 		height_val <- 500 * length(InpFileList)
-		VennDiagram::venn.diagram(Ov_Idx_MergedRef, vennPlotFile, imagetype = "png", width=width_val, height=height_val, category.names = InpLabels, print.mode = c("raw", "percent"), fill=fillcolors[1:length(InpFileList)], sigdigs=3, euler.d=FALSE, scaled=FALSE, cat.cex=rep(1, length(InpFileList)))
+		if(!onlyOutputPercentageData){
+			VennDiagram::venn.diagram(Ov_Idx_MergedRef, vennPlotFile, imagetype = "png", width=width_val, height=height_val, category.names = InpLabels, print.mode = c("raw", "percent"), fill=fillcolors[1:length(InpFileList)], sigdigs=3, euler.d=FALSE, scaled=FALSE, cat.cex=rep(1, length(InpFileList)))
+		}
+		
 	
 	} else {
 		# otherwise, use the venn package
@@ -221,9 +259,9 @@ if ((opt$RefSample > 0) & (opt$RefSample <= length(InpFileList))) {
 			excl_Ref <- setdiff(excl_Ref, Ov_Idx_MergedRef[[i]])
 		}
 		# dump those loops
-		write.table(Merged_IntData[excl_Ref, ], paste0(opt$OutDir, '/excl_Ref.bed'), row.names = FALSE, col.names = TRUE, sep = "\t", quote=FALSE, append=FALSE)
+		write.table(Merged_IntData[excl_Ref, ], paste0(opt$OutDir, '/excl_Ref.bed'), row.names = FALSE, col.names = TRUE, sep = "\t", quote=FALSE, append=FALSE)	
 	}
-
+	writeData(Ov_Idx_MergedRef)
 } else {
 
 	# first create a temporary interaction file
@@ -298,7 +336,9 @@ if ((opt$RefSample > 0) & (opt$RefSample <= length(InpFileList))) {
 		vennPlotFile <- paste0(opt$OutDir, '/Venn_Loop_Overlap_Slack', opt$offset, '.png')
 		width_val <- 900 * length(InpFileList)
 		height_val <- 900 * length(InpFileList)	
-		VennDiagram::venn.diagram(Ov_Idx_MergedRef, vennPlotFile, imagetype = "png", width=width_val, height=height_val, category.names = InpLabels, print.mode = c("raw", "percent"), fill=fillcolors[1:length(InpFileList)], sigdigs=3, euler.d=FALSE, scaled=FALSE, cat.cex=rep(0.8, length(InpFileList)))
+		if(!onlyOutputPercentageData){
+			VennDiagram::venn.diagram(Ov_Idx_MergedRef, vennPlotFile, imagetype = "png", width=width_val, height=height_val, category.names = InpLabels, print.mode = c("raw", "percent"), fill=fillcolors[1:length(InpFileList)], sigdigs=3, euler.d=FALSE, scaled=FALSE, cat.cex=rep(0.8, length(InpFileList)))
+		}
 	} else {
 
 		# otherwise, use the venn package
@@ -349,6 +389,6 @@ if ((opt$RefSample > 0) & (opt$RefSample <= length(InpFileList))) {
 		dev.off()
 
 	}
-
+	writeData(Ov_Idx_MergedRef)
 }	# end RefSample condition
 

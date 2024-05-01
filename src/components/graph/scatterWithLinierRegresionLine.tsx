@@ -133,31 +133,48 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
     return "";
   }
 
+  let clr;
   const data = {
-    datasets: [
-      
-      ...regressionLines.map(lineData => (
-        {
-          radius: 0,
-          type: 'line' as const,
-          yAxisId: props.yAxisTitle,
-          label: `${regressionLines.length>1?`${lineData.category}`:"Regression Line"}${regressionMatcher(props.clrs[k],lineData.category)}`,
-          data: lineData.data,
-          borderColor: (props.clrs && regressionLines.length>1) ? props.clrs[k] : UTIL.getColor(),
-          backgroundColor: (props.clrs && regressionLines.length>1) ? props.clrs[k++] : UTIL.getColor(),
-        })
-      ),
-      ...props.scatterData.map(scatterData => ({
-        type: 'scatter' as const,
-        yAxisId: props.yAxisTitle,
-        label: `${scatterData.name}`,
-        data: scatterData.data,
-        borderColor: (props.clrs) ? ( regressionLines.length>1 ? categoricalLegend[scatterData.category].backgroundColor : props.clrs[i]) : UTIL.getColor(),
-        backgroundColor: (props.clrs) ?  ( regressionLines.length>1 ? categoricalLegend[scatterData.category].backgroundColor : props.clrs[i++]) : UTIL.getColor(),
-      })),
-    ]
+    datasets: []
 
   };
+
+  //add data to datasets array in order of category line, all data points for that category, category line, ...
+  regressionLines.forEach(lineData=>{
+    let category = lineData.category;
+    let categoryColor = (props.clrs && regressionLines.length>1) ? props.clrs[k] : clr=UTIL.getColor();
+    k++;
+    //call a function to match the color of the category to the external legend that displays below the chart
+    regressionMatcher(categoryColor,category);
+
+    let categoryRegressionLineDataObj = {
+      radius: 0,
+      type: 'line' as const,
+      yAxisId: props.yAxisTitle,
+      label: `${regressionLines.length>1?`${category}`:"Regression Line"}`,
+      data: lineData.data,
+      borderColor: categoryColor,
+      backgroundColor: categoryColor,
+    }
+
+    data.datasets.push(categoryRegressionLineDataObj);
+    //filter for only scatter data sets that have the same category
+    props.scatterData.filter(scatterData=>scatterData.category==category).forEach(scatterData=>{
+        let borderClr = (props.clrs) ? (props.clrs[i]) : clr=UTIL.getColor();
+        let backgroundColor = (props.clrs) ?  ( regressionLines.length>1 ? categoricalLegend[scatterData.category].backgroundColor : props.clrs[i]) : clr;
+        i++;
+        let scatterDataObj = {
+          type: 'scatter' as const,
+          yAxisId: props.yAxisTitle,
+          label: `${scatterData.name}`,
+          data: scatterData.data,
+          borderColor: borderClr,
+          backgroundColor: backgroundColor,
+        }
+      data.datasets.push(scatterDataObj);
+    })
+  })
+
   const options = {
     spanGaps: true,
     radius: radius,

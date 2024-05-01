@@ -19,6 +19,7 @@ import { Line } from 'react-chartjs-2';
 import { UTIL } from '../../util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DownloadImg } from './downloadImg';
+import { Col, Row } from 'react-bootstrap';
 
 
 
@@ -117,7 +118,7 @@ export const GraphComponent = (props: lineChartProps) => {
   };
 
 
-
+  let clr;
   let i =0;
   const graphData = {
     
@@ -126,8 +127,8 @@ export const GraphComponent = (props: lineChartProps) => {
         yAxisId:'y',
         label: dataset.name,
         data: dataset.data,
-        borderColor: props.clrs? props.clrs[i] : UTIL.getColor(),
-        backgroundColor: props.clrs? props.clrs[i++] : UTIL.getColor(),
+        borderColor: props.clrs? props.clrs[i] : clr = UTIL.getColor(),
+        backgroundColor: props.clrs? props.clrs[i++] : clr,
       }
     ))
     
@@ -136,8 +137,16 @@ export const GraphComponent = (props: lineChartProps) => {
   
   return (
     <>
+    <Row>
       <Line options={options} data={graphData} ref={chartRef}/>
-      <DownloadImg chartRef={chartRef}/>
+    </Row>
+    <Row>
+      <Col>
+        <DownloadImg chartRef={chartRef}/>
+      </Col>
+    </Row>
+      
+      
     </>
   );
 };

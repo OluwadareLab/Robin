@@ -2,6 +2,24 @@ const config = {
     projectName: "Robin: Compherative analysis and visualization of loop perdictions ",
     projectDescription: "An online tool for visualization and anaylisis of chromtin loops.",
 
+    /** @description if a job is older than this (in ms) abandon the job TIMEOUT: 1hour */
+    maxjobage:60*1000*60,
+
+    /**
+     * @description the highest resolution something can be before being low res
+     */
+    highCuttoff:5001,
+
+    /**
+     * @description full url of our higlass server
+     */
+    higlassApiUrl:"http://localhost:8889",
+
+    /**
+     * @description full url of the api/v1 of our higlass server where tilesets can be retrieved from
+     */
+    higlassApiUrlV1:'',
+
     /**
      * @description the absolute path to the data folder
      * @todo, update this in prod
@@ -29,7 +47,7 @@ const config = {
     callersScriptPath: "./callers/run.sh",
 
     /** the path to the script to convert to hitle and upload to higlass server */
-    higlassUploadPath: "./callers/convertToHitile/converter.sh",
+    higlassUploadPath: "./callers/injestIntoHiglass/injestBedpeFile.sh",
 
     /** the path to the callers run script */
     callersRecovereyScripPath: "./callers/recovery/recovery.sh",
@@ -40,11 +58,16 @@ const config = {
     /** the path to the callers loop_size detection script */
     callersLoopSizeScriptPath: "./callers/loop_size/loop_size_runner.sh",
 
+    /** the path to the callers overlap script */
+    callersOverlapScriptPath: "./callers/overlap/vennCaller.sh",
+
     /** the port where the api is hosted (defined below)*/
     apiPort:undefined
 
 
 }
+
+config.higlassApiUrlV1=`${config.higlassApiUrl}/api/v1`;
 
 /** the port where the api is hosted */
 config.apiPort=config.apiPath.split(":").slice(-1)[0];

@@ -1,13 +1,29 @@
+# start cmd
+```bash 
+    docker compose up
+```
+
+
+
+
+
+# old readme
 to start the robin docker
-```docker run -it -v $(pwd):$(pwd) -w $(pwd) -p 8086:8086 robin```
+```docker run -it -v $(pwd):$(pwd) -w $(pwd) -p 8086:8086 -p 8889:8888 robin```
 
 to run the api: 
-launch the docker
+<!-- launch the docker
 nvm install --lts
 nvm use --lts
 npm install
-mongod --dbpath ./data
-apt-get install python
+apt-get -y install python
+nohup mongod --dbpath ./data & -->
+docker run --detach \
+           --publish 8888:80 \
+           --volume ~/hg-data:/data \
+           --volume ~/hg-tmp:/tmp \
+           --name higlass-container \
+           higlass/higlass-docker
 npm run start-api-worker
 
 Note: this will be fixed when I care enough to fix it. but for now running 3 more commands to set up npm is not bad.

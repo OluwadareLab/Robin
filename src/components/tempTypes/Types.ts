@@ -21,6 +21,23 @@ export class ReferenceFile {
     }
 }
 
+/**
+ * @description a type for representing the overlap data for venn diagrams
+ */
+export type OverlapDataObj = {
+    /** the raw data read from the file, this is a csv in string form */
+    data:string,
+    /** the resolution of this data */
+    resolution:string,
+    /** a string of the files combined in this diagram seperated by ':'s */
+    fileCombo:string
+  }
+
+/**
+ * @description a array of overlapDataObjs
+ */
+export type OverlapDataSet = OverlapDataObj[];
+
 export interface ResolutionData {
     resolution: number;
     file: File | null;

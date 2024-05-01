@@ -1,0 +1,8 @@
+"","..set..","..count..","percentage"
+"1","lasca<U+2229>mustache<U+2229>hicexplorer","  179","0.002527963"
+"2","(mustache<U+2229>hicexplorer)<U+2216>(lasca)","  927","0.013091741"
+"3","(lasca<U+2229>hicexplorer)<U+2216>(mustache)","   78","0.001101570"
+"4","(hicexplorer)<U+2216>(lasca<U+222A>mustache)"," 1683","0.023768501"
+"5","(lasca<U+2229>mustache)<U+2216>(hicexplorer)","  487","0.006877754"
+"6","(mustache)<U+2216>(lasca<U+222A>hicexplorer)"," 2877","0.040631002"
+"7","(lasca)<U+2216>(mustache<U+222A>hicexplorer)","64577","0.912001469"

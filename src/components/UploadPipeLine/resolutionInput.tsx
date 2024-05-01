@@ -30,8 +30,11 @@ export const ResolutionInput = (props:resolutionInputProps) => {
                 <datalist id="resolutions">
                     <option value="1000"/>
                     <option value="5000"/>
+                    <option value="10000"/>
+                    <option value="100000"/>
                     <option value="250000"/>
                     <option value="500000"/>
+                    <option value="1000000"/>
                 </datalist>
             </div>
         </>

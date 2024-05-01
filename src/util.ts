@@ -37,6 +37,45 @@ export abstract class UTIL {
         return clr?.toRgbString()
     }
 
+    /**
+     * @description get all combinations of an array of values
+     * with:
+     * No repeats
+     * Order does not matter.
+     */
+    static getCombinations(valuesArray)
+    {
+
+        var combi = [];
+        var temp = [];
+        var slent = Math.pow(2, valuesArray.length);
+
+        for (var i = 0; i < slent; i++)
+        {
+            temp = [];
+            for (var j = 0; j < valuesArray.length; j++)
+            {
+                if ((i & Math.pow(2, j)))
+                {
+                    temp.push(valuesArray[j]);
+                }
+            }
+            if (temp.length > 0)
+            {
+                combi.push(temp);
+            }
+        }
+        
+        combi.sort((a, b) => a.length - b.length);
+        console.log(combi.join("\n"));
+        return combi;
+    }
+
+    /** @description ment to be used with .filter IE: array.filter(UTIL.onlyUnique) */
+    static onlyUnique(value, index, array) {
+        return array.indexOf(value) === index;
+    }
+
   
     
     
@@ -51,7 +90,6 @@ export abstract class UTIL {
             // Calculate complementary color by inverting each channel's value
             const clr = tinycolor(rgbColor)
             const complementent = clr?.spin(90)
-  
         
             // Return the complementary color in RGB format
             return complementent?.toRgbString();

@@ -32,10 +32,10 @@ type FileUploadProps = {
   /** @description upload multiple sets of files that are either toolData or name and file */
   fileSets?:fileSet[]
   /** a callback to call when the upload is done */
-  cb:()=>void
+  cb:(e:any)=>void
 
   /** a function to call to validate whether the button shuold be able to be pressed */
-  conditionalCb?:()=>boolean;
+  conditionalCb?:(e:any)=>boolean;
 }
 
 /**
@@ -65,8 +65,8 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
     fetchQueuePosition();
   }, [uploadComplete, id]); 
 
-  const handleUpload = () => {
-      if(props.conditionalCb ? props.conditionalCb() : true){
+  const handleUpload = (e) => {
+      if(props.conditionalCb ? props.conditionalCb(e) : true){
         //for each fileset
         //setup formdata
         const formData = new FormData();
@@ -129,7 +129,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
             setTimeout(() => {
               setUploadComplete(false);
               setUploadProgress(0);
-              props.cb();
+              props.cb(e);
             }, 2000);
           })
           .catch(error => {

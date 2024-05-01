@@ -11,7 +11,7 @@
  */
 
 //package imports
-import React, { createRef, useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { useState } from "react"
 import { Container, Row } from "react-bootstrap"
 
@@ -26,7 +26,6 @@ import { jobSetupFormData } from "../components/tempTypes/Types"
 import { apiPaths } from "../api/apiConfig"
 import { paths } from "../config.mjs"
 import axios from "axios"
-import { InstructionHeader } from "../components/misc/instructionHeader"
 
 type OneStepJobUploadPageProps = {
 
@@ -36,6 +35,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     //use params to get id from url
     const params = useParams();
     const navigate = useNavigate();
+    const formRef = useRef(null);
 
     //form states
     const [protienRefFiles, setProtienRefFiles] = useState<File[]>([]);
@@ -47,6 +47,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
 
     useEffect(()=>{
         axios.get(apiPaths.getNextID).then(response=>{
+            console.log(response)
             if(response.status==200){
                 navigate(`${paths.setup}/${response.data.id}/`)
             }
@@ -71,28 +72,12 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
 
     //get job id from url
     let jobId = params.id ? parseInt(params.id) : undefined;
-    /**
-     * @description the function to handle submitting the form itself
-     * @param e 
-     */
-    function submitJob(e:React.FormEvent<HTMLFormElement>){
-        e.preventDefault();
-        
-        //submit job
-        axios.post(apiPaths.jobSubmit, {id:params.id}).then((response) => {
-            if(response.status===200)
-            navigate(paths.queue+"/"+params.id);
-        else {
-            alert("something went wrong." + response.data.err);
-        }
-            });
-        
-        
-        return "test";
-    }
-
-    function canSubmit(){
+    let once = false;
+    function canSubmit(e){
         if(toolData.some(tool=>tool.resolutions.some(res=>!res.file))) return false;
+        const formElement = e.target;
+        const isValid = formElement.checkValidity() && formRef.current.checkValidity();
+        if(!isValid) return;
 
         let data: jobSetupFormData = {
             email: basicInfo.email,
@@ -101,6 +86,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
         }
 
         //add job info 
+        if(!once){
             axios.post(apiPaths.jobInfo, data).then((res: any) =>{
                 if(res.data.status === 200){
                     console.log(res);
@@ -109,9 +95,35 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                     alert("An Unexpected error occurred.")
                 }
             })
+            once=true;
+        }
+        
         console.log(basicInfo);
         return true;
     }
+
+        /**
+     * @description the function to handle submitting the form itself
+     * @param e 
+     */
+        function submitJob(e:React.FormEvent<HTMLFormElement>){
+            e.preventDefault();
+            if(!canSubmit(e)){
+                return;
+            }
+            
+            //submit job
+            axios.post(apiPaths.jobSubmit, {id:params.id}).then((response) => {
+                if(response.status===200)
+                navigate(paths.queue+"/"+params.id);
+            else {
+                alert("something went wrong." + response.data.err);
+            }
+                });
+            
+            
+            return "test";
+        }
 
 
     /**
@@ -122,7 +134,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     }
 
     return (
-        <form onSubmit={submitJob}>
+        <form onSubmit={submitJob} id="mainForm" ref={formRef}>
             <Container fluid className="w-75" style={{ padding: ".5% 0 .5% 0" }}>
                 <Row>
                     <BasicJobInfoInputs setData={setBasicInfo}/>

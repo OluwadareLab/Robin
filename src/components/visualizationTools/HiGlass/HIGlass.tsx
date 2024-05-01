@@ -2,15 +2,89 @@ import React, { useEffect } from 'react';
 import * as hglib from './higlass/app/scripts/hglib';
 import 'higlass/dist/hglib.css';
 import { HiGlassComponent } from './higlass/app/scripts/hglib';
+import {default as robinConfig} from '../../../config.mjs';
 
-export const HiGlassComponentWrapper = () => {
+import {Track,TrackType} from "../../../types.ts"
+
+let i = 0;
+
+class HiglassTrack {
+  _defaultConfig:Track = {
+    "filetype": "bed2ddb",
+    "server": "http://localhost:8889/api/v1",
+    "tilesetUid": "bVRL97wzRR6-XeN-HdWKJg",
+    "uid": `higlassWrapperComponent-${i}`,
+    "type": TrackType.Rectangle2DDomain,
+    "options": {
+      "labelColor": "black",
+      "labelPosition": "bottomLeft",
+      "labelLeftMargin": 0,
+      "labelRightMargin": 0,
+      "labelTopMargin": 0,
+      "labelBottomMargin": 0,
+      "trackBorderWidth": 0,
+      "trackBorderColor": "black",
+      "rectangleDomainFillColor": "grey",
+      "rectangleDomainStrokeColor": "black",
+      "rectangleDomainOpacity": 0.6,
+      "minSquareSize": "none",
+      "name": "job_11_lasca_5000_1.txt"
+    },
+    "width": 1266,
+    "height": 80
+  }
+
+  _config:Track;
+
+  /**
+   * 
+   * @param tilesetUid the uuid of the tile set on the provided server url
+   * @param type the track type to render the track as
+   * @param server the server the tileset is on including /api/v1 Ex: "http://higlass.io/api/v1"
+   */
+  constructor(tilesetUid:string, type:TrackType, name:string, server:string=robinConfig.higlassApiUrlV1){
+    this._config=JSON.parse(JSON.stringify(this._defaultConfig));
+    this._config.server=server;
+    this._config.tilesetUid=tilesetUid;
+    this._config.type=type;
+    this._config.options.name=name;
+    i++;
+  }
+
+
+  /**
+   * @returns the higlass obj for this track
+   */
+  getConfig(){
+    return this._config;
+  }
+
+
+}
+
+
+export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}[])}) => {
   const container = document.getElementById('higlass-container');
   const server = "//higlass.io/api/v1" ; //"http://localhost:8888/api/v1"
+
+  // "trackSourceServers": [
+  //   "/api/v1",
+  //   "http://higlass.io/api/v1"
+  // ],
+
+  let tracks = props.uids.filter(uuid=>uuid.type&&uuid.uid).map(uidObj=>{
+      let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+      return track.getConfig();
+  })
+
+  console.log(tracks)
 
   const config = {
     "editable": true,
     "zoomFixed": false,
     "trackSourceServers": [
+      robinConfig.higlassApiUrl,
+      robinConfig.higlassApiUrlV1,
       "/api/v1",
       "http://higlass.io/api/v1"
     ],
@@ -168,7 +242,8 @@ export const HiGlassComponentWrapper = () => {
               },
               "width": 1506,
               "height": 156
-            }
+            },
+            ...tracks
           ],
           "left": [],
           "center": [],

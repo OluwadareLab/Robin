@@ -1,0 +1,61 @@
+# Use an appropriate base image
+FROM ubuntu:latest
+
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    apt-get install -y wget && \
+    apt-get install -y software-properties-common dirmngr && \
+    apt-get install -y libcurl4-openssl-dev 
+
+# Add R repository and key
+RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+
+RUN add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" 
+
+# Install R
+RUN apt-get update && \
+    apt install r-base r-base-dev -y
+
+# install R deps
+RUN Rscript -e "install.packages('data.table')"
+RUN Rscript -e "install.packages('optparse')"
+RUN Rscript -e "install.packages('BiocManager')"
+RUN Rscript -e "BiocManager::install('GenomicRanges')"
+
+#node deps
+RUN apt-get install -y gnupg curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+RUN . ~/.nvm/nvm.sh && nvm install --lts && nvm use --lts
+
+
+#mongodb
+
+RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+    gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+   --dearmor
+RUN apt-get update && apt-get install -y apt-transport-https
+RUN apt-get install -y curl
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
+RUN echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+
+RUN apt-get update && apt-get install -y mongodb-org=4.4.15 mongodb-org-server=4.4.15 mongodb-org-shell=4.4.15 mongodb-org-mongos=4.4.15 mongodb-org-tools=4.4.15
+RUN apt-get install -y python
+
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 20.11.1
+
+# Install nvm with node and npm
+RUN mkdir -p $NVM_DIR \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
+
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
+
+RUN npm install
+
+CMD [ "npm run start-api-worker" ]

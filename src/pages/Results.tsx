@@ -4,7 +4,8 @@ import { Line } from 'react-chartjs-2';
 import { HiGlassComponent, HiGlassComponentWrapper } from '../components/visualizationTools/HiGlass/HIGlass';
 import {GraphComponent} from '../components/graph/simpleGraph';
 import { Graph } from '../components/graph/exampleGraph';
-import _ from "lodash"; // cool kids know _ is low-dash
+import _ from "lodash"; // _ is low-dash
+import Select from 'react-select'
 import { ScalableElement } from '../components/misc/scaleableElement';
 
 import { RecoveryComponent, formatDataset } from '../components/recoveryVisualize/recoveryDisplay';
@@ -18,6 +19,11 @@ import { ScatterChart } from '../components/graph/scatterGraph';
 import { ScatterChartWithLine } from '../components/graph/scatterWithLine';
 import { LinierRegressionScatterPlot } from '../components/graph/scatterWithLinierRegresionLine';
 import VennDiagramComponent from '../components/graph/vennDiagram';
+import { RecoveryAndRemWithResolutionSwitch } from '../components/recoveryVisualize/recoveryResolutionSwitcher';
+import { HighLowRecoveryChart } from '../components/recoveryVisualize/highlowRecovery';
+import { TrackType } from '../types';
+import { OverlapComponent } from '../components/graph/overlap/overlap';
+import { OverlapDataSet } from '../components/tempTypes/Types';
 
 interface AnalysisResult {
   method: string;
@@ -34,7 +40,10 @@ const clrs: any = {};
 
 
 export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisResultsPageProps) => {
+  const [higlassUids, setHiglassUids] = useState<{uid:string,type:TrackType}[]>([]);
+  const [overlapData, setOverlapData] = useState<OverlapDataSet>([]);
   const [activeTab, setActiveTab] = useState<string>('Regression');
+  const [activeResolution, setActiveResolution] = useState<string>('5000');
   const [jobResults, setJobResults]  = useState<{toolname:string, files:{resultFileName:string, data:string}[]}[]>([]);
   const [datasets, setDatasets] = useState<any[]>([]);
   const [regressionPoints, setRegressionPoints] = useState<any[]>([]);
@@ -50,7 +59,11 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
   const handleTabSelect = (tab:any) => {
     setActiveTab(tab);
+    return true
+  };
 
+  const handleResolutionSelect = (res:any) => {
+    setActiveResolution(res);
     return true
   };
 
@@ -59,15 +72,6 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   let jobId = params.id
   if(props.example) jobId = "1";
 
-  const getRecoveryMax = (data) =>{
-
-    let testData = _.cloneDeep(data);
-
-    testData.forEach(data=>{
-      data.data = data.data[data.data.length-2];
-    })
-    return testData
-  }
  
   console.log(Object.keys(binVsResVsKbVsResDataset).map(key=>({'name':key,'data':binVsResVsKbVsResDataset[key],category:'none'})));
   const RegressionGraph = (props:{dataset:any,xAxisTitle:string,yAxisTitle:string,title:string}) => {
@@ -94,7 +98,10 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const normalPage = 
   <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
       <Tab key="Overlap" eventKey="Apa_Score" title="Overlap">
-          <VennDiagramComponent/>
+          <OverlapComponent
+            data={overlapData}
+            clrs={clrs}
+          />
       </Tab>
         
       <Tab key="Regression" eventKey="Regression" title="Regression">
@@ -129,30 +136,23 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       
         {Object.keys(recoveryDatasets).map(key=>{
           const recoveryMethodArr = recoveryDatasets[key];
-          const barData = getRecoveryMax(recoveryMethodArr);
-          const data = recoveryMethodArr;
-          console.log(barData);
-          
-
           return (
             <Tab key={`${recoveryMethodArr[0].method}`} eventKey={`${recoveryMethodArr[0].method}`} title={`${recoveryMethodArr[0].method}`}>
               <ScalableElement defaultSize={.5}>
-              <Container>
-                <RecoveryComponent
-                  topTitle={`${recoveryMethodArr[0].method}`}
-                  bottomTitle={`${recoveryMethodArr[0].method} Recovery`}
-                  clrs={clrs}
-                  regex={`${recoveryMethodArr[0].method}`}
-                  barData={barData}
-                  lineData={data}
-                />
-                <RemDisplay
-                  barData={remValues}
-                  bottomTitle={`${recoveryMethodArr[0].method} (REM)`}
-                  clrs={clrs}
-                  regex={`${recoveryMethodArr[0].method}`}
-                />
-              </Container>
+                <Container>
+                  <RecoveryAndRemWithResolutionSwitch
+                    recoveryDatasets={recoveryDatasets}
+                    recoveryDataSetKey={key}
+                    clrs={clrs}
+                    remValues={remValues}
+                  />
+                  {true?<HighLowRecoveryChart
+                    barData={remValues}
+                    bottomTitle={`${recoveryMethodArr[0].method}`} 
+                    clrs={clrs}
+                  />:""}
+                  
+                </Container>
               </ScalableElement>
             </Tab>
           )
@@ -162,7 +162,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       
       <Tab key="higlass" eventKey="higlass" title="higlass">
         <Container>
-          <HiGlassComponentWrapper/>
+          <HiGlassComponentWrapper uids={higlassUids}/>
         </Container>
       </Tab>
   </Tabs>
@@ -176,6 +176,9 @@ function getJobResults(){
 async function setupDataSets (){
   axios.get(apiPaths.jobResults + "?id=" + jobId).then(async (response) => {
     await setJobResults(response.data.results);
+    console.log(response.data);
+    setHiglassUids(response.data.tilesetUids);
+    setOverlapData(response.data.overlapData);
     const results = response.data.results;
     console.log(results)
 
@@ -239,7 +242,9 @@ async function setupDataSets (){
       //if we have enough points to plot our regression
       // if(tempLoopSizes[obj.method].length > 1){
         let obj = toolData.results[0];
+        console.log(obj)
         if(obj){
+          if(!tempLoopSizes[obj.toolName]) tempLoopSizes[obj.toolName] = [];
           tempRegressionPoints[obj.toolName] = {
             'kbVsRes':[],
             'binVsRes':[]
@@ -247,6 +252,7 @@ async function setupDataSets (){
           
           console.log(tempLoopSizes)
           console.log(obj.toolName)
+          console.log(tempLoopSizes[obj.toolName])
           tempLoopSizes[obj.toolName].forEach(loopSizeInfo=>{
             tempRegressionPoints[obj.toolName]['kbVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgKbSize)})
             tempRegressionPoints[obj.toolName]['binVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgBinNumersSize)})
