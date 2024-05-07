@@ -252,6 +252,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
             options={options}
             value={filterResolution}
             inputValue=""
+            className="onTop"
             onChange={(val, other) => setFilterResolution(val)}
           >
           </Select>
