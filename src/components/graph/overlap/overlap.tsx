@@ -117,7 +117,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   console.log(props.data);
   const params = useParams();
   const id = params.id ? parseInt(params.id) : undefined;
-  const [filterResolution, setFilterResolution] = useState<any>(`${props.resolutionFilter ? props.resolutionFilter : (props.data[0] ? props.data[0].resolution : 0)}`)
+  const [filterResolution, setFilterResolution] = useState<any>(props.resolutionFilter ? props.resolutionFilter : (props.data[0] ? props.data[0].resolution : false))
   const [currentCombo, setCurrentCombo] = useState<OverlapDataObj | undefined>(props.data[0] ? props.data[0] : undefined);
   const [updater, setUpdater] = useState<number>(0);
   const [labels, setLabels] = useState<string[]>([]);
@@ -130,10 +130,6 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   console.log(resolutions);
 
   let tempx = 0;
-  function tempBtn() {
-    setCurrentCombo(props.data[tempx++]);
-  }
-
   function updateLabelsAndData() {
     if (typeof currentCombo != 'undefined') {
       let currentDataObj = currentCombo;
@@ -170,6 +166,41 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
     }
   }
 
+  /**
+   * @description called whenever prop data changes. 
+   * Sets filterResolution if they do not already have values.
+   */
+  function setDefaultFilterResolution(){
+    console.log("------------------setting defaults--------------------------");
+    if(!filterResolution){
+      console.log("setting filter resolution")
+      setFilterResolution(options[0]);
+    }
+  }
+
+  /**
+   * @description called whenever prop data changes. 
+   * Sets graph display if they do not already have values.
+   */
+  function setDefaultGraph(){
+    if(data.length < 1){
+      console.log("setting current combo")
+      
+      //if we know what is valid for this resolution choose the first valid combo
+      console.log(validCombos);
+      if(validCombos[0]){
+        let obj = {};
+        validCombos[0].split(":").forEach(toolName=>{
+          obj[toolName]=true;
+        })
+        updateSelection(obj);
+      } else {
+        //else just use the first on in our data
+        setCurrentCombo(props.data[tempx++]);
+      }
+    }
+  }
+
   function getValidCombos() {
     validCombos = [];
     let tempValidOptions: string[] = [];
@@ -191,6 +222,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   useEffect(() => {
     setUpdater(updater + 3.124);
     getValidCombos();
+    setDefaultGraph();
   }, [filterResolution])
 
   useEffect(() => {
@@ -203,17 +235,12 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
     console.log(labels)
   }, [labels])
 
+
+  //set defaults if no values are already selected
   useEffect(() => {
-    function waitTillData() {
-      if (!props.data[0]) {
-        setTimeout(waitTillData, 1000);
-      } else {
-        getValidCombos();
-        tempBtn();
-      }
-    }
-    waitTillData();
-  }, [])
+    setDefaultFilterResolution();
+    console.log("here")
+  }, [props.data])
 
   //format options for resolution switcher
   const options = resolutions.map(res => ({
@@ -250,6 +277,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
           <Select
             name="resolutionSelector"
             options={options}
+            //defaultValue={{ label: "Select Dept", value: 0 }}
             value={filterResolution}
             inputValue=""
             className="onTop"
@@ -269,7 +297,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
             forceUpdate={updater}
           />
         </Col>
-        <Col md={6}>
+        <Col md={8}>
           <VennDiagramComponent
             id={id}
             data={data}

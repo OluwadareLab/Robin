@@ -1,5 +1,5 @@
 import {  Chart as ChartJS, LinearScale } from 'chart.js';
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { VennDiagramChart, VennDiagramController } from "chartjs-chart-venn";
 import { UTIL } from '../../util';
 import { DownloadImg } from './downloadImg';
@@ -26,7 +26,9 @@ type VennDiagramComponentProps = {
   clrs?:any[]
 }
 const VennDiagramComponent = (props:VennDiagramComponentProps) => {
+  const containerRef = useRef(null);
   const [chart,setChart] = useState<VennDiagramChart>();
+  const dimensions = useDimensions(containerRef);
   const chartRef = useRef();
   
   const config = {
@@ -61,20 +63,56 @@ const VennDiagramComponent = (props:VennDiagramComponentProps) => {
   };
 
   useEffect(() => {
+    //get the container of the chart
     const ctx = document.getElementById(`ven:${props.id?props.id:i++}`);
+    //destroy a chart if one already exists
     if(chart)chart.destroy()
+    //set ref to new chart
     chartRef.current=new VennDiagramChart(ctx, config)
+    //set state to new chart
     setChart(chartRef.current);
   }, [props.data]);
 
+  useEffect(()=>{
+    //make chart correct size
+    chartRef.current?.resize(dimensions.width,dimensions.height);
+  },[dimensions])
+
   
   return (
-    <>
+    <div ref={containerRef}>
       <canvas id={`ven:${props.id?props.id:i}`}></canvas>
       <DownloadImg chartRef={chartRef}/>
-    </>
+    </div>
     
   );
 };
+
+// Hook
+//simple hook to resize our graph
+function useDimensions(targetRef) {
+  const getDimensions = () => {
+    return {
+      width: targetRef.current ? targetRef.current.offsetWidth : 0,
+      height: targetRef.current ? targetRef.current.offsetHeight : 0
+    };
+  };
+
+  const [dimensions, setDimensions] = useState(getDimensions);
+
+  const handleResize = () => {
+    setDimensions(getDimensions());
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useLayoutEffect(() => {
+    handleResize();
+  }, []);
+  return dimensions;
+}
 
 export default VennDiagramComponent;
