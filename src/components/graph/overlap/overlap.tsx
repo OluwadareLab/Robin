@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VennDiagramComponent from "../vennDiagram";
 import { useParams } from "react-router-dom";
 import { OverlapDataSet, OverlapDataObj } from "../../tempTypes/Types";
@@ -122,6 +122,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   const [updater, setUpdater] = useState<number>(0);
   const [labels, setLabels] = useState<string[]>([]);
   const [data, setData] = useState<{ sets: string[]; value: any; }[]>([]);
+  const [customLegendWithSelectionState, setCustomLegendWithSelectionState] = useState({});
   const [avalibleOptions, setAvalibleOptions] = useState<string[]>([]);
   let validCombos: string[] = [];
 
@@ -182,7 +183,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
    * @description called whenever prop data changes. 
    * Sets graph display if they do not already have values.
    */
-  function setDefaultGraph(){
+  function setDefaultGraph(data=data){
     if(data.length < 1){
       console.log("setting current combo")
       
@@ -193,12 +194,15 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
         validCombos[0].split(":").forEach(toolName=>{
           obj[toolName]=true;
         })
+        console.log(obj);
+        setCustomLegendWithSelectionState(obj);
         updateSelection(obj);
       } else {
         //else just use the first on in our data
         setCurrentCombo(props.data[tempx++]);
       }
     }
+    return data.length < 1;
   }
 
   function getValidCombos() {
@@ -220,9 +224,11 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   }, [currentCombo])
 
   useEffect(() => {
-    setUpdater(updater + 3.124);
     getValidCombos();
-    setDefaultGraph();
+    //if default graph did not get set clear selection on resolution change
+    if(!setDefaultGraph([])){
+      setUpdater(updater + 3.124);
+    }
   }, [filterResolution])
 
   useEffect(() => {
@@ -287,6 +293,8 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
           <hr />
           <InstructionHeader title='select up to 3 tools to visualize overlap for:' />
           <CustomLegendWithSelection
+            state={customLegendWithSelectionState}
+            setState={setCustomLegendWithSelectionState}
             items={
               avalibleOptions.map(name => ({
                 "label": name,
