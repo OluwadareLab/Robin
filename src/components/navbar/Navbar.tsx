@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, ToggleButton, ButtonGroup } from 'react-bootstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { paths } from "../../config.mjs";
+import { hrefPaths as paths } from "../../config.mjs";
 import { Logo } from "../logo/logo";
 import { DarkModeToggle } from "../misc/darkmodeToggle";
 
@@ -12,7 +12,7 @@ type NavbarProps = {
 /** the navbar for the site. Has little configurability intentionally as it shouldn't be reused elsewhere. */
 export const AppNavbar: React.FC = (props: NavbarProps) => {
     return (
-        <Router>
+        <Router basename="robin">
             <Navbar bg="" expand="lg" style={{padding:0, margin:0}}>
                 <Navbar.Brand  style={{display:"inline-block", width:"50px"}} href={paths.home} ><Logo/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

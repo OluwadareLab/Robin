@@ -1,4 +1,7 @@
 const config = {
+    //used to enable more logging
+    DEBUG:false,
+
     projectName: "Robin: Compherative analysis and visualization of loop perdictions ",
     projectDescription: "An online tool for visualization and anaylisis of chromtin loops.",
 
@@ -13,7 +16,7 @@ const config = {
     /**
      * @description full url of our higlass server
      */
-    higlassApiUrl:"http://localhost:8889",
+    higlassApiUrl:"http://biomlearn.uccs.edu/robinHighglassAPI/",
 
     /**
      * @description full url of the api/v1 of our higlass server where tilesets can be retrieved from
@@ -27,10 +30,13 @@ const config = {
     dataFolderPath:"./data",
 
     /** @description the api path */
-    apiPath:"http://127.0.0.1:8086",
+    apiPath:"http://biomlearn.uccs.edu/robinAPI/", //"http://127.0.0.1:8086",
+
+    /** the port the api should be hosted on */
+    apiPort:8086,
 
     /** @description the path of the actual web server */
-    webPath:"http://localhost:3000",
+    webPath:"http://biomlearn.uccs.edu/robin/", //http://localhost:3000",
 
     /** @description the link to the project's github */
     github:"https://github.com/mattieFM/MohitProjWeb",
@@ -61,16 +67,16 @@ const config = {
     /** the path to the callers overlap script */
     callersOverlapScriptPath: "./callers/overlap/vennCaller.sh",
 
-    /** the port where the api is hosted (defined below)*/
-    apiPort:undefined
+    // /** the port where the api is hosted (defined below)*/
+    // apiPort:undefined
 
 
 }
 
 config.higlassApiUrlV1=`${config.higlassApiUrl}/api/v1`;
 
-/** the port where the api is hosted */
-config.apiPort=config.apiPath.split(":").slice(-1)[0];
+// /** the port where the api is hosted */
+// config.apiPort=config.apiPath.split(":").slice(-1)[0];
 
 /**
  * @description all relative paths within the website
@@ -89,5 +95,12 @@ const paths = {
 
 }
 
-export {paths};
+/**
+ * @description all absulute paths
+ */
+const hrefPaths = {};
+
+Object.keys(paths).forEach(key=>hrefPaths[key]=`/robin${paths[key]}`)
+
+export {paths, hrefPaths};
 export default config;

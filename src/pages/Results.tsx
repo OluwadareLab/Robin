@@ -11,6 +11,7 @@ import { ScalableElement } from '../components/misc/scaleableElement';
 import { RecoveryComponent, formatDataset } from '../components/recoveryVisualize/recoveryDisplay';
 import axios from 'axios';
 import { apiPaths } from '../api/apiConfig';
+import config from '../config.mjs';
 import { useParams } from 'react-router-dom';
 import {BarChart} from '../components/graph/barChart';
 import { UTIL } from '../util';
@@ -24,6 +25,7 @@ import { HighLowRecoveryChart } from '../components/recoveryVisualize/highlowRec
 import { TrackType } from '../types';
 import { OverlapComponent } from '../components/graph/overlap/overlap';
 import { OverlapDataSet } from '../components/tempTypes/Types';
+
 
 interface AnalysisResult {
   method: string;
@@ -73,9 +75,9 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   if(props.example) jobId = "1";
 
  
-  console.log(Object.keys(binVsResVsKbVsResDataset).map(key=>({'name':key,'data':binVsResVsKbVsResDataset[key],category:'none'})));
+  if(config.DEBUG)console.log(Object.keys(binVsResVsKbVsResDataset).map(key=>({'name':key,'data':binVsResVsKbVsResDataset[key],category:'none'})));
   const RegressionGraph = (props:{dataset:any,xAxisTitle:string,yAxisTitle:string,title:string}) => {
-    console.log(props.dataset);
+    if(config.DEBUG)console.log(props.dataset);
    
     const parsedDataSets = Object.keys(props.dataset).map(key=>(
       {
@@ -83,7 +85,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         data:props.dataset[key]
       }
     ))
-    console.log(parsedDataSets)
+    if(config.DEBUG)console.log(parsedDataSets)
     return (
     <GraphComponent 
         datasets ={parsedDataSets}
@@ -94,7 +96,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         radius={5}
       />
     )}
-    console.log(kbVsResDataset)
+    if(config.DEBUG)console.log(kbVsResDataset)
   const normalPage = 
   <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
       <Tab key="Overlap" eventKey="Apa_Score" title="Overlap">
@@ -175,12 +177,14 @@ function getJobResults(){
 
 async function setupDataSets (){
   axios.get(apiPaths.jobResults + "?id=" + jobId).then(async (response) => {
+    console.log("-------------------------all results data-------------------------")
+    console.log(response);
     await setJobResults(response.data.results);
-    console.log(response.data);
+    if(config.DEBUG)console.log(response.data);
     setHiglassUids(response.data.tilesetUids);
     setOverlapData(response.data.overlapData);
     const results = response.data.results;
-    console.log(results)
+    if(config.DEBUG)console.log(results)
 
     const formattedData: {x:number,y:number}[] = [];
     // datasets=[{
@@ -224,7 +228,8 @@ async function setupDataSets (){
 
 
       toolData.results.map(result=>result.data=convertToXYDataset(result.data));
-      console.log(toolData)
+      if(config.DEBUG)console.log(toolData)
+
       //append all datasets
       toolData.results.forEach(obj=>{
         if(!tempDatasets[obj.method]) tempDatasets[obj.method] = [];
@@ -237,85 +242,90 @@ async function setupDataSets (){
       })
 
       tempRemData = [...tempRemData, ...toolData.remResults];
-      console.log(toolData)     
+      if(config.DEBUG)console.log(toolData)     
 
       //if we have enough points to plot our regression
       // if(tempLoopSizes[obj.method].length > 1){
-        let obj = toolData.results[0];
-        console.log(obj)
-        if(obj){
-          if(!tempLoopSizes[obj.toolName]) tempLoopSizes[obj.toolName] = [];
-          tempRegressionPoints[obj.toolName] = {
-            'kbVsRes':[],
-            'binVsRes':[]
-          };
-          
-          console.log(tempLoopSizes)
-          console.log(obj.toolName)
-          console.log(tempLoopSizes[obj.toolName])
-          tempLoopSizes[obj.toolName].forEach(loopSizeInfo=>{
-            tempRegressionPoints[obj.toolName]['kbVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgKbSize)})
-            tempRegressionPoints[obj.toolName]['binVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgBinNumersSize)})
-          })
-    
-          //extract the data
-          tempKbVsRes[obj.toolName]=[]
-          tempRegressionPoints[obj.toolName]['kbVsRes'].forEach(kbVsResElement=>{
-            tempKbVsRes[obj.toolName].push(kbVsResElement);
-          })
-          tempBinVsRes[obj.toolName]=[]
-          tempRegressionPoints[obj.toolName]['binVsRes'].forEach(binVsResElement=>{
-            tempBinVsRes[obj.toolName].push(binVsResElement);
-          })
-    
-    
-          tempBinVsResVsKbVsResDataset[obj.toolName]=[];
-          for (let index = 0; index < tempBinVsRes[obj.toolName].length; index++) {
-            const binVsResElement = tempBinVsRes[obj.toolName][index];
-            const kbVsResElement = tempKbVsRes[obj.toolName][index];
-            tempBinVsResVsKbVsResDataset[obj.toolName].push({
-              y:(kbVsResElement.y/kbVsResElement.x),
-              x:(binVsResElement.y/binVsResElement.x)
-            })
-          }
-    
-          tempBinVsRes[obj.toolName]=tempBinVsRes[obj.toolName].sort((a,b)=>{
-            return(a.x-b.x)
-          });
-          tempKbVsRes[obj.toolName]=tempKbVsRes[obj.toolName].sort((a,b)=>{
-            return(a.x-b.x)
-          });
-    
-          tempBinVsResVsKbVsResDataset[obj.toolName]=tempBinVsResVsKbVsResDataset[obj.toolName].sort((a,b)=>{
-            return(a.x-b.x)
-          });
-
-          let obj2 = {}
-          obj2.data = tempBinVsResVsKbVsResDataset[obj.toolName];
-          obj2.category = obj.category;
-          tempBinVsResVsKbVsResDataset[obj.toolName]=obj2;
-          
-          console.log(tempKbVsRes)
-          console.log(tempBinVsResVsKbVsResDataset)
-    
-          setBinVsResDataset(tempBinVsRes);
-          setKbVsResDataset(tempKbVsRes);
-          setBinVsResVsKbVsResDataset(tempBinVsResVsKbVsResDataset);
-        }
-      
+      let obj = toolData.results[0] || toolData.loopSizeResults[0] || toolData.remResults[0];
+      if(config.DEBUG)console.log(obj)
+      console.log("-------------------firstObj----------------------")
+      console.log(obj);
+      if(obj){
         
-      // }
+        tempRegressionPoints[obj.toolName] = {
+          'kbVsRes':[],
+          'binVsRes':[]
+        };
+        
+        if(!tempLoopSizes[obj.toolName]) tempLoopSizes[obj.toolName] = [];
+        tempLoopSizes[obj.toolName].forEach(loopSizeInfo=>{
+          tempRegressionPoints[obj.toolName]['kbVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgKbSize)})
+          tempRegressionPoints[obj.toolName]['binVsRes'].push({x:parseInt(loopSizeInfo.resolution),y:parseFloat(loopSizeInfo.avgBinNumersSize)})
+        })
+  
+        //extract the data
+        tempKbVsRes[obj.toolName]=[]
+        tempRegressionPoints[obj.toolName]['kbVsRes'].forEach(kbVsResElement=>{
+          tempKbVsRes[obj.toolName].push(kbVsResElement);
+        })
+        tempBinVsRes[obj.toolName]=[]
+        tempRegressionPoints[obj.toolName]['binVsRes'].forEach(binVsResElement=>{
+          tempBinVsRes[obj.toolName].push(binVsResElement);
+        })
+
+        console.log("---------------regression--------------")
+        console.log(tempKbVsRes)
+        console.log(tempBinVsRes)
+        console.log(tempLoopSizes)
+  
+  
+        tempBinVsResVsKbVsResDataset[obj.toolName]=[];
+        for (let index = 0; index < tempBinVsRes[obj.toolName].length; index++) {
+          const binVsResElement = tempBinVsRes[obj.toolName][index];
+          const kbVsResElement = tempKbVsRes[obj.toolName][index];
+          tempBinVsResVsKbVsResDataset[obj.toolName].push({
+            y:(kbVsResElement.y/kbVsResElement.x),
+            x:(binVsResElement.y/binVsResElement.x)
+          })
+        }
+  
+        tempBinVsRes[obj.toolName]=tempBinVsRes[obj.toolName].sort((a,b)=>{
+          return(a.x-b.x)
+        });
+        tempKbVsRes[obj.toolName]=tempKbVsRes[obj.toolName].sort((a,b)=>{
+          return(a.x-b.x)
+        });
+  
+        tempBinVsResVsKbVsResDataset[obj.toolName]=tempBinVsResVsKbVsResDataset[obj.toolName].sort((a,b)=>{
+          return(a.x-b.x)
+        });
+
+        let obj2 = {}
+        obj2.data = tempBinVsResVsKbVsResDataset[obj.toolName];
+        obj2.category = obj.category;
+        tempBinVsResVsKbVsResDataset[obj.toolName]=obj2;
+        
+        if(config.DEBUG)console.log(tempKbVsRes)
+        if(config.DEBUG)console.log(tempBinVsResVsKbVsResDataset)
+  
+        setBinVsResDataset(tempBinVsRes);
+        setKbVsResDataset(tempKbVsRes);
+        setBinVsResVsKbVsResDataset(tempBinVsResVsKbVsResDataset);
+      }
+    
+        
+    // }
     })
 
     
 
-    console.log(tempDatasets)
+    if(config.DEBUG)console.log(tempDatasets)
     setRecoveryDatasets(tempDatasets);
     setRemValues(tempRemData);
     setLoopSizes(tempLoopSizes);
     setRegressionPoints(tempRegressionPoints);
-    console.log(tempRegressionPoints)   
-    console.log(tempLoopSizes)
+    if(config.DEBUG)console.log(tempRegressionPoints)   
+    if(config.DEBUG)console.log(tempLoopSizes)
 
 
   });

@@ -64,3 +64,7 @@ input[type="checkbox"]:checked + .dark-mode-toggle {
 input[type="checkbox"]:checked + .dark-mode-toggle::before {
   transform: translateX(30px);
 }
+
+.onTop {
+  z-index: 10000;
+}
