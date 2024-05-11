@@ -19,7 +19,7 @@ import { Line } from 'react-chartjs-2';
 import { UTIL } from '../../util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DownloadImg } from './downloadImg';
-import { Col, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 
 
@@ -62,7 +62,21 @@ ChartJS.register(
 const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 1)`;
 
 export const GraphComponent = (props: lineChartProps) => {
-  let radius = props.radius ? props.radius : 0;
+  let [baseRadius,setBaseRadius] = useState(0);
+  let [showAllPoints,setShowAllPoints] = useState(0);
+  let radius = props.radius ? props.radius : baseRadius;
+
+  const toggleShowAllPoints = () => {
+    setShowAllPoints(!showAllPoints);
+    setBaseRadius((!showAllPoints) ? 5 : (props.radius ? props.radius : 0));
+  }
+  let renderToggleBtn = false;
+  console.log(props.datasets)
+  props.datasets.forEach(dataset=>{
+    if(dataset.data.filter(point=>!isNaN(point.x)&&!isNaN(point.y)).length==1){
+      renderToggleBtn=true;
+    }
+  })
   const chartRef = useRef(null);
 
   const options = {
@@ -140,6 +154,27 @@ export const GraphComponent = (props: lineChartProps) => {
     <Row>
       <Line options={options} data={graphData} ref={chartRef}/>
     </Row>
+    { (renderToggleBtn && !props.radius) ? 
+      <Container>
+      <Row>
+        <Col md={8}>
+          <p>One or more datasets have only 1 data point, thus not drawing a line.</p>
+        </Col>
+        <Col>
+          <Form.Check 
+            type="switch"
+            id="custom-switch"
+            label="Draw All Points"
+            checked={showAllPoints}
+            onChange={toggleShowAllPoints}
+          />
+        </Col>
+        
+      </Row>
+
+      <hr/>
+      </Container>
+    : ""}
     <Row>
       <Col>
         <DownloadImg chartRef={chartRef}/>

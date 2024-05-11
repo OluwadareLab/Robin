@@ -107,6 +107,7 @@ app.get(apiPaths.jobResults, (req, res) => {
     const overlapData = []
     inputFiles.forEach(file=>{
         let split = file.split("_");
+        categories[split[0]]=split[split.length-1].split(".")[0];
     })
 
     
@@ -231,6 +232,50 @@ app.get(apiPaths.allJobsInfo,  async (req, response) => {
 
 })
 
+/** 
+ * the get path for getting the status of a job
+ * provide id in query
+ */
+app.get(apiPaths.jobStatus, async (req, response) => {
+    //
+    const timeout = setTimeout(() => {
+        response.json({ queue: 404, status: 408 });
+    }, 30000);
+    try {
+        const id = req.query.id;
+        //const title = req.body.title;
+        clearTimeout(timeout);
+        const status = await getJobStatus(id);
+        response.json({ jobStatus: status, status: 200 });
+        console.log(`Job #${id}, has status ${status}.`);
+            
+    } catch (error) {
+        response.json({ status: 400, error: "unexpectedd error occured:\n"+error });
+    }
+})
+
+/** 
+ * the get path for getting the higlass status of a job
+ * provide id in query
+ */
+app.get(apiPaths.jobHiglassToggle, async (req, response) => {
+    //
+    const timeout = setTimeout(() => {
+        response.json({ queue: 404, status: 408 });
+    }, 30000);
+    try {
+        const id = req.query.id;
+        //const title = req.body.title;
+        clearTimeout(timeout);
+        const status = await getJobHiglassStatus(id);
+        response.json({ higlassToggle: status, status: 200 });
+        console.log(`Job #${id}, has status ${status}.`);
+            
+    } catch (error) {
+        response.json({ status: 400, error: "unexpectedd error occured:\n"+error });
+    }
+})
+
 app.get(apiPaths.quePosition, async (req, response) => {
     //
     const timeout = setTimeout(() => {
@@ -299,15 +344,41 @@ app.post(apiPaths.jobInfo, async (req, response) => {
         const title = req.body.title;
         const email = req.body.email || "";
         const description = req.body.description;
+        const higlassToggle = (typeof req.body.higlassToggle !== "undefined") ? (req.body.higlassToggle == true ? 1 : 0) : 0;
         //const title = req.body.title;
 
-        addJob(title, description, email);
+        addJob(title, description, email, STATUSES.NO_DATA, higlassToggle);
         db.all("SELECT last_insert_rowid();", (err, res) => {
             const id = res[0]['last_insert_rowid()'];
             if (id) {
                 clearTimeout(timeout);
                 response.json({ id: id, status: 200 });
                 console.log(`Job #${id}, Title:${title}, Desc:${description} was written to db.`);
+            }
+        });
+    } catch (error) {
+        response.json({ status: 400, error: "Issue parsing your data. please provide a request in the form {title:\"something\", description:\"somthing\", email:\"Optional@optional.com\"" });
+    }
+})
+
+/**
+ * @description set the higlass togle status of a job
+ */
+app.post(apiPaths.higlassToggle, async (req, response) => {
+    const timeout = setTimeout(() => {
+        response.json({ id: null, status: 408 });
+    }, 10000);
+    try {
+        const id = req.body.id;
+        const higlassToggle = req.body.higlassToggle || 1;
+
+        updateJobHiglassToggle(id, higlassToggle);
+        db.all("SELECT last_insert_rowid();", (err, res) => {
+            const id = res[0]['last_insert_rowid()'];
+            if (id) {
+                clearTimeout(timeout);
+                response.json({ id: id, status: 200 });
+                console.log(`Job #${id}, had higlass updated`);
             }
         });
     } catch (error) {
@@ -424,6 +495,17 @@ export function updateJobStatus(jobId, newStatus){
             WHERE ROWID=${jobId}`)
 }
 
+/**
+ * @param {number} jobId the id of the job in the db
+ * @param {boolean} higlassToggle the new status to upadate to
+ */
+export function updateJobHiglassToggle(jobId, higlassToggle){
+    db.run(`
+            UPDATE jobs
+            SET higlass = "${higlassToggle}"
+            WHERE ROWID=${jobId}`)
+}
+
 export async function getAllJobsWithStatus(status){
     return new Promise(resolve =>{
         db.all(`
@@ -442,7 +524,7 @@ export async function getAllJobsWithStatus(status){
  * @param {number} jobId the id of the job in the db
  * @param {STATUSES} newStatus the new status to upadate to
  */
-function getJobStatus(jobId){
+export function getJobStatus(jobId){
     try {
         return new Promise(resolve =>{
             db.all(`
@@ -456,8 +538,28 @@ function getJobStatus(jobId){
     } catch (error) {
         resolve(STATUSES.FAIL);
     }
-    
-    
+}
+
+/**
+ * @description return weather higlass should be used for this job
+ * @param {number} jobId the id of the job in the db
+ */
+export function getJobHiglassStatus(jobId){
+    try {
+        return new Promise(resolve =>{
+            db.all(`
+                SELECT higlassToggle
+                FROM jobs
+                WHERE ROWID=${jobId}`, (err, res) => {
+                    console.log("---------------------------------------higlassToggle-------------");
+                    console.log(res);
+                    if(res) {resolve(res[0].higlassToggle);}
+                    else { resolve(0);}
+                })
+        })
+    } catch (error) {
+        resolve(0);
+    }
 }
 
 /**
@@ -488,13 +590,13 @@ function getAllJobs(){
     })
 }
 
-function addJob(title, description, email = null, status = STATUSES.NO_DATA) {
+function addJob(title, description, email = null, status = STATUSES.NO_DATA, higlassToggle=1) {
     var pad = function(num) { return ('00'+num).slice(-2) };
     var date;
     date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     db.run(
-        `INSERT INTO jobs (title, description, email, status, date)
-         VALUES ("${title}","${description}","${email}","${status}", "${date}");
+        `INSERT INTO jobs (title, description, email, status, date, higlassToggle)
+         VALUES ("${title}","${description}","${email}","${status}", "${date}", "${higlassToggle}");
     `)
 }
 

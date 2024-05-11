@@ -1,0 +1,54 @@
+@import "../styles/transitions";
+
+.content {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  transition: margin-left $fast-transition $easing,
+    margin-right $fast-transition $easing;
+
+  &.has-sub-top-bar {
+    margin-top: 5rem;
+  }
+
+  &.is-full-screen {
+    overflow: hidden;
+  }
+
+  &.no-bottom-margin {
+    margin-bottom: 0;
+  }
+
+  > header {
+    font-size: 1.125em;
+    text-align: justify;
+
+    p {
+      line-height: 1.75em;
+    }
+  }
+
+  /*
+   * -----------------------------------------------------------------------------
+   * Media Queries
+   * -----------------------------------------------------------------------------
+   */
+
+  /* 400px */
+  @media screen and (max-width: 40em) {
+    > header {
+      text-align: left;
+    }
+  }
+}
+
+.content-wrapper-bottom-bar .content {
+  margin-bottom: 1.5rem;
+}
+
+.content-wrapper-has-error .content {
+  margin-top: 0;
+}
+
+.content-wrapper-has-error .right-bar {
+  top: 5rem;
+}

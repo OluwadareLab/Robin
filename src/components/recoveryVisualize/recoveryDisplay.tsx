@@ -32,8 +32,8 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
     const shouldAvg = props.filterResolution=="average";
     const filterRes = (!["all resolutions","average"].includes(props.filterResolution)) ? props.filterResolution : undefined;
 
-    let data:{name:string,data:any}[] = 
-      props.barData
+    function prepareDatasets(dataset){
+      let data:{name:string,data:any}[] = dataset
         .filter(obj=>new RegExp(props.regex, 'i').test(obj.method))
         .filter(obj=>(filterRes ? obj.resolution == filterRes : true))
         .map(value=>
@@ -41,49 +41,58 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
               name:`${value.toolName}_${value.resolution}`,
               data:[value.data]
             }));
-
-    if(shouldAvg){
-      let avgData = {};
-      data.forEach((dataSet)=>{
-        let name = dataSet.name.split('_')[0];
-        if(!avgData[name]) avgData[name] = [];
-        avgData[name] = [...avgData[name], ...dataSet.data]
-      })
-
-      console.log(avgData)
-      
-      Object.keys(avgData).forEach((key)=>{
-        let obj = avgData[key];
-        let count = obj.length;
-        console.log(obj)
-        obj = obj.reduce((lastValue,thisValue)=>{
-          lastValue.x+=thisValue.x;
-          lastValue.y+=thisValue.y;
-          return lastValue;
-        },{"x":0,"y":0});
-        obj.x/=count;
-        obj.y/=count;
-        avgData[key]=obj;
-      });
-
-      data = Object.keys(avgData).map(key=>{
-        return{
-          name:key,
-          data:[avgData[key]]
+    
+        if(shouldAvg){
+          let avgData = {};
+          data.forEach((dataSet)=>{
+            let name = dataSet.name.split('_')[0];
+            if(!avgData[name]) avgData[name] = [];
+            avgData[name] = [...avgData[name], ...dataSet.data]
+          })
+    
+          console.log(avgData)
+          
+          Object.keys(avgData).forEach((key)=>{
+            let obj = avgData[key];
+            let count = obj.length;
+            console.log(obj)
+            obj = obj.reduce((lastValue,thisValue)=>{
+              lastValue.x+=thisValue.x;
+              lastValue.y+=thisValue.y;
+              return lastValue;
+            },{"x":0,"y":0});
+            obj.x/=count;
+            obj.y/=count;
+            avgData[key]=obj;
+          });
+    
+          data = Object.keys(avgData).map(key=>{
+            return{
+              name:key,
+              data:[avgData[key]]
+            }
+          })
         }
-      })
+        return data;
     }
+
+    let barData = prepareDatasets(props.barData);
+    let lineData = prepareDatasets(props.lineData);
+    lineData.forEach(obj=>obj.data=obj.data.flat());
+    console.log(prepareDatasets(formatDataset(props.lineData)));
+    console.log(lineData);
+    console.log(formatDataset(props.lineData));
     
     return (
         <>
         <GraphComponent 
-            datasets={formatDataset(props.lineData)}
+            datasets={lineData}
             xAxisTitle='Number of Loops Predicted'
             yAxisTitle='Recovery Rate'
             title={props.topTitle}
             clrs={props.clrs}
           />
-          <hr/>
+
           <Row>
             {props.insertAfterFirstGraph?props.insertAfterFirstGraph:""}
           </Row>
@@ -91,7 +100,7 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
           <BarChart 
             yAxisTitle='Recovery Rate'
             title={props.bottomTitle}
-            data={data}
+            data={barData}
             clrs={props.clrs}
             labels={[""]}
           />

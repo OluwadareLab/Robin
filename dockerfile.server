@@ -17,13 +17,16 @@ RUN add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_r
 RUN apt-get update && \
     apt install r-base r-base-dev -y
 
+# Install Bed Tools
+RUN apt-get install -y bedtools
+
 # install R deps
 RUN Rscript -e "install.packages('data.table')"
 RUN Rscript -e "install.packages('dplyr')"
 RUN Rscript -e "install.packages('optparse')"
 RUN Rscript -e "install.packages('BiocManager')"
 RUN Rscript -e "BiocManager::install('GenomicRanges')"
-RUN Rscript -e "BiocManager::install('CAGEfightR')"
+# RUN Rscript -e "BiocManager::install('CAGEfightR')"
 RUN Rscript -e "install.packages('venn')"
 RUN Rscript -e "install.packages('VennDiagram')"
 

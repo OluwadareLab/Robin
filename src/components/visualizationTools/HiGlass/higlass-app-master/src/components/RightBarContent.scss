@@ -1,0 +1,17 @@
+@import "../styles/colors";
+@import "../styles/transitions";
+
+.right-bar-content {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  background: $gray-lightest;
+  border-bottom: 0;
+
+  .tab-content {
+    padding: 0.25rem;
+  }
+}
+
+.right-bar.is-shown > .right-bar-content {
+  box-shadow: inset 0 -1px 0 0 $gray-lightest-rgba;
+}

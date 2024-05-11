@@ -59,6 +59,18 @@ export const RecoveryAndRemWithResolutionSwitch = (props:RecoveryAndRemWithResol
 
     return (
         <>
+            <>
+                <label htmlFor='resolutionSelector'>Resolution</label>
+                <Select
+                    name="resolutionSelector"
+                    options={options}
+                    value={resolution}
+                    onChange={(val,other)=>setResolution(val)}
+                    >
+                        
+                </Select>
+            </>
+            <hr/>
             <RecoveryComponent
                 topTitle={`${recoveryMethodArr[0].method}`}
                 bottomTitle={`${recoveryMethodArr[0].method} Recovery`}
@@ -67,19 +79,6 @@ export const RecoveryAndRemWithResolutionSwitch = (props:RecoveryAndRemWithResol
                 barData={barData}
                 lineData={data}
                 filterResolution={resolution.value}
-                insertAfterFirstGraph={
-                    <>
-                        <label htmlFor='resolutionSelector'>Resolution</label>
-                        <Select
-                            name="resolutionSelector"
-                            options={options}
-                            value={resolution}
-                            onChange={(val,other)=>setResolution(val)}
-                            >
-                                
-                        </Select>
-                    </>
-                }
             />
             <RemDisplay
                 filterResolution={resolution.value}

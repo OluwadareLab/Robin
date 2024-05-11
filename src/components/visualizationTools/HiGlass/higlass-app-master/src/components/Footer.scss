@@ -1,0 +1,136 @@
+@import "../styles/colors";
+@import "../styles/transitions";
+@import "../styles/underline";
+
+.footer {
+  padding: 0.66rem 0;
+  color: $gray-dark;
+  border-top: 2px solid $gray-lightest;
+
+  a {
+    @include underline($black, 1px, 1px);
+    box-shadow: none;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $black;
+      box-shadow: none;
+    }
+
+    &.is-active {
+      color: $primary;
+      font-weight: bold;
+      box-shadow: inset 0 -2px 0 0 $primary;
+    }
+  }
+
+  .icon {
+    height: 2em;
+    margin: 0 0.2em;
+  }
+
+  .icon-logo-hms,
+  .icon-logo-seas {
+    width: 2em;
+  }
+
+  .icon-logo-hms {
+    margin-left: 0;
+  }
+
+  .icon-logo-mit {
+    width: 3.5rem;
+    padding: 0.1em;
+  }
+
+  nav {
+    li {
+      a {
+        margin: 0 0.25rem;
+        padding: 0.125rem;
+      }
+    }
+  }
+
+  .copyright {
+    margin: 0.2rem 0 0 0;
+    font-size: 0.8em;
+    color: transparentize($gray-dark, 0.5);
+  }
+
+  #run-by {
+    margin: -0.66rem 0 0.66rem 0;
+    padding: 0.66rem 0;
+    color: $white;
+    background: $primary;
+
+    .run-by-slogan {
+      padding-bottom: 0.25rem;
+    }
+
+    .run-by-organization {
+      margin-bottom: -0.5rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+
+      a {
+        color: inherit !important;
+
+        &:after {
+          background: $white
+        }
+      }
+    }
+
+    .run-by-logo {
+      margin-right: 0.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .run-by-contact {
+      margin-bottom: -0.5rem;
+      padding: 0.25em 0.5em;
+      border: 1px solid $white;
+      background: $primary;
+
+      a {
+        color: inherit !important;
+
+        &:after {
+          display: none;
+        }
+      }
+
+      &:hover {
+        color: $black;
+        background: $white;
+      }
+    }
+  }
+
+  /*
+   * -----------------------------------------------------------------------------
+   * Media Queries
+   * -----------------------------------------------------------------------------
+   */
+
+  /* 400px */
+  @media screen and (max-width: 40em) {
+    padding: 1rem 0;
+
+    .wrap {
+      align-items: flex-start;
+    }
+
+    nav > ul {
+      flex-direction: column;
+      text-align: right;
+
+      li {
+        margin-bottom: 0.25em;
+      }
+    }
+  }
+}

@@ -17,7 +17,13 @@ const apiPaths = {
     /** @description the path for submitting a job */
     jobSubmit:"/submit",
     /** the path for getting all jobs in the database for the jobs page */
-    allJobsInfo:"/jobs"
+    allJobsInfo:"/jobs",
+    /**get: the path for getting the status of a job */
+    jobStatus:"/status",
+    /**post: the path for updating higlass toggle */
+    higlassToggle:"/higlassToggle",
+    /**get: the path for getting higlass toggle */
+    jobHiglassToggle:"/getHiglassToggle"
 
 }
 
@@ -34,7 +40,9 @@ const STATUSES = {
     /** all processing has run. job is done and can be viewed */
     DONE: "done",
     /** job has failed */
-    FAIL: "fail"
+    FAIL: "fail",
+    /** if the job is actively being run */
+    RUNNING:"running"
 }
 
 export {apiPaths, STATUSES};

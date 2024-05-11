@@ -1,0 +1,62 @@
+@import "../styles/colors";
+@import "../styles/transitions";
+
+.higlass-placeholder {
+  padding: 1rem;
+  color: white;
+  border-radius: 0.25rem;
+  transition: color $normal-transition $easing,
+              box-shadow $normal-transition $easing;
+
+  .top-track,
+  .left-track,
+  .center-track {
+    border-radius: 0.25rem;
+    background: $gray-lightest;
+    transition: background $normal-transition $easing;
+  }
+
+  .top-track {
+    height: 2rem;
+    margin: 0 0 0.5rem 2.5rem;
+  }
+
+  .left-track {
+    width: 2rem;
+    margin: 0 0.5rem 0 0;
+  }
+
+  .left-track,
+  .center-track {
+    min-height: 6rem;
+  }
+
+  span {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-top: 0;
+  }
+
+  &:focus,
+  &:hover {
+    color: $primary;
+    outline: none;
+
+    .top-track,
+    .left-track,
+    .center-track {
+      background: transparentize($primary, 0.9);
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px $blue-highlight,
+                inset 0 0 0 2px $blue-highlight;
+    outline: none;
+  }
+}

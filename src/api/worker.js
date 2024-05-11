@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Job } from './models/job.js';
 import cron from 'node-cron';
 import { STATUSES } from './apiConfig.js';
-import {updateJobStatus, getAllJobsWithStatus} from './mainAPI.js'
+import {updateJobStatus, getAllJobsWithStatus, getJobStatus} from './mainAPI.js'
 import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
 import {url} from "./mongo.config.js";
@@ -19,9 +19,9 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+/** simple function to get all combos of an array */
 function getCombinations(valuesArray)
 {
-
     var combi = [];
     var temp = [];
     var slent = Math.pow(2, valuesArray.length);
@@ -47,52 +47,150 @@ function getCombinations(valuesArray)
     return combi;
 }
 
+function sendEmailStart(job){
+  //email send
+  if(job.email){
+    //if user provided emial
+    var mailOptions = {
+      from: config.email,
+      to: job.email,
+      subject: `Your job, job #${job.rowid} ${config.projectName} has been submitted.`,
+      text: `you can view the status at: ${config.webPath}/${paths.queue}${job.rowid}`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
+}
+
+function sendEmailEnd(job){
+  //email send
+  if(job.email){
+    //if user provided emial
+    var mailOptions = {
+      from: config.email,
+      to: job.email,
+      subject: `Your job, job #${job.rowid} ${config.projectName} has been completed..`,
+      text: `you can view the results at: ${config.webPath}/${paths.results}${job.rowid}`
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
+}
+
+/**
+ * @description a simple script to run a child script in bash and catch/log errors
+ * @param {*} script the script to run
+ * @param {*} name a descriptive name to print to console for info
+ */
+function runChildScript(script, name){
+  return new Promise(res=>{
+    console.log(`running: ${name} with script: ${script}`)
+    const child = exec(script, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing ${name}: ${error}`);
+        res();
+      }
+      if (stderr) {
+        console.error(`${name} stderr: ${stderr}`);
+        res();
+      }
+      console.log(`${name} output: ${stdout}`);
+      res();
+    });
+  })
+}
+
+/**
+ * @description injest a reference file into higlass
+ * @param {*} referenceFile 
+ * @param {*} chromSizes 
+ * @returns promise for script to complete
+ */
+function injestReferenceFile(referenceFile, chromSizes){
+    let job = referenceFile.job;
+    let fileName = referenceFile.file;
+    console.log(chromSizes);
+    console.log(referenceFile);
+    console.log(fileName);
+    let script = `bash ${config.callersHiglassReferenceInjestScript} ${fileName} ${job.rowid} ${referenceFile.protein} ${chromSizes.fileName} ${chromSizes.fileName.split(".").pop()}`;
+    return(runChildScript(script, "injest reference file"));
+}
+
+/**
+ * 
+ * @param {{file:File,job:any,protein:string}[]} referenceFilesArr 
+ * @param {File[]} chromSizesArr
+ * @returns Promise[] 
+ */
+function injestAllReferenceFiles(referenceFilesArr,chromSizesArr){
+  let promises = [];
+  //injest all reference files into higlass
+  chromSizesArr.forEach(chromSizeFile=>{
+    referenceFilesArr.forEach(referenceFile=>{
+      promises.push(injestReferenceFile(referenceFile, chromSizeFile));
+    })
+  })
+  return promises;
+}
+
 mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongooseErr:"+error));
 
 let jobIsRunning = false;
 // Schedule a task to run every minute
 cron.schedule('* * * * *', async () => {
   let recoveryProtiens;
+  let chromSizes;
   let jobID;
+
   try {
     console.log("trying to find pending jobs")
-    const pendingJobs = await getAllJobsWithStatus(STATUSES.HAS_DATA_IN_QUE_WAITING)
+    const pendingJobs = [...await getAllJobsWithStatus(STATUSES.HAS_DATA_IN_QUE_WAITING), ...await getAllJobsWithStatus(STATUSES.RUNNING)];
     console.log("found pending jobs")
     console.log(pendingJobs);
     if (pendingJobs.length > 0 && !jobIsRunning) {
       jobIsRunning=true;
       const job = pendingJobs[0];
       jobID = job.rowid;
-      var date = new Date();
-      let dateSubmitted = Date.parse(job.date);
-      if(Date.now() - dateSubmitted > config.maxjobage){
-        updateJobStatus(jobID, STATUSES.FAIL);
+
+      //if job id as not defined cancel
+      if(!jobID)return;
+
+      //cancel if job is not waiting in que
+      console.log("----checking job status-----");
+      const jobStatus = await getJobStatus(jobID);
+      console.log(`jobStatus:${jobStatus}`);
+      console.log(`jobStatus is inQueue:${jobStatus === STATUSES.HAS_DATA_IN_QUE_WAITING}`);
+      if(jobStatus === STATUSES.HAS_DATA_IN_QUE_WAITING){
+        updateJobStatus(jobID, STATUSES.RUNNING);
+        var date = new Date();
+        let dateSubmitted = Date.parse(job.date);
+        if(Date.now() - dateSubmitted > config.maxjobage){
+          if(jobID)
+          updateJobStatus(jobID, STATUSES.FAIL);
+          return;
+        }
+      } else {
         return;
       }
-      //email send
-      if(job.email){
-        //if user provided emial
-        var mailOptions = {
-          from: config.email,
-          to: job.email,
-          subject: `Your job, job #${job.rowid} ${config.projectName} has been submitted.`,
-          text: `you can view the status at: ${config.webPath}/${paths.queue}${job.rowid}`
-        };
 
-        transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
-      }
+      sendEmailStart(job);
 
       //---------------------
       //main execution of job
       //---------------------
       console.log(`Executing job: ${job.rowid}`);
-      
       const path = `${config.dataFolderPath}/job_${job.rowid}/data`;
       console.log(path)
       const files = fs.readdirSync(path);
@@ -101,29 +199,39 @@ cron.schedule('* * * * *', async () => {
       // Replace 'script.sh' with the path to your .sh script
 
       //all the tool data
-      const jobInfo = files.filter(file=>!file.startsWith("reference_")).map(file=>{
+      const jobInfo = files.filter(file=>!file.startsWith("reference_")&&!file.startsWith("chrom.sizes")).map(file=>{
         const splitFile = file.split("_")
         return {
           resolution: parseInt(splitFile[1]),
           tool: splitFile[0],
           fileName:file,
         }
-      })
+      });
 
-      console.log("---------------JobsINFOn---------------")
-      console.log("stringifyed:")
-      console.log(JSON.stringify(jobInfo))
-      console.log("base:")
-      console.log(jobInfo)
+      console.log("---------------JobsINFOn---------------");
+      console.log("stringifyed:");
+      console.log(JSON.stringify(jobInfo));
+      console.log("base:");
+      console.log(jobInfo);
 
       //all the protien reference files
       recoveryProtiens = files.filter(file=>file.startsWith("reference_")).map(file=>{
+        const splitFile = file.split("_");
+        return {
+          protein: splitFile[1],
+          file:file,
+          job:job
+        }
+      });
+
+      //all the chrom sizes files files
+      chromSizes = files.filter(file=>file.startsWith("chrom.sizes")).map(file=>{
         const splitFile = file.split("_")
         return {
           protein: splitFile[1],
           fileName:file,
         }
-      })
+      });
 
       jobInfo.forEach(job=>{
         //create all folders
@@ -131,6 +239,10 @@ cron.schedule('* * * * *', async () => {
       });
 
       let promises = [];
+
+      //----------HIGLASS INJESTION---------
+      //reference files
+      promises = [...promises,...injestAllReferenceFiles(recoveryProtiens, chromSizes)];
 
       //OVERLAP RUNNER
 
@@ -258,24 +370,7 @@ cron.schedule('* * * * *', async () => {
 
 
       //email send
-      if(job.email){
-        //if user provided emial
-        var mailOptions = {
-          from: config.email,
-          to: job.email,
-          subject: `Your job, job #${job.rowid} ${config.projectName} has been completed..`,
-          text: `you can view the results at: ${config.webPath}/${paths.results}${job.rowid}`
-        };
-
-        transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
-      }
-
+      sendEmailEnd(job);
 
     promises = [];
 
@@ -314,19 +409,25 @@ cron.schedule('* * * * *', async () => {
 
       })
       await Promise.all(promises);
-      updateJobStatus(jobID, STATUSES.DONE);
+      if(jobID) updateJobStatus(jobID, STATUSES.DONE);
     } catch (error) {
       jobIsRunning=false;
+      if(jobID) updateJobStatus(jobID, STATUSES.FAIL);
       console.log(error);
     }
     } else {
+      jobIsRunning=false
+      if(jobID) updateJobStatus(jobID, STATUSES.FAIL);
       console.log('No pending jobs');
     }
     
   } catch (error) {
     jobIsRunning=false;
+    if(jobID) updateJobStatus(jobID, STATUSES.FAIL);
     console.error('Error executing job:', error);
   }
+
+  jobIsRunning=false
 
 
   

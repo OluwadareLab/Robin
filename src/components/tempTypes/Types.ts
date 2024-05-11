@@ -21,6 +21,36 @@ export class ReferenceFile {
     }
 }
 
+export type FileAndName = {
+    file:File,
+    name:string
+}
+
+export class ChromFile {
+    file?:File;
+    chromName:string;
+    fileName:string;
+
+    constructor(file=undefined,chromName=""){
+        this.file=file;
+        this.chromName=chromName;
+    }
+
+    /** create nwe ChromFile from existing */
+    fromExisting(chromFile:ChromFile){
+        this.file=chromFile.file;
+        this.chromName=chromFile.chromName;
+        this.fileName=chromFile.fileName;
+        return this;
+    }
+
+    /** check if this chrom file has vaild data */
+    isValid(){
+        return this.file instanceof File && this.chromName;
+    }
+
+}
+
 /**
  * @description a type for representing the overlap data for venn diagrams
  */
@@ -81,4 +111,6 @@ export interface jobSetupFormData {
    description: string;
    /** @description the value of the email input */
    email?: string;
+   /**@description optinoal wether to use higlass */
+   higlassToggle?:number;
 }

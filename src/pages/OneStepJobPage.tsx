@@ -21,11 +21,13 @@ import ToolFormUploadForm from "../components/UploadPipeLine/majorSteps/ToolForm
 import { ProtienReferenceUploadForm } from "../components/UploadPipeLine/majorSteps/ProtienReferenceUploadForm"
 import FileUploadDisplay from "../components/fileUpload/FileUploadDisplay"
 import { useNavigate, useParams } from "react-router-dom"
-import { ToolData, fileSet } from "../components/tempTypes/Types"
+import { ChromFile, ToolData, fileSet } from "../components/tempTypes/Types"
 import { jobSetupFormData } from "../components/tempTypes/Types"
 import { apiPaths } from "../api/apiConfig"
 import { paths } from "../config.mjs"
 import axios from "axios"
+import { HiglassUploadForm } from "../components/UploadPipeLine/higlassUploadForm"
+import { HiglassToggle } from "../components/UploadPipeLine/higlassToggle"
 
 type OneStepJobUploadPageProps = {
 
@@ -41,6 +43,8 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     const [protienRefFiles, setProtienRefFiles] = useState<File[]>([]);
     const [protienRefFileNames, setProtienRefFileNames] = useState<string[]>([]);
     const [toolData, setToolData] = useState<ToolData[]>([]);
+    const [useHiglass, setUseHiglass] = useState<boolean>(true);
+    const [chromSizesFile, setChromSizesFile] = useState<ChromFile>(new ChromFile());
 
     const [fileSets, setFilesets] = useState<fileSet[]>([]);
     const [basicInfo, setBasicInfo] = useState<any>({});
@@ -64,10 +68,15 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
             }
         })
 
-        setFilesets([toolData, protienRefFilesets])
+        let arr = [toolData, protienRefFilesets];
+
+        if(chromSizesFile.isValid()) arr.push([{file:chromSizesFile.file, name:chromSizesFile.fileName}]);
+        console.log({file:chromSizesFile.file, name:chromSizesFile.fileName});
+        console.log(chromSizesFile);
+        setFilesets(arr)
 
         
-    },[protienRefFiles,protienRefFileNames,toolData])
+    },[protienRefFiles,protienRefFileNames,toolData,chromSizesFile])
 
 
     //get job id from url
@@ -83,6 +92,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
             email: basicInfo.email,
             description: basicInfo.description,
             title: basicInfo.jobTitle,
+            higlassToggle:useHiglass === true ? 1 : 0,
         }
 
         //add job info 
@@ -140,17 +150,27 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                     <BasicJobInfoInputs setData={setBasicInfo}/>
                 </Row>
                 <hr/>
+
                 <Row>
                     <ToolFormUploadForm
                         setToolDataCb={setToolData}
                     />
                 </Row>
                 <hr/>
+
                 <Row>
                     <ProtienReferenceUploadForm
                         setRefFileNames={setProtienRefFileNames}
                         setRefFiles={setProtienRefFiles}
                     />
+                </Row>
+                <hr/>
+                <Row>
+                    <HiglassUploadForm 
+                    checked={useHiglass} 
+                    setChecked={setUseHiglass} 
+                    chromSizesFile={chromSizesFile} 
+                    setChromSizesFile={setChromSizesFile}/>
                 </Row>
             </Container>
             <FileUploadDisplay 

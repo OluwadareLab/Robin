@@ -67,6 +67,9 @@ const config = {
     /** the path to the callers overlap script */
     callersOverlapScriptPath: "./callers/overlap/vennCaller.sh",
 
+    /** the path to the injest reference file into higlass script */
+    callersHiglassReferenceInjestScript: "./callers/injestIntoHiglass/injestReferenceFile.sh",
+
     // /** the port where the api is hosted (defined below)*/
     // apiPort:undefined
 
@@ -101,6 +104,7 @@ const paths = {
 const hrefPaths = {};
 
 Object.keys(paths).forEach(key=>hrefPaths[key]=`/robin${paths[key]}`)
+
 
 export {paths, hrefPaths};
 export default config;

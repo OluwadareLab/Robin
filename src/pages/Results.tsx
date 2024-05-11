@@ -25,6 +25,7 @@ import { HighLowRecoveryChart } from '../components/recoveryVisualize/highlowRec
 import { TrackType } from '../types';
 import { OverlapComponent } from '../components/graph/overlap/overlap';
 import { OverlapDataSet } from '../components/tempTypes/Types';
+import { getJobStatus } from '../api/mainAPI';
 
 
 interface AnalysisResult {
@@ -56,6 +57,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const [kbVsResDataset, setKbVsResDataset] = useState<any[]>([]);
   const [binVsResDataset, setBinVsResDataset] = useState<any[]>([]);
   const [binVsResVsKbVsResDataset, setBinVsResVsKbVsResDataset] = useState<any>({});
+  const [renderHiglass, setRenderHiglass] = useState<boolean>(false);
 
   const params = useParams()
 
@@ -68,6 +70,15 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
     setActiveResolution(res);
     return true
   };
+
+  useEffect(()=>{
+    axios.get(apiPaths.jobHiglassToggle+ "?id=" + jobId).then(response=>{
+      console.log(response)
+      if(response.status==200){
+        setRenderHiglass(response.data.higlassToggle);
+      }
+  })
+  },[])
 
   
 
@@ -134,8 +145,6 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         </Container>
       </ScalableElement>
       </Tab>
-
-      
         {Object.keys(recoveryDatasets).map(key=>{
           const recoveryMethodArr = recoveryDatasets[key];
           return (
@@ -162,11 +171,14 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         )
         }
       
+      {renderHiglass?
       <Tab key="higlass" eventKey="higlass" title="higlass">
         <Container>
           <HiGlassComponentWrapper uids={higlassUids}/>
         </Container>
       </Tab>
+      :""}
+      
   </Tabs>
 
 function getJobResults(){

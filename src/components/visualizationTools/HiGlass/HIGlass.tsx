@@ -3,7 +3,7 @@ import * as hglib from './higlass/app/scripts/hglib';
 import 'higlass/dist/hglib.css';
 import { HiGlassComponent } from './higlass/app/scripts/hglib';
 import {default as robinConfig} from '../../../config.mjs';
-
+import deepClone from '../../../utils/deep-clone.js';
 import {Track,TrackType} from "../../../types.ts"
 
 let i = 0;
@@ -58,8 +58,6 @@ class HiglassTrack {
   getConfig(){
     return this._config;
   }
-
-
 }
 
 
@@ -72,9 +70,18 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
   //   "http://higlass.io/api/v1"
   // ],
 
-  let tracks = props.uids.filter(uuid=>uuid.type&&uuid.uid).map(uidObj=>{
+  let tracks:Track[] = []
+  
+  //add all reference lines first
+  props.uids.filter(uuid=>uuid.type=="line"&&uuid.uid).forEach(uidObj=>{
       let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
-      return track.getConfig();
+      tracks.push(track.getConfig());
+  })
+
+  //add all results files
+  props.uids.filter(uuid=>uuid.type!="line"&&uuid.uid).forEach(uidObj=>{
+    let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+    tracks.push(track.getConfig());
   })
 
   console.log(tracks)
@@ -94,6 +101,7 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
         "tracks": {
           "top": [
             {
+              "editable": true,
               "filetype": "cooler",
               "server": "http://higlass.io/api/v1",
               "tilesetUid": "e5QaKN16SdWyIWKAidq2Kw",
@@ -115,7 +123,6 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
                   "rgba(208,2,27,1.0)",
                   "black"
                 ],
-                "maxZoom": null,
                 "minWidth": 100,
                 "minHeight": 40,
                 "trackBorderWidth": 0,
@@ -143,106 +150,6 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
                 }
               ]
             },
-            {
-              "filetype": "beddb",
-              "server": "http://higlass.io/api/v1",
-              "tilesetUid": "N3g_OsVITeulp6cUs2EaJA",
-              "uid": "ZMa4P0gWQdmiDy1VDIvXvQ",
-              "type": "bedlike",
-              "options": {
-                "alternating": false,
-                "annotationStyle": "box",
-                "fillColor": "blue",
-                "fillOpacity": 0.3,
-                "fontSize": "10",
-                "axisPositionHorizontal": "right",
-                "labelColor": "black",
-                "labelPosition": "hidden",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "minHeight": 20,
-                "maxAnnotationHeight": null,
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "valueColumn": null,
-                "colorEncoding": "itemRgb",
-                "showTexts": false,
-                "colorRange": [
-                  "#000000",
-                  "#652537",
-                  "#bf5458",
-                  "#fba273",
-                  "#ffffe0"
-                ],
-                "colorEncodingRange": false,
-                "separatePlusMinusStrands": true,
-                "annotationHeight": 16,
-                "name": "CTCF motifs (hg19)"
-              },
-              "width": 1506,
-              "height": 126
-            },
-            {
-              "filetype": "beddb",
-              "server": "http://higlass.io/api/v1",
-              "tilesetUid": "OHJakQICQD6gTD7skx4EWA",
-              "uid": "QE9gci95QI6uTPCM-thStQ",
-              "type": "gene-annotations",
-              "options": {
-                "fontSize": 10,
-                "labelColor": "black",
-                "labelBackgroundColor": "#ffffff",
-                "labelPosition": "hidden",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "minHeight": 24,
-                "plusStrandColor": "blue",
-                "minusStrandColor": "red",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "showMousePosition": false,
-                "mousePositionColor": "#000000",
-                "geneAnnotationHeight": 16,
-                "geneLabelPosition": "outside",
-                "geneStrandSpacing": 4,
-                "name": "Gene Annotations (hg19)"
-              },
-              "width": 1506,
-              "height": 90
-            },
-            {
-              "filetype": "hitile",
-              "server": "http://higlass.io/api/v1",
-              "tilesetUid": "PjIJKXGbSNCalUZO21e_HQ",
-              "uid": "QMmSuVnKQj2N8ZSUTAmHEw",
-              "type": "line",
-              "options": {
-                "align": "bottom",
-                "labelColor": "[glyph-color]",
-                "labelPosition": "topLeft",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": false,
-                "labelShowAssembly": true,
-                "axisLabelFormatting": "scientific",
-                "axisPositionHorizontal": "right",
-                "barFillColor": "darkgreen",
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "labelTextOpacity": 0.4,
-                "barOpacity": 1,
-                "name": "GM12878-E116-H3K27ac.fc.signal"
-              },
-              "width": 1506,
-              "height": 156
-            },
             ...tracks
           ],
           "left": [],
@@ -252,14 +159,6 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
           "whole": [],
           "gallery": []
         },
-        "initialXDomain": [
-          700247244.6536919,
-          1086268436.85133
-        ],
-        "initialYDomain": [
-          813469769.3277305,
-          854481316.97157
-        ],
         "layout": {
           "w": 12,
           "h": 12,
@@ -287,7 +186,14 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
   const options = {bounded: false} 
   const ref = React.createRef();
   return (
-    <HiGlassComponent ref={ref} options={options || {}} viewConfig={config} />
+    <>
+    <HiGlassComponent 
+    ref={ref} 
+    options={deepClone(options || {})} 
+    viewConfig={deepClone(config)}
+     />
+    </>
+    
   );
 };
 
