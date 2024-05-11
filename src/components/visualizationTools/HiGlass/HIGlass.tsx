@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as hglib from './higlass/app/scripts/hglib';
 import 'higlass/dist/hglib.css';
 import { HiGlassComponent } from './higlass/app/scripts/hglib';
 import {default as robinConfig} from '../../../config.mjs';
 import deepClone from '../../../utils/deep-clone.js';
 import {Track,TrackType} from "../../../types.ts"
+import { Button, Container } from 'react-bootstrap';
 
 let i = 0;
 
@@ -64,6 +65,7 @@ class HiglassTrack {
 export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}[])}) => {
   const container = document.getElementById('higlass-container');
   const server = "//higlass.io/api/v1" ; //"http://localhost:8888/api/v1"
+  const [height, setHeight] = useState(100);
 
   // "trackSourceServers": [
   //   "/api/v1",
@@ -130,7 +132,7 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
                 "name": "Rao et al. (2014) GM12878 MboI (SRR1658572)"
               },
               "width": 1506,
-              "height": 40,
+              "height": height,
               "transforms": [
                 {
                   "name": "ICE",
@@ -185,13 +187,26 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
   };
   const options = {bounded: false} 
   const ref = React.createRef();
+
+  useEffect(()=>{
+    console.log(ref)
+    console.log(ref.current)
+    
+  },[ref])
+
+  useEffect(()=>{
+    
+  },[height])
   return (
     <>
-    <HiGlassComponent 
-    ref={ref} 
-    options={deepClone(options || {})} 
-    viewConfig={deepClone(config)}
-     />
+    <Container>
+      <HiGlassComponent 
+      ref={ref} 
+      options={deepClone(options || {})} 
+      viewConfig={deepClone(config)}
+      />
+    </Container>
+    
     </>
     
   );
