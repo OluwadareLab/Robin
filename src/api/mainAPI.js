@@ -161,6 +161,9 @@ app.get(apiPaths.jobResults, (req, res) => {
             return;
         }
         const toolPath = `${path}/${tool}`
+        if (fs.existsSync(toolPath)) {
+            if(!fs.lstatSync(toolPath).isDirectory()) return;
+        } else return;
         const resultFiles = fs.readdirSync(toolPath);
         console.log("tool");
         console.log(tool);

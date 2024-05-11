@@ -151,10 +151,11 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
      * @param index the index of the tool
      * @param event the html event
      */
-     const handleCategoryChange = (toolIndex: number, event: React.ChangeEvent<HTMLInputElement>) => {
+     const handleCategoryChange = (toolIndex: number, event: { value: string; label: string; }) => {
         const value = event.value;
         const newData = [...toolData];
         newData[toolIndex].category = value;
+        newData[toolIndex]._category = event;
         setToolData(newData);
     };
 
@@ -178,11 +179,15 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
                         <div className='col-sm-8' >
                             <Creatable
                                 onChange={async (e) => handleCategoryChange(toolIndex, e)}
+                                value={toolData[toolIndex]._category}
                                 placeholder="(optional) Type a category name to group this tool with other tools."
                                 name={`Cat-${tool.name}`}
                                 options={categories}
                                 onCreateOption={(option)=>{
-                                    setCategories([...categories,{"value":option.trim().replaceAll(' ','-'),"label":option}])
+                                    let newOption = {"value":option.trim().replaceAll(' ','-'),"label":option};
+                                    setCategories([...categories,newOption]);
+                                    let e = newOption;
+                                    handleCategoryChange(toolIndex, e);
                                 }}
                             />
                         </div>

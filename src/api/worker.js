@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Job } from './models/job.js';
 import cron from 'node-cron';
 import { STATUSES } from './apiConfig.js';
-import {updateJobStatus, getAllJobsWithStatus, getJobStatus} from './mainAPI.js'
+import {updateJobStatus, getAllJobsWithStatus, getJobStatus, getJobHiglassStatus} from './mainAPI.js'
 import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
 import {url} from "./mongo.config.js";
@@ -220,6 +220,7 @@ cron.schedule('* * * * *', async () => {
         return {
           protein: splitFile[1],
           file:file,
+          fileName:file,
           job:job
         }
       });
@@ -242,7 +243,8 @@ cron.schedule('* * * * *', async () => {
 
       //----------HIGLASS INJESTION---------
       //reference files
-      promises = [...promises,...injestAllReferenceFiles(recoveryProtiens, chromSizes)];
+      //since this is heavy, only run if user enabled higlass
+      if(getJobHiglassStatus(jobID)) promises = [...promises,...injestAllReferenceFiles(recoveryProtiens, chromSizes)];
 
       //OVERLAP RUNNER
 

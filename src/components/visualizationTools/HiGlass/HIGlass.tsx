@@ -6,6 +6,7 @@ import {default as robinConfig} from '../../../config.mjs';
 import deepClone from '../../../utils/deep-clone.js';
 import {Track,TrackType} from "../../../types.ts"
 import { Button, Container } from 'react-bootstrap';
+import axios from 'axios';
 
 let i = 0;
 
@@ -18,21 +19,30 @@ class HiglassTrack {
     "type": TrackType.Rectangle2DDomain,
     "options": {
       "labelColor": "black",
-      "labelPosition": "bottomLeft",
+      "labelPosition": "topLeft",
       "labelLeftMargin": 0,
       "labelRightMargin": 0,
       "labelTopMargin": 0,
       "labelBottomMargin": 0,
+      "labelBackgroundColor": "white",
+      "labelShowResolution": false,
+      "labelShowAssembly": true,
+      "axisLabelFormatting": "scientific",
+      "axisPositionHorizontal": "right",
+      "lineStrokeColor": "blue",
+      "lineStrokeWidth": 1,
+      "valueScaling": "linear",
       "trackBorderWidth": 0,
       "trackBorderColor": "black",
-      "rectangleDomainFillColor": "grey",
-      "rectangleDomainStrokeColor": "black",
-      "rectangleDomainOpacity": 0.6,
-      "minSquareSize": "none",
-      "name": "job_11_lasca_5000_1.txt"
+      "labelTextOpacity": 0.4,
+      "showMousePosition": false,
+      "minHeight": 20,
+      "mousePositionColor": "#000000",
+      "showTooltip": false,
+      "name": "Bonev et al. 2017 - GSE96107_NPC_CTCF"
     },
-    "width": 1266,
-    "height": 80
+    "width": 20,
+    "height": 20
   }
 
   _config:Track;
@@ -61,30 +71,66 @@ class HiglassTrack {
   }
 }
 
+/**
+ * @description check if a tilesetuuid exists on our server
+ * @param uid 
+ * @returns 
+ */
+function trackHasErrors(uid){
+  return new Promise(res=>{
+    axios.get(`http://biomlearn.uccs.edu/robinHighglassAPI//api/v1/tileset_info/?d=${uid}`).then(response=>{
+    const errorsExist = Object.keys(response.data).some(key=>response.data[key]["error"]);
+    res(errorsExist);
+  })
+  })
+  
+}
 
 export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}[])}) => {
   const container = document.getElementById('higlass-container');
   const server = "//higlass.io/api/v1" ; //"http://localhost:8888/api/v1"
   const [height, setHeight] = useState(100);
+  const [tracks, setTracks] = useState<Track[]>([]);
 
-  // "trackSourceServers": [
-  //   "/api/v1",
-  //   "http://higlass.io/api/v1"
-  // ],
-
-  let tracks:Track[] = []
   
-  //add all reference lines first
-  props.uids.filter(uuid=>uuid.type=="line"&&uuid.uid).forEach(uidObj=>{
-      let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
-      tracks.push(track.getConfig());
-  })
+  useEffect(()=>{
+    let tempTracks:Track[] = [];
+    let loadingPromises:Promise<void>[] = [];
+    //add all reference lines first
+    props.uids.filter(uuid=>uuid.type=="line"&&uuid.uid).forEach(uidObj=>{
+      loadingPromises.push(new Promise((res)=>{
+        trackHasErrors(uidObj.uid).then(hasError=>{
+          if(!hasError){
+            let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+            track._config.height*=2;
+            let config = track.getConfig();
+            tempTracks.push(config);
+          }
+          res();
+        })
+      }))
+    })
 
-  //add all results files
-  props.uids.filter(uuid=>uuid.type!="line"&&uuid.uid).forEach(uidObj=>{
-    let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
-    tracks.push(track.getConfig());
-  })
+    //add all results files
+    props.uids.filter(uuid=>uuid.type!="line"&&uuid.uid).forEach(uidObj=>{
+      loadingPromises.push(new Promise((res)=>{
+        trackHasErrors(uidObj.uid).then(hasError=>{
+          if(!hasError){
+            let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+            tempTracks.push(track.getConfig());
+          }
+          res();
+        })
+      }))
+    })
+
+    Promise.all(loadingPromises).then(()=>{
+      setTracks(tempTracks);
+    });
+  },[])
+
+  
+
 
   console.log(tracks)
 
@@ -97,9 +143,18 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
       "/api/v1",
       "http://higlass.io/api/v1"
     ],
-    "exportViewUrl": "/api/v1/viewconfs/",
     "views": [
       {
+        "exportViewUrl": "/api/v1/viewconfs/",
+        "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+        "genomePositionSearchBox": {
+          "autocompleteServer": "//higlass.io/api/v1",
+          "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
+          "chromInfoServer": "//higlass.io/api/v1",
+          "chromInfoId": "hg19",
+          "visible": true
+        },
+        "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
         "tracks": {
           "top": [
             {
@@ -185,7 +240,11 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
       "locksDict": {}
     }
   };
-  const options = {bounded: false} 
+  const options = {
+    bounded: false,
+
+    
+  } 
   const ref = React.createRef();
 
   useEffect(()=>{
