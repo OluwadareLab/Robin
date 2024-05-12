@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import * as hglib from './higlass/app/scripts/hglib';
 import 'higlass/dist/hglib.css';
 import { HiGlassComponent } from './higlass/app/scripts/hglib';
-import {default as robinConfig} from '../../../config.mjs';
+import { default as robinConfig } from '../../../config.mjs';
 import deepClone from '../../../utils/deep-clone.js';
-import {Track,TrackType} from "../../../types.ts"
-import { Button, Container } from 'react-bootstrap';
+import { Track, TrackType } from "../../../types.ts"
+import Popup from 'reactjs-popup';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
+import { HiglassCoolPopup } from '../../higlassCoolFileUploader/higlassCoolPopup.tsx';
 
 let i = 0;
 
 class HiglassTrack {
-  _defaultConfig:Track = {
+  _defaultConfig: Track = {
     "filetype": "bed2ddb",
     "server": "http://localhost:8889/api/v1",
     "tilesetUid": "bVRL97wzRR6-XeN-HdWKJg",
@@ -45,7 +47,7 @@ class HiglassTrack {
     "height": 20
   }
 
-  _config:Track;
+  _config: Track;
 
   /**
    * 
@@ -53,12 +55,12 @@ class HiglassTrack {
    * @param type the track type to render the track as
    * @param server the server the tileset is on including /api/v1 Ex: "http://higlass.io/api/v1"
    */
-  constructor(tilesetUid:string, type:TrackType, name:string, server:string=robinConfig.higlassApiUrlV1){
-    this._config=JSON.parse(JSON.stringify(this._defaultConfig));
-    this._config.server=server;
-    this._config.tilesetUid=tilesetUid;
-    this._config.type=type;
-    this._config.options.name=name;
+  constructor(tilesetUid: string, type: TrackType, name: string, server: string = robinConfig.higlassApiUrlV1) {
+    this._config = JSON.parse(JSON.stringify(this._defaultConfig));
+    this._config.server = server;
+    this._config.tilesetUid = tilesetUid;
+    this._config.type = type;
+    this._config.options.name = name;
     i++;
   }
 
@@ -66,7 +68,7 @@ class HiglassTrack {
   /**
    * @returns the higlass obj for this track
    */
-  getConfig(){
+  getConfig() {
     return this._config;
   }
 }
@@ -76,33 +78,36 @@ class HiglassTrack {
  * @param uid 
  * @returns 
  */
-function trackHasErrors(uid){
-  return new Promise(res=>{
-    axios.get(`http://biomlearn.uccs.edu/robinHighglassAPI//api/v1/tileset_info/?d=${uid}`).then(response=>{
-    const errorsExist = Object.keys(response.data).some(key=>response.data[key]["error"]);
-    res(errorsExist);
+function trackHasErrors(uid) {
+  return new Promise(res => {
+    axios.get(`http://biomlearn.uccs.edu/robinHighglassAPI//api/v1/tileset_info/?d=${uid}`).then(response => {
+      const errorsExist = Object.keys(response.data).some(key => response.data[key]["error"]);
+      res(errorsExist);
+    })
   })
-  })
-  
+
 }
 
-export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}[])}) => {
+
+export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: TrackType }[]) }) => {
   const container = document.getElementById('higlass-container');
-  const server = "//higlass.io/api/v1" ; //"http://localhost:8888/api/v1"
+  const server = "//higlass.io/api/v1"; //"http://localhost:8888/api/v1"
   const [height, setHeight] = useState(100);
   const [tracks, setTracks] = useState<Track[]>([]);
+  const [name, setName] = useState<string>("");
+  const [file, setFile] = useState<File>();
 
-  
-  useEffect(()=>{
-    let tempTracks:Track[] = [];
-    let loadingPromises:Promise<void>[] = [];
+  useEffect(() => {
+    // window.location.reload();
+    let tempTracks: Track[] = [];
+    let loadingPromises: Promise<void>[] = [];
     //add all reference lines first
-    props.uids.filter(uuid=>uuid.type=="line"&&uuid.uid).forEach(uidObj=>{
-      loadingPromises.push(new Promise((res)=>{
-        trackHasErrors(uidObj.uid).then(hasError=>{
-          if(!hasError){
+    props.uids.filter(uuid => uuid.type == "line" && uuid.uid).forEach(uidObj => {
+      loadingPromises.push(new Promise((res) => {
+        trackHasErrors(uidObj.uid).then(hasError => {
+          if (!hasError) {
             let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
-            track._config.height*=2;
+            track._config.height *= 2;
             let config = track.getConfig();
             tempTracks.push(config);
           }
@@ -112,10 +117,11 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
     })
 
     //add all results files
-    props.uids.filter(uuid=>uuid.type!="line"&&uuid.uid).forEach(uidObj=>{
-      loadingPromises.push(new Promise((res)=>{
-        trackHasErrors(uidObj.uid).then(hasError=>{
-          if(!hasError){
+    console.log(props.uids)
+    props.uids.filter(uuid => uuid.type != "line" && uuid.uid).forEach(uidObj => {
+      loadingPromises.push(new Promise((res) => {
+        trackHasErrors(uidObj.uid).then(hasError => {
+          if (!hasError) {
             let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
             tempTracks.push(track.getConfig());
           }
@@ -124,12 +130,13 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
       }))
     })
 
-    Promise.all(loadingPromises).then(()=>{
+    Promise.all(loadingPromises).then(() => {
       setTracks(tempTracks);
+      console.log(tempTracks);
     });
-  },[])
+  }, [props.uids])
 
-  
+
 
 
   console.log(tracks)
@@ -243,31 +250,46 @@ export const HiGlassComponentWrapper = (props:{uids:({uid:string,type:TrackType}
   const options = {
     bounded: false,
 
-    
-  } 
+
+  }
   const ref = React.createRef();
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(ref)
     console.log(ref.current)
-    
-  },[ref])
 
-  useEffect(()=>{
-    
-  },[height])
+  }, [ref])
+
+  useEffect(() => {
+
+  }, [height])
   return (
     <>
-    <Container>
-      <HiGlassComponent 
-      ref={ref} 
-      options={deepClone(options || {})} 
-      viewConfig={deepClone(config)}
-      />
-    </Container>
-    
+      <Container>
+
+        <Row>
+          <Col md={4}>
+            <p>This tab will not remember any changes if you leave.</p>
+          </Col>
+          <Col sm={2}>
+            <Button onClick={() => window.location.reload()}>Reload Higlass</Button>
+          </Col>
+          {robinConfig.allowCoolerUploads ?
+            <Col md={2}>
+              <HiglassCoolPopup fileName={name} setFileName={setName} file={file} setFile={setFile} />
+            </Col>
+            : ""}
+
+        </Row>
+
+        <HiGlassComponent
+          ref={ref}
+          options={deepClone(options || {})}
+          viewConfig={deepClone(config)}
+        />
+      </Container>
     </>
-    
+
   );
 };
 

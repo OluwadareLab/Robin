@@ -61,6 +61,7 @@ ChartJS.register(
 
 const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 1)`;
 
+let k =0;
 export const GraphComponent = (props: lineChartProps) => {
   let [baseRadius,setBaseRadius] = useState(0);
   let [showAllPoints,setShowAllPoints] = useState(0);
@@ -163,7 +164,7 @@ export const GraphComponent = (props: lineChartProps) => {
         <Col>
           <Form.Check 
             type="switch"
-            id="custom-switch"
+            id={`switch-${k++}`}
             label="Draw All Points"
             checked={showAllPoints}
             onChange={toggleShowAllPoints}

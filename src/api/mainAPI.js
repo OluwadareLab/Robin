@@ -12,6 +12,7 @@ import * as fs from 'fs';
 import cors from 'cors';
 import { STATUSES } from './apiConfig.js';
 import { resolve } from 'path';
+import { runChildScript } from './worker.js';
 
 const upload = multer({ dest: config.dataFolderPath });
 
@@ -390,7 +391,50 @@ app.post(apiPaths.higlassToggle, async (req, response) => {
 
 })
 
+/**
+ * @description set the higlass togle status of a job
+ */
+app.post(apiPaths.reRunAsNewJob, async (req, response) => {
+    const timeout = setTimeout(() => {
+        response.json({ id: null, status: 408 });
+    }, 25000);
+    try {
+        const id = req.body.id;
+        let oldTitle = await getPropFromJob(id, "title")
+        let oldDesc= await getPropFromJob(id, "description")
+        let oldEmail= await getPropFromJob(id, "email")
+        let oldHiglass = await getJobHiglassStatus(id) != 0 ? 0 : 1;
 
+        const srcPath = await resolve(generateJobDataFolderPath(id));
+
+        await addJob("rerun of:"+oldTitle, "copied all files from job: " +id + " and reran job\n" +oldDesc, oldEmail, STATUSES.HAS_DATA_IN_QUE_WAITING, oldHiglass);
+        
+        db.all("SELECT last_insert_rowid();", (err, res) => {
+            const id = res[0]['last_insert_rowid()'];
+            if (id) {
+                const destPath = resolve(generateJobDataFolderPath(id));
+                if(fs.existsSync(srcPath)){
+                    fs.cpSync(srcPath, destPath, {recursive: true});
+
+                    clearTimeout(timeout);
+                    response.json({ id: id, status: 200 });
+                    console.log(`Job #${id}, reraun as new job`);
+                } else {
+                    response.json({ id: id, status: 400, error:"this job never had any data uplaoded, rerunning is impossible" });
+                }
+                
+                
+            }
+        });
+    } catch (error) {
+        console.log("error rerunning job:");
+        console.log(error);
+        response.json({ status: 400, error: "Issue parsing your data. please provide a request in the form {title:\"something\", description:\"somthing\", email:\"Optional@optional.com\"",err:error });
+    }
+
+})
+
+/** return the nextID */
 app.get(apiPaths.getNextID, async (req, response) =>{
     const timeout = setTimeout(() => {
         response.json({ id: null, status: 400 });
@@ -402,6 +446,30 @@ app.get(apiPaths.getNextID, async (req, response) =>{
         response.json({ id: id, status: 200 });
         clearTimeout(timeout);
     })
+})
+
+/** return the nextID */
+app.get(apiPaths.htmlFiles, async (req, response) =>{
+    const timeout = setTimeout(() => {
+        response.json({ id: null, status: 400 });
+        console.log(`nextid call timeout.`)
+    }, 10000);
+
+    try {
+        const id = req.query.id;
+        const folderPath = resolve(generateJobjupyterFolderPath(id));
+        let files = fs.readdirSync(folderPath).filter(filename=>filename.endsWith(".html")).map(
+            filename=>fs.readFileSync(`${folderPath}/${filename}`, 'utf8')
+        );
+
+        response.json({ files: files, status: 200 });
+        clearTimeout(timeout);
+    } catch(err){
+        response.json({ err: err, status: 400 });
+        clearTimeout(timeout);
+    }
+
+   
 })
 
 /**
@@ -428,13 +496,51 @@ const uploadData = multer({
 })
 
 /**
- * @description the post request to put jobData into the filesystem ,
- * expects a request in the form of
- * {
- *  id:int
- * }
+ * @description handle uploading data to correct spot
  */
-app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next) => {
+const uploadJupyterFile= multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            const id = req.body.id;
+            const path = generateJobjupyterFolderPath(id);
+            if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
+            cb(null, path);
+            return path + "/";
+        },
+
+        filename: (req, file, cb) => {
+            const id = req.body.id;
+            const fileName = id + "data";
+            cb(null, (file.originalname || fileName))
+        }
+    }
+
+    )
+})
+
+/**
+ * @description handle uploading data to correct spot
+ */
+const uploadCoolerData = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            const id = req.body.id;
+            const path = generateJobDataFolderPath(id);
+            if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
+            cb(null, path);
+            return path + "/";
+        },
+
+        filename: (req, file, cb) => {
+            const id = req.body.id;
+            const fileName = id + "data";
+            cb(null, `${Date.now()}_${(file.originalname || fileName)}.cool`)
+        }
+    }
+)
+})
+
+function handleFileUpload(req,response){
     const timeout = setTimeout(() => {
         response.json({ id: null, status: 408 });
     }, 10000);
@@ -442,6 +548,69 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
         const id = req.body.id;
         try {
             updateJobStatus(id, STATUSES.HAS_SOME_DATA);
+        } catch (error) {
+            console.log(`Failed to update database status of job_${id}: ${error}.`);
+        }
+        
+        response.json({ status: 200 });
+        console.log("File uploaded to job #" + id);
+        clearTimeout(timeout);
+       
+    } catch (err) {
+        response.json({ status: 400, error: "Issue parsing your data. please provide a request in the form {id:#number, files:file}", err:err });
+    }
+
+}
+
+/**
+ * @description the post request to put jobData into the filesystem ,
+ * expects a request in the form of
+ * {
+ *  id:int
+ * }
+ */
+app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next) => {
+    handleFileUpload(req,response);
+})
+
+/**
+ * @description the post request to put juypter files into the filesystem ,
+ * expects a request in the form of
+ * {
+ *  id:int
+ *  files:file[]
+ * }
+ */
+app.post(apiPaths.jyupterUpload, uploadJupyterFile.array("files"), async (req, response, next) => {
+    let jobId=req.body.id;
+    await handleFileUpload(req,response);
+    //then convert to html
+
+    let files = fs.readdirSync(generateJobjupyterFolderPath(jobId));
+    files.forEach(file=>{
+        if(file.endsWith(".ipynb")){
+            let script = `bash ${config.jupyterConverter} ${file} ${jobId}`;
+            runChildScript(script, "conver jyupter file");
+        }
+    })
+    
+})
+
+/**
+ * @description the post request to put jobData into the filesystem ,
+ * expects a request in the form of
+ * {
+ *  id:int
+ * }
+ */
+app.post(apiPaths.uploadCoolFile, uploadCoolerData.array("files"), async (req, response, next) => {
+    const timeout = setTimeout(() => {
+        response.json({ id: null, status: 408 });
+    }, 10000);
+    try {
+        const id = req.body.id;
+        try {
+            updateJobHiglassToggle(id, 4);
         } catch (error) {
             console.log(`Failed to update database status of job_${id}: ${error}.`);
         }
@@ -501,11 +670,17 @@ export function updateJobStatus(jobId, newStatus){
 /**
  * @param {number} jobId the id of the job in the db
  * @param {boolean} higlassToggle the new status to upadate to
+ * 0=disabled
+ * 1=enabled
+ * 2=finished and ready to view
+ * 4=needs processing cool file
+ * 5=finished and ready to view, but needs to have cool file deleted
+ * 6=processing cool file
  */
 export function updateJobHiglassToggle(jobId, higlassToggle){
     db.run(`
             UPDATE jobs
-            SET higlass = "${higlassToggle}"
+            SET higlassToggle="${higlassToggle}"
             WHERE ROWID=${jobId}`)
 }
 
@@ -515,6 +690,19 @@ export async function getAllJobsWithStatus(status){
         SELECT rowid, *
         FROM jobs
         WHERE status=="${status}"
+    `,
+        (err, res)=>{resolve(res)}
+        );
+    })
+    
+}
+
+export async function getAllJobsWithHiglassStatus(higlassStatus){
+    return new Promise(resolve =>{
+        db.all(`
+        SELECT rowid, *
+        FROM jobs
+        WHERE higlassToggle=="${higlassStatus}"
     `,
         (err, res)=>{resolve(res)}
         );
@@ -535,6 +723,27 @@ export function getJobStatus(jobId){
                 FROM jobs
                 WHERE ROWID=${jobId}`, (err, res) => {
                     if(res) {resolve(res[0].status);}
+                    else { resolve(STATUSES.FAIL);}
+                })
+        })
+    } catch (error) {
+        resolve(STATUSES.FAIL);
+    }
+}
+
+/**
+ * 
+ * @param {number} jobId the id of the job in the db
+ * @param {STATUSES} prop the string of the property to get
+ */
+export function getPropFromJob(jobId,prop){
+    try {
+        return new Promise(resolve =>{
+            db.all(`
+                SELECT ${prop}
+                FROM jobs
+                WHERE ROWID=${jobId}`, (err, res) => {
+                    if(res) {resolve(res[0][prop]);}
                     else { resolve(STATUSES.FAIL);}
                 })
         })
@@ -633,6 +842,18 @@ function createDb() {
 function generateJobDataFolderPath(jobid){
     return config.dataFolderPath +'/job_' + jobid + "/data/";
 }
+
+/**
+ * @description get the path to a job's jupyter folder
+ * @param {number} jobid the id of the job
+ * @returns {string} the path to the jobs jupyter folder (string)
+ */
+function generateJobjupyterFolderPath(jobid){
+    return config.dataFolderPath +'/job_' + jobid + "/jupyter/";
+}
+
+
+
 
 /**
  * @description get the path to a job's output folder

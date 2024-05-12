@@ -13,30 +13,44 @@ type FileUploadProps = {
    * The file types allowed by the upload component IE: '.cool, .hic, etc...'
    * @default ".cool, .hic, .bed, .bedme, .mcool"
    */
-  fileTypes?:string
+  fileTypes?: string
 
   /**
    * The id of this upload
    */
-  id:number
+  id: number
 
   /** @description an array of the files to be uploaded */
-  toolData?:(ToolData)[]
+  toolData?: (ToolData)[]
 
   /** if provided this will ignore tool data and just use this list */
-  files?:File[],
+  files?: File[],
 
   /** if provided overrides the names of file in the files arr */
-  fileNames?:string[],
+  fileNames?: string[],
 
   /** @description upload multiple sets of files that are either toolData or name and file */
-  fileSets?:fileSet[]
+  fileSets?: fileSet[]
   /** a callback to call when the upload is done */
-  cb:(e:any)=>void
+  cb: (e: any) => void
 
   /** a function to call to validate whether the button shuold be able to be pressed */
-  conditionalCb?:(e:any)=>boolean;
+  conditionalCb?: (e: any) => boolean;
+
+  /** optional override for the api to upload to */
+  apiPath?: string;
+
+  /** if true/defined, dont render submitbtn */
+  dontShowSubmitBtn?: boolean;
 }
+
+const scrollableStyle = {
+  maxHeight: '300px',  // Set a maximum height
+  width: "100%",
+  overflowY: 'auto',   // 'auto' will show the scrollbar only if the content overflows
+  border: '1px solid #ccc', // Optional, just for visual reference
+  padding: '10px',
+};
 
 /**
  * @description a component for file uploading. can specify types with prop.fileTypes
@@ -44,13 +58,15 @@ type FileUploadProps = {
  * @returns 
  */
 export const FileUploadDisplay = (props: FileUploadProps) => {
-  const id:number = props.id;
+  const id: number = props.id;
   const fileTypes = props.fileTypes || ".cool, .hic, .bed, .bedme, .mcool";
+  const apiPath = props.apiPath || apiPaths.jobUploads;
+  const apiEndpoint = props.apiPath || apiPaths.jobData;
 
   //this is for asetetics and rendering display suffs
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
-  
+
   /** Data for the tools */
   const [uploadData, setUploadData] = useState([]);
 
@@ -58,132 +74,127 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
     const fetchQueuePosition = async () => {
       axios.get(apiPaths.jobUploads + "?id=" + id).then((response) => {
         //console.log(response)
-        if(response.status===200)
-        setUploadData(response.data.files);
+        if (response.status === 200)
+          setUploadData(response.data.files);
       });
     };
     fetchQueuePosition();
-  }, [uploadComplete, id]); 
+  }, [uploadComplete, id]);
 
   const handleUpload = (e) => {
-      if(props.conditionalCb ? props.conditionalCb(e) : true){
-        //for each fileset
-        //setup formdata
-        const formData = new FormData();
+    if (props.conditionalCb ? props.conditionalCb(e) : true) {
+      //for each fileset
+      //setup formdata
+      const formData = new FormData();
 
-        //id must be added first due to some annoying things
-        formData.append(`id`, id.toString());
-        props.fileSets?.forEach(fileSet=>{
-          console.log(fileSet)
-          //if fileset is tooldata types then parse and add to form data
-          if(fileSet[0]){
-            if(fileSet[0] instanceof ToolData || fileSet[0].resolutions){
-              console.log("toolData found")
-              let toolData = fileSet as ToolData[];
-              toolData.forEach((tool) => {
-                console.log("tool:")
-                console.log(tool)
-                tool.resolutions.forEach(res=>{
-                  console.log("has res")
-                    if(res.file){
-                      console.log("has res file")
-                        const extention = res.file.name.split('.').pop();
-                        formData.append(`files`, res.file, `${tool.name}_${res.resolution}${tool.category?`_${tool.category}`:''}.${extention}`);
-                    }
-                })
-                
-              });
-            } 
-  
-            //if fileset has file prop
-            else if(fileSet[0].file){
-                fileSet.forEach(fileObj=>{
-                  formData.append(`files`, fileObj.file, fileObj.name ? fileObj.name : fileObj.file);
-                })    
-              }
+      //id must be added first due to some annoying things
+      formData.append(`id`, id.toString());
+      props.fileSets?.forEach(fileSet => {
+        console.log(fileSet)
+        //if fileset is tooldata types then parse and add to form data
+        if (fileSet[0]) {
+          if (fileSet[0] instanceof ToolData || fileSet[0].resolutions) {
+            console.log("toolData found")
+            let toolData = fileSet as ToolData[];
+            toolData.forEach((tool) => {
+              console.log("tool:")
+              console.log(tool)
+              tool.resolutions.forEach(res => {
+                console.log("has res")
+                if (res.file) {
+                  console.log("has res file")
+                  const extention = res.file.name.split('.').pop();
+                  formData.append(`files`, res.file, `${tool.name}_${res.resolution}${tool.category ? `_${tool.category}` : ''}.${extention}`);
+                }
+              })
+
+            });
           }
-        });
 
-        //formdata is finished now
-        const apiEndpoint = apiPaths.jobData;
-
-        console.log("FormData contents:");
-        for (const pair of formData.entries()) {
-          console.log(pair[0], pair[1]);
+          //if fileset has file prop
+          else if (fileSet[0].file) {
+            fileSet.forEach(fileObj => {
+              formData.append(`files`, fileObj.file, fileObj.name ? fileObj.name : fileObj.file);
+            })
+          }
         }
-        // Axios request with progress event
-        axios.post(apiEndpoint, formData, {
-          onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-            const progress = Math.round(
-              (progressEvent.loaded * 100) / (progressEvent.total?progressEvent.total:100)
-            );
-            setUploadProgress(progress);
-          },
-        })
-          .then(response => {
-            // Handle API response
-            console.log(response.data);
-            // Set upload complete
-            setUploadComplete(true);
-            // Clear selected files after a short delay
-            setTimeout(() => {
-              setUploadComplete(false);
-              setUploadProgress(0);
-              props.cb(e);
-            }, 2000);
-          })
-          .catch(error => {
-            // Handle error
-            console.error('Error uploading files:', error);
-            setUploadProgress(0);
+      });
+
+      //formdata is finished now
+
+
+      console.log("FormData contents:");
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      // Axios request with progress event
+      axios.post(apiEndpoint, formData, {
+        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total ? progressEvent.total : 100)
+          );
+          setUploadProgress(progress);
+        },
+      })
+        .then(response => {
+          // Handle API response
+          console.log(response.data);
+          // Set upload complete
+          setUploadComplete(true);
+          // Clear selected files after a short delay
+          setTimeout(() => {
             setUploadComplete(false);
-          });
-      };
+            setUploadProgress(0);
+            props.cb(e);
+          }, 2000);
+        })
+        .catch(error => {
+          // Handle error
+          console.error('Error uploading files:', error);
+          setUploadProgress(0);
+          setUploadComplete(false);
+        });
+    };
   }
 
   return (
     <div className="container mt-5">
 
-      <div style={{display:'flex', flexDirection:"row", justifyContent:"right"}}>
+      <div style={{ display: 'flex', flexDirection: "row", justifyContent: "right" }}>
 
-      {uploadProgress > 0 && !uploadComplete && (
-        <div className="progress mt-3" style={{width:"75%"}}>
-          <div
-            className="progress-bar"
-            role="progressbar"
-            style={{ width: `${uploadProgress}%` }}
-            aria-valuenow={uploadProgress}
-     
-          >
-            {uploadProgress}%
+        {uploadProgress > 0 && !uploadComplete && (
+          <div className="progress mt-3" style={{ width: "75%" }}>
+            <div
+              className="progress-bar"
+              role="progressbar"
+              style={{ width: `${uploadProgress}%` }}
+              aria-valuenow={uploadProgress}
+
+            >
+              {uploadProgress}%
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <button className="btn btn-lg btn-secondary cf" onClick={handleUpload} style={{width:"25%"}}>
-        Upload And Submit
-      </button>
+        {!props.dontShowSubmitBtn ?
+          <button className="btn btn-lg btn-secondary cf" onClick={handleUpload} style={{ width: "25%" }}>
+            Upload And Submit
+          </button>
+          : ""}
+
       </div>
 
-        {uploadData.length > 0 ? (
-          <>
-           <div style={{display:'flex', flexDirection:"row", justifyContent:"left"}}>
-          <h3 style={{color:"#708090"}}>Uploaded files for job:</h3>
+      {uploadData.length > 0 ? (
+        <div style={scrollableStyle}>
+          <div style={{ display: 'flex', flexDirection: "row", justifyContent: "left" }}>
+            <h3 style={{ color: "#708090" }}>Uploaded files for job:</h3>
           </div>
           <ol>
-          {uploadData.map((element)=>(<li>{element}</li>))}
+            {uploadData.map((element) => (<li>{element}</li>))}
           </ol>
-          </>
-         
-        ): ""}
-      
-      
+        </div>
 
-     
-      
-      
-
-      
+      ) : ""}
 
       {uploadComplete && (
         <div className="mt-3">
@@ -191,7 +202,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
         </div>
       )}
     </div>
-    
+
   );
 };
 

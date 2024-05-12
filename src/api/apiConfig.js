@@ -6,6 +6,12 @@ const apiPaths = {
     /** get the next id from the db */
     getNextID: "/nextID",
 
+    /** the post path for uploading and injesting a cool file */
+    uploadCoolFile: "/injestCool",
+
+    //the path for submitting a post request to rerun an existing job as a new job, that is copy the data from the old job and run it again
+    reRunAsNewJob: "/rerunAsNew",
+
     /** @description the path for the put request to put the actual data we would like to process onto the server */
     jobData: "/jobData",
     /** @description the path for the get request for where the user is in the queue */
@@ -23,7 +29,11 @@ const apiPaths = {
     /**post: the path for updating higlass toggle */
     higlassToggle:"/higlassToggle",
     /**get: the path for getting higlass toggle */
-    jobHiglassToggle:"/getHiglassToggle"
+    jobHiglassToggle:"/getHiglassToggle",
+    /** post: path for uploading a jyupter file and running it */
+    jyupterUpload: "/uploadJyupter",
+    /** get:path for getting the html result files from jyupter tasks */
+    htmlFiles:"/JyupterHtmlFiles"
 
 }
 

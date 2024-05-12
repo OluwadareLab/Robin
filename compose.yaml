@@ -1,13 +1,4 @@
 services:
-  mongodb:
-    image: mongo:4.4.18
-    restart: always
-    ports:
-      - '27017:27017'
-    volumes:
-      - db-data:/data/db
-    networks:
-      - backend
   higlass:
     image: "higlass/higlass-docker"
     ports:
@@ -25,7 +16,6 @@ services:
       - "8086:8086" #8086 is the internal port hosted on inside the docker
     depends_on:
       - higlass
-      - mongodb
     volumes:
       - web_data:/storage/store/Robin_ComprehensiveLoopCaller/
     networks:
@@ -38,7 +28,6 @@ services:
       - "3006:3006" #3006 is the internal port hosted on inside the docker
     depends_on:
       - higlass
-      - mongodb
       - web_api
     volumes:
       - web_data:/storage/store/Robin_ComprehensiveLoopCaller/

@@ -1,0 +1,26 @@
+
+
+
+{
+  "algorithms": ["DecisionTreeClassifier",
+                "GradientBoostingClassifier",
+                "KNeighborsClassifier",
+                "SVC",
+                "LogisticRegression",
+                "RandomForestClassifier",
+                "DecisionTreeRegressor",
+                "XGBRegressor",
+                "SVR",
+                "KNeighborsRegressor",
+                "KernelRidge",
+                "RandomForestRegressor",
+                "AdaBoostClassifier"
+                ,"KMeans"
+                ,"GaussianNB"
+                ,"MultinomialNB"
+                ,"BernoulliNB"
+                ,"MLPClassifier"
+              ]
+}
+
+

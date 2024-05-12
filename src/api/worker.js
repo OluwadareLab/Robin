@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Job } from './models/job.js';
 import cron from 'node-cron';
 import { STATUSES } from './apiConfig.js';
-import {updateJobStatus, getAllJobsWithStatus, getJobStatus, getJobHiglassStatus} from './mainAPI.js'
+import {updateJobStatus, getAllJobsWithStatus, getJobStatus, getJobHiglassStatus, updateJobHiglassToggle, getAllJobsWithHiglassStatus} from './mainAPI.js'
 import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
 import {url} from "./mongo.config.js";
@@ -94,7 +94,7 @@ function sendEmailEnd(job){
  * @param {*} script the script to run
  * @param {*} name a descriptive name to print to console for info
  */
-function runChildScript(script, name){
+export function runChildScript(script, name){
   return new Promise(res=>{
     console.log(`running: ${name} with script: ${script}`)
     const child = exec(script, (error, stdout, stderr) => {
@@ -129,6 +129,83 @@ function injestReferenceFile(referenceFile, chromSizes){
 }
 
 /**
+ * @description injest a .cool file into higlass
+ * @param {*} coolFile 
+ * @param {*} job the job this cool file is for
+ * @returns promise for script to complete
+ */
+function injestCoolFile(coolFileName, job){
+  let fileName = coolFileName;
+  let script = `bash ${config.callersHiglassCoolerInjestScript} ${fileName} ${job.rowid} ${referenceFile.protein} ${chromSizes.fileName} ${chromSizes.fileName.split(".").pop()}`;
+  return(runChildScript(script, "injest reference file"));
+}
+
+/** handle runnign the cooler upload and deletion jobs */
+async function runCoolerUploadJobs(){
+  try {
+    const pendingCoolerJobs = [...await getAllJobsWithHiglassStatus(4), ...await getAllJobsWithHiglassStatus(5)];
+
+    pendingCoolerJobs.forEach(async (job)=>{
+      const jobId = job.rowid;
+      try {
+      
+      console.log(`Executing cooler injestion job: ${job.rowid}`);
+      const path = `${config.dataFolderPath}/job_${job.rowid}/data`;
+      const files = fs.readdirSync(path);
+      console.log(`files in dir ${files}`)
+      console.log(files);
+
+      const coolFiles = files.filter(file=>file.endsWith(".cool")).map(file=>{
+        const splitFile = file.split("_")
+          return {
+            timeUploaded:splitFile[0],
+            fileName:file,
+          }
+        });
+
+      
+      //if this job needs cool file processed
+      let higlassStatus = await getJobHiglassStatus(jobId);
+      console.log(`job:${jobId} has status: ${higlassStatus}`);
+      if(higlassStatus==4){
+        updateJobHiglassToggle(jobId,6);
+        
+        let coolerPromises = [];
+        coolFiles.forEach((coolFile)=>{
+          coolerPromises.push(injestCoolFile(coolFile.fileName, job));
+        })
+
+        Promise.all(coolerPromises).then(()=>{
+          updateJobHiglassToggle(jobId,5);
+        })
+      } else {
+        console.log("-----------checking deletion time for cool files----------------")
+        console.log(coolFiles);
+        //if we need to check if this file needs to be deleted
+        coolFiles.forEach((coolFile)=>{
+          console.log(coolFile)
+          const timeDif = Date.now()-parseInt(coolFile.timeUploaded);
+          console.log(`job has time diff of: ${timeDif}`);
+          if(timeDif > config.timeToStoreCoolerFilesForInMs){
+            console.log(`deleting:${path}/${coolFile.fileName}`)
+            fs.unlinkSync(`${path}/${coolFile.fileName}`);
+          }
+        })
+      }
+    } catch (error) {
+        console.log(`error executing job:${jobId}`)
+        console.log(error);
+    }
+    })
+    
+  } catch (error) {
+    console.log("error in executing cooler injestion")
+    console.log(error);
+    jobIsRunning=false
+  }
+}
+
+/**
  * 
  * @param {{file:File,job:any,protein:string}[]} referenceFilesArr 
  * @param {File[]} chromSizesArr
@@ -160,6 +237,8 @@ cron.schedule('* * * * *', async () => {
     console.log("found pending jobs")
     console.log(pendingJobs);
     if (pendingJobs.length > 0 && !jobIsRunning) {
+      
+
       jobIsRunning=true;
       const job = pendingJobs[0];
       jobID = job.rowid;
@@ -196,10 +275,9 @@ cron.schedule('* * * * *', async () => {
       const files = fs.readdirSync(path);
       console.log(`files in dir ${files}`)
       console.log(files);
-      // Replace 'script.sh' with the path to your .sh script
 
       //all the tool data
-      const jobInfo = files.filter(file=>!file.startsWith("reference_")&&!file.startsWith("chrom.sizes")).map(file=>{
+      const jobInfo = files.filter(file=>!file.startsWith("reference_")&&!file.startsWith("chrom.sizes")&&!file.endsWith(".cool")).map(file=>{
         const splitFile = file.split("_")
         return {
           resolution: parseInt(splitFile[1]),
@@ -244,7 +322,11 @@ cron.schedule('* * * * *', async () => {
       //----------HIGLASS INJESTION---------
       //reference files
       //since this is heavy, only run if user enabled higlass
-      if(getJobHiglassStatus(jobID)) promises = [...promises,...injestAllReferenceFiles(recoveryProtiens, chromSizes)];
+      if(getJobHiglassStatus(jobID)) {
+        Promise.all(injestAllReferenceFiles(recoveryProtiens, chromSizes)).then(()=>{
+          updateJobHiglassToggle(jobID,2)
+        });
+      }
 
       //OVERLAP RUNNER
 
@@ -428,6 +510,9 @@ cron.schedule('* * * * *', async () => {
     if(jobID) updateJobStatus(jobID, STATUSES.FAIL);
     console.error('Error executing job:', error);
   }
+
+  //handle cooler uploads
+  if(config.allowCoolerUploads) runCoolerUploadJobs();
 
   jobIsRunning=false
 

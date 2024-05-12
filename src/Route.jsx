@@ -7,11 +7,13 @@ import { ChromatinLoopAnalysisResultsPage } from './pages/Results';
 import { ViewAllJobsPage } from './pages/ViewAllJobs';
 import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass/HIGlass';
 import { OneStepJobUploadPage } from './pages/OneStepJobPage';
+import { AiAssistantComponent } from './components/aiAssistant/aiAssistant';
 
 export const WebRoutes = () => (
     <Router basename="robin/">
         <Routes>
             <Route exact path={paths.home} element={<HomePage />}/>
+            <Route path={`${paths.aiTest}`} element={<AiAssistantComponent />}/>
             <Route path={`${paths.setup}/:id`} element={<OneStepJobUploadPage />}/>
             <Route path={`${paths.setup}`} element={<OneStepJobUploadPage />}/>
             <Route path={`${paths.queue}/:id`} element={<QueuePage />}/>

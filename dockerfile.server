@@ -57,5 +57,17 @@ WORKDIR /app/
 COPY ./package.json /app/package.json
 RUN npm install
 
+#install python3
+RUN apt-get install -y python3
+# Install ipykernel if it's not already installed
+RUN pip install ipykernel
+# Install the Python 3 kernel
+RUN python3 -m ipykernel install --user --name python3 --display-name "Python 3"
+#install jyupter notebook converter
+RUN pip install nbconvert
+
+#install all libs for graphing
+RUN pip install matplotlib
+
 WORKDIR /storage/store/Robin_ComprehensiveLoopCaller
 CMD [ "npm", "run", "start-api-worker" ]

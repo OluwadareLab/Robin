@@ -1,12 +1,18 @@
-const config = {
+const config = {    
     //used to enable more logging
     DEBUG:false,
+
+    /** weather to allow users to upload cooler files to higlass or not */
+    allowCoolerUploads:false,
 
     projectName: "Robin: Compherative analysis and visualization of loop perdictions ",
     projectDescription: "An online tool for visualization and anaylisis of chromtin loops.",
 
-    /** @description if a job is older than this (in ms) abandon the job TIMEOUT: 1hour */
-    maxjobage:60*1000*60,
+    /** @description if a job is older than this (in ms) abandon the job TIMEOUT: 4 hours */
+    maxjobage:60*1000*60 * 4,
+
+    /** the time before we delete a cooler file from our server (1 hour) */
+    timeToStoreCoolerFilesForInMs:1000 ,//60*1000*60,
 
     /**
      * @description the highest resolution something can be before being low res
@@ -70,6 +76,12 @@ const config = {
     /** the path to the injest reference file into higlass script */
     callersHiglassReferenceInjestScript: "./callers/injestIntoHiglass/injestReferenceFile.sh",
 
+    /** the path to the injest cooler file into higlass script */
+    callersHiglassCoolerInjestScript: "./callers/injestIntoHiglass/injestCoolFile.sh",
+
+    /** the pather to the script to convert jyupter file to html including execution */
+    jupyterConverter:"./callers/jupyterConverter/convert.sh"
+
     // /** the port where the api is hosted (defined below)*/
     // apiPort:undefined
 
@@ -94,7 +106,8 @@ const paths = {
     example: "/example",
     github: "/github",
     about: "/about",
-    referenceUpload: "/uploadRef"
+    referenceUpload: "/uploadRef",
+    aiTest: "/testAI"
 
 }
 

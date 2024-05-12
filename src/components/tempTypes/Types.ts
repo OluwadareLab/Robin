@@ -21,6 +21,20 @@ export class ReferenceFile {
     }
 }
 
+export type resultData = {
+    datasets: any;
+    remData: any[];
+    loopSizes: any;
+    regressionPoints;
+    kbVsRes: any;
+    binVsRes: any;
+    binVsResVsKbVsResDataset: any;
+    overlapData:any;
+    higlassUids:any;
+    /** the raw data obj that the above were parsed from */
+    raw:any
+}
+
 export type FileAndName = {
     file:File,
     name:string
