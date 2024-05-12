@@ -43,9 +43,10 @@ export const CustomLegend = (props: { items: { backgroundColor: any, label: stri
  * @param borders optional, if provided draw borders
  * @returns 
  */
-export const CustomLegendWithSelection = (props: { items: { backgroundColor: any, label: string, borders?:Boolean}[], onSelect:(state)=>void, forceUpdate?:number, state?:any,setState?:any}) => {
+export const CustomLegendWithSelection = (props: { items: { backgroundColor: any, label: string, borders?:Boolean}[], onSelect:(state)=>void, forceUpdate?:number, max?:number, state?:any,setState?:any,passup?:boolean}) => {
   const [state,setState] = useState({});
   let labels:string[] = [];
+  let maxSelections = props.max || 3;
 
   useEffect(()=>{
     setState(props.state)
@@ -73,7 +74,7 @@ export const CustomLegendWithSelection = (props: { items: { backgroundColor: any
 
   function ToggleButton(id, bool?:boolean){
     let oldState = JSON.parse(JSON.stringify(state));
-    if(Object.keys(oldState).filter(key=>oldState[key]).length<3 || !oldState[id]==false){
+    if(Object.keys(oldState).filter(key=>oldState[key]).length<maxSelections || !oldState[id]==false){
       console.log(oldState);
       oldState[id] = (typeof bool != 'undefined') ? bool : !oldState[id]
       console.log(oldState);

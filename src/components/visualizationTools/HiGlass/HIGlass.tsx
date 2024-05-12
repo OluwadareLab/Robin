@@ -272,7 +272,17 @@ export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: Tra
             <p>This tab will not remember any changes if you leave.</p>
           </Col>
           <Col sm={2}>
-            <Button onClick={() => window.location.reload()}>Reload Higlass</Button>
+            <Button onClick={() => {
+                //this is a janky work around
+                localStorage.setItem('tab','nothing');
+                window.location.reload()
+                new Promise((res)=>{
+                  setTimeout(()=>res(1),3000)
+                }).then(()=>{
+                  localStorage.setItem('tab','higlass');
+                  window.location.reload()
+                })
+            }}>Reload Higlass </Button>
           </Col>
           {robinConfig.allowCoolerUploads ?
             <Col md={2}>

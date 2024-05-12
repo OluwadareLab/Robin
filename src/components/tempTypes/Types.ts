@@ -22,7 +22,7 @@ export class ReferenceFile {
 }
 
 export type resultData = {
-    datasets: any;
+    recoveryDatasets: any;
     remData: any[];
     loopSizes: any;
     regressionPoints;
