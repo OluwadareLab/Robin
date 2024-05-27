@@ -25,6 +25,7 @@ export const ResolutionInput = (props:resolutionInputProps) => {
                     list="resolutions"
                     placeholder="IE: 1000, 5000..."
                     value={props.resolution}
+                    step={1}
                     onChange={(e) => props.handleResolutionChange(e)}
                 />
                 <datalist id="resolutions">

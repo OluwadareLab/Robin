@@ -203,7 +203,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         </Tab>
         : ""}
 
-      <Tab key="Ai Assistant" eventKey="Ai Assistant" title="Ai Assistant">
+      <Tab key="Ai Assistant" eventKey="Ai Assistant" title="AI Assistant">
         <Container>
           <AiAssistantComponent clrs={clrs}/>
         </Container>

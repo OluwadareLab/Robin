@@ -8,6 +8,7 @@ import { ViewAllJobsPage } from './pages/ViewAllJobs';
 import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass/HIGlass';
 import { OneStepJobUploadPage } from './pages/OneStepJobPage';
 import { AiAssistantComponent } from './components/aiAssistant/aiAssistant';
+import { AboutPage } from './pages/aboutPage';
 
 export const WebRoutes = () => (
     <Router basename="robin/">
@@ -19,7 +20,7 @@ export const WebRoutes = () => (
             <Route path={`${paths.queue}/:id`} element={<QueuePage />}/>
             <Route path={`${paths.results}/:id`} element={<ChromatinLoopAnalysisResultsPage />}/>
             <Route path={`${paths.example}`} element={<ChromatinLoopAnalysisResultsPage example={true}/>}/>
-            <Route path={`${paths.about}`} element={<div>about</div>}/>
+            <Route path={`${paths.about}`} element={<AboutPage/>}/>
             <Route path={`${paths.github}`} element={<div>https://github.com/mattieFM/MohitProjWeb</div>}/>
             <Route path={`${paths.jobs}`} element={<ViewAllJobsPage/>}/>
             <Route path={`/temp/`} element={<HiGlassComponentWrapper/>}/>

@@ -6,7 +6,7 @@ const config = {
     broswerName:"Robin",
 
     /** the id of the job to display as an example */
-    exampleJobId:61,
+    exampleJobId:"61",
 
     /** weather to allow users to upload cooler files to higlass or not */
     allowCoolerUploads:false,
@@ -23,7 +23,7 @@ const config = {
     /**
      * @description the highest resolution something can be before being low res
      */
-    highCuttoff:5001,
+    highCuttoff:10001,
 
     /**
      * @description full url of our higlass server
