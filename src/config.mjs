@@ -57,7 +57,7 @@ const config = {
     github:"https://github.com/OluwadareLab/Robin/",
 
     /** TODO: [mohitAddthePathToOurDocsHere] */
-    docs:"https://google.com",
+    docs:"https://media.tenor.com/a2GNbdj_n7gAAAAM/cat-wink.gif",
 
     /** the number of milliseconds the que page will update every x */
     queuePageUpdateFrequency: 10000,

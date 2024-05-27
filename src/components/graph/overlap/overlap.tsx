@@ -117,6 +117,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   console.log(props.data);
   const params = useParams();
   const id = params.id ? parseInt(params.id) : undefined;
+  const [invalidComboWarn, setInvalidComboWarn] = useState<boolean>(false);
   const [filterResolution, setFilterResolution] = useState<any>(props.resolutionFilter ? props.resolutionFilter : (props.data[0] ? props.data[0].resolution : false))
   const [currentCombo, setCurrentCombo] = useState<OverlapDataObj | undefined>(props.data[0] ? props.data[0] : undefined);
   const [updater, setUpdater] = useState<number>(0);
@@ -258,6 +259,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
 
   function updateSelection(data) {
     let selections = Object.keys(data).filter(key => data[key]);
+    let valid = false;
     if (selections.length > 1) {
       getValidCombos()
       console.log(data)
@@ -268,9 +270,11 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
         console.log(`combo:${combo}`)
         if (selections.every(keyword => combo.includes(keyword)) && combo.split(":").length == selections.length) {
           setCurrentCombo(props.data.find(element => element.fileCombo === combo));
-        }
+          valid=true;
+        } 
       }
     }
+    setInvalidComboWarn(!valid)
 
   }
 
@@ -306,6 +310,12 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
           />
         </Col>
         <Col md={8}>
+          {invalidComboWarn?
+          <>
+          <InstructionHeader title="An error occured when computing this overlap combination."/>
+          <p>this could mean there is no overlap, a formatting issue, or something else went wrong</p>
+          </>:""
+          }
           <VennDiagramComponent
             id={id}
             data={data}
