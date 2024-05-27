@@ -113,7 +113,7 @@ const QueuePage: React.FC<QueuePageProps> = () => {
         ) : (
           <>
             <h1>Processing Now</h1>
-            <p>Your job should take 5-10 min to complete.</p>
+            <p>Your job should take about 3 min per tool with 4 resolutions to complete. (10-30min depending on how much data you have)</p>
             <p>We will redirect you to your results when they are done.</p>
         
           </>

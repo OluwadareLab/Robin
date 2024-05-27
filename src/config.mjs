@@ -50,8 +50,14 @@ const config = {
     /** @description the link to the project's github */
     github:"https://github.com/OluwadareLab/Robin/",
 
+    /** TODO: [mohitAddthePathToOurDocsHere] */
+    docs:"https://google.com",
+
     /** the number of milliseconds the que page will update every x */
     queuePageUpdateFrequency: 10000,
+
+    /** the number of milliseconds the jyupter results page will update every x */
+    aiFetchNewJyupterNotebookfilesFrequency: 10000,
 
     email:"comprehensiveloopcaller@gmail.com",
     emailServer:"gmail",
@@ -104,7 +110,6 @@ config.higlassApiUrlV1=`${config.higlassApiUrl}/api/v1`;
  */
 const paths = {
     home: "/",
-    docs:"[mohit[addthispath",
     upload: "/upload",
     setup: "/jobSetup",
     queue: "/queue",

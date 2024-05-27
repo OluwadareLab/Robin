@@ -8,7 +8,7 @@ export const GitHubLink: React.FC = () => {
   return (
     <>
     <img src={gitlogo} alt="github logo" className="rounded-circle" style={{ width: '54%' }} /> 
-    <Nav.Link href={config.github}>Github</Nav.Link>
+    <Nav.Link target="_blank" href={config.github}>Github</Nav.Link>
     </>
       
         

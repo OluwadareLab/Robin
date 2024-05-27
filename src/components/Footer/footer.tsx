@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
           </div>
           <div style={{ float: 'left', marginLeft: '10px' }}>
             <span style={{ marginTop: '5px', fontSize: '14px' }}>
-              © {new Date().getFullYear()} <b><a href="https://uccs-bioinformatics.com/">UCCS Bioinformatics Lab</a></b>
+              © {new Date().getFullYear()} <b><a target="_blank" href="https://uccs-bioinformatics.com/">UCCS Bioinformatics Lab</a></b>
             </span>
           </div>
         </Col>

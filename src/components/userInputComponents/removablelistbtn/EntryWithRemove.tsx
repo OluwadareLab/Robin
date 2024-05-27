@@ -31,7 +31,10 @@ export const EntryWithRemove = (props:EntryWithRemoveProps) => (
             />
         </div>
         <div className='col-sm-2'>
-            <button className="btn btn-secondary" onClick={(e)=>props.handleRemoveToolData(e)}>Remove</button>
+            <button className="btn btn-secondary" onClick={(e)=>{
+                e.preventDefault();
+                return props.handleRemoveToolData(e);
+                }}>Remove</button>
         </div>
     </div>
     

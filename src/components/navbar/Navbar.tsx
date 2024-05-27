@@ -19,9 +19,9 @@ export const AppNavbar: React.FC = (props: NavbarProps) => {
                 <Navbar.Collapse id="basic-navbar-nav" className="ml-auto">
                     <Nav className="mr-auto">
                         <Nav.Link href={paths.about}>About</Nav.Link>
-                        <Nav.Link href={path2.docs}>Documentation</Nav.Link>
+                        <Nav.Link target="_blank" href={config.docs}>Documentation</Nav.Link>
                         <Nav.Link href={paths.example}>Example</Nav.Link>
-                        <Nav.Link href={config.github}>GitHub</Nav.Link>
+                        <Nav.Link target="_blank" href={config.github}>GitHub</Nav.Link>
                         
                     </Nav>
                    

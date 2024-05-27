@@ -623,7 +623,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
         [count, setCount] = useState(0)
    
    useEffect(() => {
-    const timer = setTimeout(() => ticking && setCount(count+1), 1e4)
+    const timer = setTimeout(() => ticking && setCount(count+1), config.aiFetchNewJyupterNotebookfilesFrequency)
     return () => clearTimeout(timer)
    }, [count, ticking])
 
