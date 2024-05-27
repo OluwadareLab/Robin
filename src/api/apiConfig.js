@@ -1,4 +1,9 @@
-
+/** the max number of scripts that can run at the same time */
+const maxParralellScripts = 50;
+/** how much max memory in gb jobs can take up while running */
+const maxMemoryConsumed = 200;
+/** if the system's free mem is lower than this wait to run scripts till it is below this number */
+const minFreeMemOnSystem = 200;
 
 const apiPaths = {
     /** @description the path for the put request to put general info onto the server */
@@ -55,4 +60,4 @@ const STATUSES = {
     RUNNING:"running"
 }
 
-export {apiPaths, STATUSES};
+export {apiPaths, STATUSES, maxParralellScripts, minFreeMemOnSystem, maxMemoryConsumed};

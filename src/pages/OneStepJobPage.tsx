@@ -39,15 +39,49 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     const navigate = useNavigate();
     const formRef = useRef(null);
 
-    //form states
-    const [protienRefFiles, setProtienRefFiles] = useState<File[]>([]);
-    const [protienRefFileNames, setProtienRefFileNames] = useState<string[]>([]);
-    const [toolData, setToolData] = useState<ToolData[]>([]);
-    const [useHiglass, setUseHiglass] = useState<boolean>(true);
-    const [chromSizesFile, setChromSizesFile] = useState<ChromFile>(new ChromFile());
+    
+    //------------------------
+    //The commmented out sections below are most of an implementation of storing 
+    //the user's choices in cookies to make sure they dont lose their work if they 
+    //are uploading a big job
+    //---------------------
+    // //stored data to make form persist
+    let storedProtienRefArr:string[]=[];
+    let storedProtienRefFileNames:string[]=[];
+    let storedToolData:ToolData[]=[];
+    let storedUseHiGlass:boolean=true;
+    let storedChromFile=new ChromFile();
+    let storedFileSets:fileSet[]=[];
+    let storedBasicInfo:any={};
 
-    const [fileSets, setFilesets] = useState<fileSet[]>([]);
-    const [basicInfo, setBasicInfo] = useState<any>({});
+    // //these are all wrapped with try catches since we are just checking if the data
+    // //exists and loading if so, hence we dont need any more than a simple try catch
+    // try {storedProtienRefArr=JSON.parse(localStorage.getItem('storedProtienRefArr'))} catch {}
+    // try {storedProtienRefFileNames=JSON.parse(localStorage.getItem('storedProtienRefFileNames'))} catch {}
+    // try {storedToolData=JSON.parse(localStorage.getItem('storedToolData'))} catch {}
+    // try {storedUseHiGlass=JSON.parse(localStorage.getItem('storedUseHiGlass'))} catch {}
+    // try {storedChromFile=JSON.parse(localStorage.getItem('storedChromFile'))} catch {}
+    // try {storedFileSets=JSON.parse(localStorage.getItem('storedFileSets'))} catch {}
+    // try {storedBasicInfo=JSON.parse(localStorage.getItem('storedBasicInfo'))} catch {}
+
+
+    // console.log(localStorage.getItem('storedProtienRefArr'));
+    // console.log(localStorage.getItem('storedProtienRefFileNames'));
+    
+    //form states
+    const [protienRefFiles, setProtienRefFiles] = useState<File[]>(storedProtienRefArr?storedProtienRefArr:[]);
+    const [protienRefFileNames, setProtienRefFileNames] = useState<string[]>(storedProtienRefFileNames?storedProtienRefFileNames:[]);
+    const [toolData, setToolData] = useState<ToolData[]>(storedToolData?storedToolData:[]);
+    const [useHiglass, setUseHiglass] = useState<boolean>(storedUseHiGlass);
+    const [chromSizesFile, setChromSizesFile] = useState<ChromFile>(storedChromFile?storedChromFile:new ChromFile());
+    const [fileSets, setFilesets] = useState<fileSet[]>(storedFileSets?storedFileSets:[]);
+    const [basicInfo, setBasicInfo] = useState<any>(storedBasicInfo?storedBasicInfo:{});
+
+    // /** @description a simple wrapper to update local storage with the result of the state */
+    // const localStorageWrapper = (localStoreString,originalSetter) => ((value)=>{originalSetter(value);localStorage.setItem(localStoreString,JSON.stringify(value))});
+    // //we wrap the form states setters to store their values to the local storage
+    // const setProtienRefFiles = localStorageWrapper('storedProtienRefArr', _setProtienRefFiles);
+    // const setProtienRefFileNames = localStorageWrapper('storedProtienRefFileNames', _setProtienRefFileNames);
 
     useEffect(()=>{
         axios.get(apiPaths.getNextID).then(response=>{
@@ -122,14 +156,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                 return;
             }
             
-            //submit job
-            axios.post(apiPaths.jobSubmit, {id:params.id}).then((response) => {
-                if(response.status===200)
-                navigate(paths.queue+"/"+params.id);
-            else {
-                alert("something went wrong." + response.data.err);
-            }
-                });
+            
             
             
             return "test";
@@ -140,7 +167,14 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
      * @description the callback when the form fully submitted
      */
     function onSubmitted(){
-
+        //submit job
+            axios.post(apiPaths.jobSubmit, {id:params.id}).then((response) => {
+                    if(response.status===200)
+                    navigate(paths.queue+"/"+params.id);
+                else {
+                    alert("something went wrong." + response.data.err);
+                }
+            });
     }
 
     return (
@@ -162,6 +196,8 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                     <ProtienReferenceUploadForm
                         setRefFileNames={setProtienRefFileNames}
                         setRefFiles={setProtienRefFiles}
+                        refFiles={protienRefFiles}
+                        refNames={protienRefFileNames}
                     />
                 </Row>
                 <hr/>

@@ -81,21 +81,22 @@ echo "cleaning up temp files"
 
 wait
 
-# rm $tempUpdatedFile
-# rm $tempUpdatedFileSorted
-# rm $tempConvertedToBedgraphFile
+rm $tempUpdatedFile
+rm $tempUpdatedFileSorted
+rm $tempConvertedToBedgraphFile
 
 echo "copying hitile file to higlass path"
-cp $convertedToHitileFile $higlassTempDataPath/$outfile.hitile
+mv $convertedToHitileFile $higlassTempDataPath/$outfile.hitile
 
 echo "api requesting to injest higlass file"
+#TODO: add arugmuent
 curl -u admin:admin \
     -F "datafile=@/$higlassTempDataPath/$outfile.hitile" \
     -F 'datatype=vector' \
     -F 'filetype=hitile' \
     -F "name=$higlassName" \
     -F "uid=$uid" \
-    -F 'coordSystem=mm10' \
+    -F "coordSystem=$assembly" \
     http://higlass:80/api/v1/tilesets/
 
 

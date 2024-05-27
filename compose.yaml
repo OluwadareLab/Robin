@@ -20,6 +20,19 @@ services:
       - web_data:/storage/store/Robin_ComprehensiveLoopCaller/
     networks:
       - backend
+  flask_api:
+    build: 
+      context: .
+      dockerfile: dockerfile.server  # Specify the name of the Dockerfile
+    ports:
+      - "8087:8087" #8087 is the internal port hosted on inside the docker
+    depends_on:
+      - higlass
+    volumes:
+      - web_data:/storage/store/Robin_ComprehensiveLoopCaller/
+    networks:
+      - backend
+    command: npm run start-flask-api
   web:
     build: 
       context: .

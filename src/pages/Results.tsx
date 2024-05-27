@@ -47,7 +47,7 @@ const clrs: any = {};
 export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisResultsPageProps) => {
   const [higlassUids, setHiglassUids] = useState<{ uid: string, type: TrackType }[]>([]);
   const [overlapData, setOverlapData] = useState<OverlapDataSet>([]);
-  const [activeTab, setActiveTab] = useState<string>(localStorage.getItem('tab') ? localStorage.getItem('tab') : "overlap");
+  const [activeTab, setActiveTab] = useState<string>(localStorage.getItem('tab') ? localStorage.getItem('tab') : "Overlap");
   const [activeResolution, setActiveResolution] = useState<string>('5000');
   const [jobResults, setJobResults] = useState<{ toolname: string, files: { resultFileName: string, data: string }[] }[]>([]);
   const [datasets, setDatasets] = useState<any[]>([]);
@@ -60,6 +60,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const [binVsResDataset, setBinVsResDataset] = useState<any[]>([]);
   const [binVsResVsKbVsResDataset, setBinVsResVsKbVsResDataset] = useState<any>({});
   const [renderHiglass, setRenderHiglass] = useState<boolean>(false);
+
+  const [dataHasLoaded, setDataHasLoaded] = useState<boolean>(false);
 
   const params = useParams()
 
@@ -86,7 +88,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
 
   let jobId = params.id
-  if (props.example) jobId = "1";
+  if (props.example) jobId = "41";
 
 
   if (config.DEBUG) console.log(Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key], category: 'none' })));
@@ -116,6 +118,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const higlasstab =
     <Container>
       <HiGlassComponentWrapper uids={higlassUids} />
+      <p>If Higlass is not loading, please try clearing browsing data or using an incognito window/other browser, and clicking the reload higlass button at the top of this page</p>
     </Container>
   const normalPage =
     <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
@@ -366,8 +369,9 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       if (config.DEBUG) console.log(tempRegressionPoints)
       if (config.DEBUG) console.log(tempLoopSizes)
 
-
+      setDataHasLoaded(true);
     });
+    
 
   }
 
@@ -387,7 +391,17 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
   return (
     <div id="resultsMainPage">
-      {normalPage}
+      {dataHasLoaded?
+      normalPage:
+      <>
+       <InstructionHeader title="Loading Your Data" />
+        <div
+        className="spinner-border text-primary"
+        style={{ width: "5rem", height: "5rem" }}
+        role="status"
+      />
+      </>
+      }
     </div>
   );
 };

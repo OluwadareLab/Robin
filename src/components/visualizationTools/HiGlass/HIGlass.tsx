@@ -164,56 +164,57 @@ export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: Tra
         "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
         "tracks": {
           "top": [
-            {
-              "editable": true,
-              "filetype": "cooler",
-              "server": "http://higlass.io/api/v1",
-              "tilesetUid": "e5QaKN16SdWyIWKAidq2Kw",
-              "uid": "I3VHsqI-RxquUSZ3J42LwQ",
-              "type": "linear-heatmap",
-              "options": {
-                "backgroundColor": "#eeeeee",
-                "labelPosition": "bottomRight",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": true,
-                "labelShowAssembly": true,
-                "labelColor": "black",
-                "colorRange": [
-                  "white",
-                  "rgba(245,166,35,1.0)",
-                  "rgba(208,2,27,1.0)",
-                  "black"
-                ],
-                "minWidth": 100,
-                "minHeight": 40,
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "name": "Rao et al. (2014) GM12878 MboI (SRR1658572)"
-              },
-              "width": 1506,
-              "height": height,
-              "transforms": [
-                {
-                  "name": "ICE",
-                  "value": "weight"
-                },
-                {
-                  "name": "KR",
-                  "value": "KR"
-                },
-                {
-                  "name": "VC",
-                  "value": "VC"
-                },
-                {
-                  "name": "VC_SQRT",
-                  "value": "VC_SQRT"
-                }
-              ]
-            },
+            //previous default heatmap
+            // {
+            //   "editable": true,
+            //   "filetype": "cooler",
+            //   "server": "http://higlass.io/api/v1",
+            //   "tilesetUid": "e5QaKN16SdWyIWKAidq2Kw",
+            //   "uid": "I3VHsqI-RxquUSZ3J42LwQ",
+            //   "type": "linear-heatmap",
+            //   "options": {
+            //     "backgroundColor": "#eeeeee",
+            //     "labelPosition": "bottomRight",
+            //     "labelLeftMargin": 0,
+            //     "labelRightMargin": 0,
+            //     "labelTopMargin": 0,
+            //     "labelBottomMargin": 0,
+            //     "labelShowResolution": true,
+            //     "labelShowAssembly": true,
+            //     "labelColor": "black",
+            //     "colorRange": [
+            //       "white",
+            //       "rgba(245,166,35,1.0)",
+            //       "rgba(208,2,27,1.0)",
+            //       "black"
+            //     ],
+            //     "minWidth": 100,
+            //     "minHeight": 40,
+            //     "trackBorderWidth": 0,
+            //     "trackBorderColor": "black",
+            //     "name": "Rao et al. (2014) GM12878 MboI (SRR1658572)"
+            //   },
+            //   "width": 1506,
+            //   "height": height,
+            //   "transforms": [
+            //     {
+            //       "name": "ICE",
+            //       "value": "weight"
+            //     },
+            //     {
+            //       "name": "KR",
+            //       "value": "KR"
+            //     },
+            //     {
+            //       "name": "VC",
+            //       "value": "VC"
+            //     },
+            //     {
+            //       "name": "VC_SQRT",
+            //       "value": "VC_SQRT"
+            //     }
+            //   ]
+            // },
             ...tracks
           ],
           "left": [],

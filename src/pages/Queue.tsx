@@ -74,6 +74,23 @@ const QueuePage: React.FC<QueuePageProps> = () => {
   }, [position, interval, navigate])
 
 
+
+  //make sure user has bookmarked
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      window.alert("please make sure you have bookmarked this page before you leave");
+      event.returnValue = 'please make sure you have book marked this page'; // This line is necessary for the confirmation dialog to show up in some browsers
+      
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  },[])
+
+
   function page(body){
     return (
       <div className="container-fluid h-100 d-flex align-items-center justify-content-center">
@@ -96,6 +113,7 @@ const QueuePage: React.FC<QueuePageProps> = () => {
         ) : (
           <>
             <h1>Processing Now</h1>
+            <p>Your job should take 5-10 min to complete.</p>
             <p>We will redirect you to your results when they are done.</p>
         
           </>

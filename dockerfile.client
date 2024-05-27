@@ -18,10 +18,13 @@ RUN apt-get update && \
     apt install r-base r-base-dev -y
 
 # install R deps
-RUN Rscript -e "install.packages('data.table')"
-RUN Rscript -e "install.packages('optparse')"
+RUN R -e "install.packages('data.table')"
+RUN R -e "install.packages('optparse')"
+RUN R -e "install.packages('BiocManager')"
+RUN R -e "BiocManager::install('GenomicRanges')"
 RUN Rscript -e "install.packages('BiocManager')"
 RUN Rscript -e "BiocManager::install('GenomicRanges')"
+
 
 # Install curl and other necessary system dependencies
 RUN apt-get update && apt-get install -y curl software-properties-common

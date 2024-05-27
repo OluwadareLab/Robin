@@ -20,17 +20,6 @@ RUN apt-get update && \
 # Install Bed Tools
 RUN apt-get install -y bedtools
 
-# install R deps
-RUN Rscript -e "install.packages('data.table')"
-RUN Rscript -e "install.packages('dplyr')"
-RUN Rscript -e "install.packages('optparse')"
-RUN Rscript -e "install.packages('BiocManager')"
-RUN Rscript -e "BiocManager::install('GenomicRanges')"
-# RUN Rscript -e "BiocManager::install('CAGEfightR')"
-RUN Rscript -e "install.packages('venn')"
-RUN Rscript -e "install.packages('VennDiagram')"
-
-
 # Install curl and other necessary system dependencies
 RUN apt-get update && apt-get install -y curl software-properties-common
 
@@ -68,6 +57,27 @@ RUN pip install nbconvert
 
 #install all libs for graphing
 RUN pip install matplotlib
+
+# install R deps
+RUN R -e "install.packages('data.table')"
+RUN R -e "install.packages('dplyr')"
+RUN R -e "install.packages('optparse')"
+RUN R -e "install.packages('BiocManager')"
+RUN R -e "BiocManager::install('GenomicRanges')"
+# RUN R -e "BiocManager::install('CAGEfightR')"
+RUN R -e "install.packages('venn')"
+RUN R -e "install.packages('VennDiagram')"
+RUN Rscript -e "install.packages('BiocManager')"
+RUN Rscript -e "BiocManager::install('GenomicRanges')"
+
+#double check genomic ranges is installed
+RUN R -e "library(GenomicRanges); print('GenomicRanges is available')"
+RUN Rscript -e "library(GenomicRanges); print('GenomicRanges is available')"
+
+#get flask installed
+RUN pip install flask-cors
+RUN pip install -U Flask
+RUN pip install python-dotenv
 
 WORKDIR /storage/store/Robin_ComprehensiveLoopCaller
 CMD [ "npm", "run", "start-api-worker" ]

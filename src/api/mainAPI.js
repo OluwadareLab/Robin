@@ -71,7 +71,7 @@ app.listen(config.apiPort);
 function getQueuePos(id, status){
     return new Promise((resolve) =>{
         db.all(`SELECT COUNT(status) FROM jobs WHERE status="${status}" AND ROWID<${id}`, (err, res) => {
-            if(res){
+            if(res && res[0]){
                 if(typeof(res[0]['COUNT(status)']) != "undefined"){
                     resolve(res[0]['COUNT(status)']);
                 }
@@ -459,7 +459,7 @@ app.get(apiPaths.htmlFiles, async (req, response) =>{
         const id = req.query.id;
         const folderPath = resolve(generateJobjupyterFolderPath(id));
         let files = fs.readdirSync(folderPath).filter(filename=>filename.endsWith(".html")).map(
-            filename=>fs.readFileSync(`${folderPath}/${filename}`, 'utf8')
+            filename=>({file:fs.readFileSync(`${folderPath}/${filename}`, 'utf8'),name:filename})
         );
 
         response.json({ files: files, status: 200 });
@@ -540,13 +540,14 @@ const uploadCoolerData = multer({
 )
 })
 
-function handleFileUpload(req,response){
+function handleFileUpload(req,response,STATUS=STATUSES.HAS_SOME_DATA){
     const timeout = setTimeout(() => {
         response.json({ id: null, status: 408 });
     }, 10000);
     try {
         const id = req.body.id;
         try {
+            if(STATUS!=null)
             updateJobStatus(id, STATUSES.HAS_SOME_DATA);
         } catch (error) {
             console.log(`Failed to update database status of job_${id}: ${error}.`);
@@ -583,7 +584,7 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
  */
 app.post(apiPaths.jyupterUpload, uploadJupyterFile.array("files"), async (req, response, next) => {
     let jobId=req.body.id;
-    await handleFileUpload(req,response);
+    await handleFileUpload(req,response,STATUSES.DONE);
     //then convert to html
 
     let files = fs.readdirSync(generateJobjupyterFolderPath(jobId));
@@ -718,13 +719,20 @@ export async function getAllJobsWithHiglassStatus(higlassStatus){
 export function getJobStatus(jobId){
     try {
         return new Promise(resolve =>{
-            db.all(`
+            try {
+                db.all(`
                 SELECT status
                 FROM jobs
                 WHERE ROWID=${jobId}`, (err, res) => {
-                    if(res) {resolve(res[0].status);}
+                    if(res && res[0]) {resolve(res[0].status);}
                     else { resolve(STATUSES.FAIL);}
                 })
+            } catch (error) {
+                console.log("error status not defined likely a bad job id from getjobstatus");
+                console.log(error);
+                resolve(STATUSES.FAIL);
+            }
+            
         })
     } catch (error) {
         resolve(STATUSES.FAIL);
@@ -743,7 +751,7 @@ export function getPropFromJob(jobId,prop){
                 SELECT ${prop}
                 FROM jobs
                 WHERE ROWID=${jobId}`, (err, res) => {
-                    if(res) {resolve(res[0][prop]);}
+                    if(res && res[0]) {resolve(res[0][prop]);}
                     else { resolve(STATUSES.FAIL);}
                 })
         })
@@ -765,7 +773,7 @@ export function getJobHiglassStatus(jobId){
                 WHERE ROWID=${jobId}`, (err, res) => {
                     console.log("---------------------------------------higlassToggle-------------");
                     console.log(res);
-                    if(res) {resolve(res[0].higlassToggle);}
+                    if(res && res[0]) {resolve(res[0].higlassToggle);}
                     else { resolve(0);}
                 })
         })

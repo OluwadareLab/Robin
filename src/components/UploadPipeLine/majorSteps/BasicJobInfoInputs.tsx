@@ -31,12 +31,15 @@ export const BasicJobInfoInputs = (props:{setData?:(any)=>void}) => {
             required:true
             },
 
-            {
-            name:'email',
-            title:'Email',
-            required:false,
-            inputType:'email'
-            }]}
+            // uncomment if you want to add back in the email field
+            // {
+            // name:'email',
+            // title:'Email',
+            // required:false,
+            // inputType:'email'
+            // }
+        
+        ]}
             onSubmit={onSubmitJobInfo}
             />
     </>

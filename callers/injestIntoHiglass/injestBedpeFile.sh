@@ -8,6 +8,8 @@ resolution=$2
 jobId=$3
 name=$4
 
+#=TODO pass assembly name and update coordSystem in higlass 
+
 #basic paths
 jobPath=$storagePath/job_$jobId
 outputPath=$storagePath/job_$jobId/out

@@ -64,6 +64,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
   const apiEndpoint = props.apiPath || apiPaths.jobData;
 
   //this is for asetetics and rendering display suffs
+  const [btnPressedCount, setBtnPressedCount] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
 
@@ -82,7 +83,13 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
   }, [uploadComplete, id]);
 
   const handleUpload = (e) => {
+    if(btnPressedCount>1){
+      if(!window.confirm('You already have completed an upload, or one is in progress. Are you sure you need to submit this again?')){
+        return;
+      }
+    }
     if (props.conditionalCb ? props.conditionalCb(e) : true) {
+      setBtnPressedCount(btnPressedCount+1);
       //for each fileset
       //setup formdata
       const formData = new FormData();

@@ -5,8 +5,8 @@ const config = {
     /** weather to allow users to upload cooler files to higlass or not */
     allowCoolerUploads:false,
 
-    projectName: "Robin: Compherative analysis and visualization of loop perdictions ",
-    projectDescription: "An online tool for visualization and anaylisis of chromtin loops.",
+    projectName: "Robin:  An Advanced Tool for Comparative Loop Caller Analysis Leveraging Large Language Models",
+    projectDescription: "An online tool for visualization and anaylisis of chromtin loops. [mohit]",
 
     /** @description if a job is older than this (in ms) abandon the job TIMEOUT: 4 hours */
     maxjobage:60*1000*60 * 4,
@@ -23,6 +23,9 @@ const config = {
      * @description full url of our higlass server
      */
     higlassApiUrl:"http://biomlearn.uccs.edu/robinHighglassAPI/",
+
+    /** path for flask api */
+    flaskAPIUrl:"http://biomlearn.uccs.edu/robinFlaskAPI/",
 
     /**
      * @description full url of the api/v1 of our higlass server where tilesets can be retrieved from
@@ -45,7 +48,7 @@ const config = {
     webPath:"http://biomlearn.uccs.edu/robin/", //http://localhost:3000",
 
     /** @description the link to the project's github */
-    github:"https://github.com/mattieFM/MohitProjWeb",
+    github:"https://github.com/OluwadareLab/Robin/",
 
     /** the number of milliseconds the que page will update every x */
     queuePageUpdateFrequency: 10000,
@@ -80,10 +83,11 @@ const config = {
     callersHiglassCoolerInjestScript: "./callers/injestIntoHiglass/injestCoolFile.sh",
 
     /** the pather to the script to convert jyupter file to html including execution */
-    jupyterConverter:"./callers/jupyterConverter/convert.sh"
+    jupyterConverter:"./callers/jupyterConverter/convert.sh",
 
     // /** the port where the api is hosted (defined below)*/
     // apiPort:undefined
+
 
 
 }
@@ -93,18 +97,20 @@ config.higlassApiUrlV1=`${config.higlassApiUrl}/api/v1`;
 // /** the port where the api is hosted */
 // config.apiPort=config.apiPath.split(":").slice(-1)[0];
 
+
+//TODO: mohit add documentation path below:
 /**
  * @description all relative paths within the website
  */
 const paths = {
     home: "/",
+    docs:"[mohit[addthispath",
     upload: "/upload",
     setup: "/jobSetup",
     queue: "/queue",
     results: "/results",
     jobs: "/jobs",
     example: "/example",
-    github: "/github",
     about: "/about",
     referenceUpload: "/uploadRef",
     aiTest: "/testAI"
@@ -119,5 +125,5 @@ const hrefPaths = {};
 Object.keys(paths).forEach(key=>hrefPaths[key]=`/robin${paths[key]}`)
 
 
-export {paths, hrefPaths};
+export {paths, hrefPaths, config};
 export default config;

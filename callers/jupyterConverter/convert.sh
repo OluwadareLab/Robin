@@ -12,15 +12,27 @@ outputPath=$storagePath/job_$jobId/out
 dataPath=$storagePath/job_$jobId/jupyter 
 logPath=$storagePath/job_$jobId/log
 logFile=$logPath/jyupter_${fileName}.log
+new_filename="$dataPath/${fileName%.ipynb}.html"
 
-mkdir -p $logPath
-mkdir -p $dataPath
+if [ -e "$new_filename" ]; then
+    echo "File exists."
+else
+    mkdir -p $logPath
+    mkdir -p $dataPath
 
-touch $logFile
-exec > $logFile 2>&1
+    touch $logFile
+    exec > $logFile 2>&1
 
-echo "converting jyupterbook to html"
+    echo "converting jyupterbook to html"
 
-jupyter nbconvert --execute --to html $dataPath/$fileName
+    jupyter nbconvert --execute --to html $dataPath/$fileName
 
-echo "dpne converting jyupterbook to html"
+    #if script failed provided error as html file
+    if [ -e "$new_filename" ]; then
+        echo "File exists."
+    else
+        cp $logFile $new_filename
+    fi
+
+    echo "dpne converting jyupterbook to html"
+fi

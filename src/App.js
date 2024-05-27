@@ -11,8 +11,9 @@ import config from './config.mjs';
 import axios from 'axios';
 
 axios.defaults.baseURL = config.apiPath;
-axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
-axios.defaults.headers.get['Content-Type'] ='application/x-www-form-urlencoded';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] ='*';
+axios.defaults.headers.get['Access-Control-Allow-Credentials'] =false;
+//axios.defaults.headers.get['Content-Type'] ='application/x-www-form-urlencoded';
 
 const ThemeContext = React.createContext('light');
 

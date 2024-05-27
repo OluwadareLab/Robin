@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Collapse, Accordion, AccordionBody, NavLink, AccordionItem } from 'react-bootstrap';
 import OpenAI from 'openai';
-import Markdown from 'https://esm.sh/react-markdown@9'
+import Markdown from 'react-markdown';
 import { TempJyupterUploader } from '../tempJuypterParser/tempJuypterPopup';
 import axios from 'axios';
 import { apiPaths } from '../../api/apiConfig';
@@ -13,9 +13,18 @@ import { UTIL } from '../../util';
 import { CustomLegendWithSelection } from '../graph/CustomLegend';
 import { resultData } from '../tempTypes/Types';
 
+import CodeMirror from '@uiw/react-codemirror';
+import { python } from '@codemirror/lang-python';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { AiInstructions } from './aiInstructions';
+import { BtnLink } from '../buttons/BtnLink';
+
+//import style sheet
+import "./aiAssistant.css"
+
 type AiAssistantComponentProps = {
   datasets: any[];
-  clrs:any[]
+  clrs: any[]
 }
 
 type msg = {
@@ -29,7 +38,7 @@ const chatContainerStyle = {
   borderRadius: "8px", /* Rounded corners for a modern look */
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", /* Subtle shadow for depth */
   overflow: "overflow: scroll;", /* Ensures no overflow outside the rounded corners */
-  height: "1800px",
+  height: "auto",
   display: "flex",
   flexDirection: "column", /* Ensures a column layout for messages and input area */
 }
@@ -215,7 +224,7 @@ function juypterFileAsembler(codeSnippet) {
       "execution_count": null,
       "metadata": {},
       "outputs": [],
-      "source": ${JSON.stringify(codeSnippet.split("\n").filter(line => line.length > 1).map(line => line += "\n"))}
+      "source": ${JSON.stringify(codeSnippet.split("\n").filter(line => line.length >= 1).map(line => line += "\n"))}
      }
     ],
     "metadata": {
@@ -261,6 +270,126 @@ function juypterFileAsembler(codeSnippet) {
 
 let i = 0;
 
+function extractSnippetFromMarkdownText(text) {
+  const regexCodeSnippetMatcher = /\`\`\`python(.*?)\`\`\`/s
+  const regexMatch = regexCodeSnippetMatcher.exec(text);
+  return regexMatch[1];
+}
+
+function submitSnippet(answer, jobId, jobTitle) {
+  const regexCodeSnippetMatcher = /\`\`\`python(.*?)\`\`\`/s
+  const regexMatch = regexCodeSnippetMatcher.exec(answer);
+  if (regexMatch) {
+    const codeSnippet = regexMatch[1];
+    console.log(answer);
+    console.log(codeSnippet);
+    const juypterFile = juypterFileAsembler(codeSnippet);
+    console.log(juypterFile);
+
+    if (codeSnippet) {
+      const formData = new FormData();
+      formData.append(`id`, jobId.toString());
+      // Convert the string to a Blob
+      const blob = new Blob([juypterFile], { type: 'text/plain' });
+
+      // Create a File object from the Blob
+      const fileName = "example.txt";
+      const file = new File([blob], fileName, { type: 'text/plain' });
+      formData.append(`files`, file, `${jobTitle.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9]/g, '_')}.ipynb`);
+      axios.post(apiPaths.jyupterUpload, formData);
+    }
+  }
+}
+
+type MessageContainerProps = {
+  /**the response from the ai */
+  message: string;
+  /** what they werwe reponding to */
+  question: string;
+
+  /** a variable that will change to signifty that a result has been saved */
+  updater:any
+}
+/**
+ * 
+ * @param props 
+ * @returns 
+ */
+const MessageContainer = (props: MessageContainerProps) => {
+  const params = useParams();
+  const [isEditMode, setEditMode] = useState<boolean>(true);
+  const [message, setMessage] = useState(props.message);
+  const [output, setOutput] = useState("");
+  const [hasCodeBeenTested, setCodeHasBeenTested] = useState<boolean>(false);
+  const [waitingForResponse, setWaitingForResponse] = useState<boolean>(false);
+  const [waitingForJyupterResponse, setWaitingForJyupterResponse] = useState<boolean>(false);
+
+  //run code using flask
+  const runCode = async (msg) => {
+    try {
+      const response = await axios.post(`${config.flaskAPIUrl}run`, { code: msg }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setOutput(response.data.output);
+    } catch (error) {
+      setOutput('Error running code:' + error);
+    }
+  };
+
+  useEffect(() => {
+    setWaitingForResponse(false);
+  }, [output]);
+
+  useEffect(() => {
+    setWaitingForJyupterResponse(false);
+  }, [props.updater]);
+
+  return <>
+    <CodeMirror
+      value={message}
+      height="400px"
+      extensions={[python()]}
+      theme={oneDark}
+      onChange={(value) => setMessage(value)}
+    />
+    {
+      (waitingForResponse || waitingForJyupterResponse) ?
+        <div className="loader">
+          <span>.</span><span>.</span><span>.</span>
+        </div>
+        : ""
+    }
+    <pre style={{ color: "black" }}>{output}</pre>
+    <Row>
+      <Col>
+        <Button onClick={() => {
+          if(waitingForResponse) {alert("Please wait for response"); return;}
+          runCode(extractSnippetFromMarkdownText(message))
+          setCodeHasBeenTested(true);
+          setWaitingForResponse(true);
+        }}>Test Code</Button>
+      </Col>
+      <Col>
+        <Button variant={hasCodeBeenTested ? "primary" : "secondary"} onClick={() => {
+          //user must test code first
+          if (hasCodeBeenTested) {
+            if(waitingForJyupterResponse) {alert("Please wait for response. The list on the right will update with your result"); return;}
+            submitSnippet(message, params.id, props.question)
+            setWaitingForJyupterResponse(true);
+          } else {
+            alert("you must test your code before saving it.");
+          }
+
+        }}>Run Code & Save Result</Button>
+      </Col>
+    </Row>
+
+  </>
+
+
+}
 
 function ChatInterface(props) {
   const params = useParams();
@@ -269,18 +398,22 @@ function ChatInterface(props) {
   const [inputText, setInputText] = useState<string>('');
   const [name, setName] = useState<string>("");
   const [apikey, setApiKey] = useState<string>("");
-  
+
+  //used to wait for the ai to respond
+  const [timeUserLastSpoke, setTimeUserLastSpoke] = useState<number>(0);
+  const [userCanSpeak, setUserCanSpeak] = useState<boolean>(true);
+
   const [file, setFile] = useState<File>();
 
   const models = [
-    {label:"gpt-3.5-turbo",value:"gpt-3.5-turbo"},
-    {label:"gpt-4-turbo",value:"gpt-4-turbo"},
-    {label:"gpt-4",value:"gpt-4"},
-    {label:"gpt-4-32k",value:"gpt-4-32k"},
+    { label: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
+    { label: "gpt-4-turbo", value: "gpt-4-turbo" },
+    { label: "gpt-4", value: "gpt-4" },
+    { label: "gpt-4-32k", value: "gpt-4-32k" },
   ]
 
   const [model, setModel] = useState<string>(models[0].value);
-  const [dataSets,setDataSets] = useState({});
+  const [dataSets, setDataSets] = useState({});
   const [customLegendWithSelectionState, setCustomLegendWithSelectionState] = useState({});
 
   //TODO hide key
@@ -289,29 +422,31 @@ function ChatInterface(props) {
     dangerouslyAllowBrowser: true,
   });
 
-  useEffect(()=>{
-    setupDataSets(jobId).then(dataSets=>{delete dataSets["raw"]; setDataSets(dataSets)});
-  },[])
+  useEffect(() => {
+    setupDataSets(jobId).then(dataSets => { delete dataSets["raw"]; delete dataSets["higlassUids"]; setDataSets(dataSets) });
+  }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     openai = new OpenAI({
       apiKey: apikey, // This is the default and can be omitted
       dangerouslyAllowBrowser: true,
     });
-  },[apikey])
+  }, [apikey])
+
+
 
   /** @description the main function to get a response from gpt */
   async function getResponseFromGPT(msg: string, id): string {
     try {
       const avaliblePythonModules = ["matplotlib"]
-      const filteredDatasets = Object.keys(dataSets).filter(key=>{
-        console.log("key:"+key);
+      const filteredDatasets = Object.keys(dataSets).filter(key => {
+        console.log("key:" + key);
         console.log(customLegendWithSelectionState);
         return customLegendWithSelectionState[key];
-      }).map(key=>dataSets[key]);
+      }).map(key => dataSets[key]);
 
-      
-      
+
+
       //{
       //   "dogs":[{"age":10,"name":"tucker"},{"age":14,"name":"barky"},{"age":18,"name":"pupper"},{"age":5,"name":"waggle"},{"age":7,"name":"oatmeal"}]
       // };
@@ -320,8 +455,11 @@ function ChatInterface(props) {
       you may only use the following python modules in your responses, do not use any not included in this list: ${JSON.stringify(avaliblePythonModules)}
       When writing code do not attempt to do any calculations yourself, write code to do all calculations.
       the following question partains to data visualization in the context of chromatin loop analysis.
-      the following datasets should be used to answer the question.
-      Datasets: ${JSON.stringify(filteredDatasets)}
+      Prioritize functional code above all else. do not explain your code unless asked to, still comment it though.
+      Below is a JSON object containing all data applicable to this question:
+      ${JSON.stringify(filteredDatasets)}
+      Always use the above data, do not make up data or infer data. Always finish your code, do not leave places for the user to put in data, use the data provided above.
+      Never abriviate the data, never try to save space. ALWAYS INCLUDE FULL DATA.
 
     `;
 
@@ -329,7 +467,6 @@ function ChatInterface(props) {
 
       console.log(actualMsg);
 
-      const regexCodeSnippetMatcher = /\`\`\`python(.*?)\`\`\`/s
       console.log(model);
       const completion = await openai.chat.completions.create({
         messages: [{ role: "system", content: actualMsg }],
@@ -337,27 +474,6 @@ function ChatInterface(props) {
       });
 
       const answer = completion.choices[0].message.content;
-      const regexMatch = regexCodeSnippetMatcher.exec(answer);
-      if (regexMatch) {
-        const codeSnippet = regexMatch[1];
-        console.log(answer);
-        console.log(codeSnippet);
-        const juypterFile = juypterFileAsembler(codeSnippet);
-        console.log(juypterFile);
-
-        if (codeSnippet) {
-          const formData = new FormData();
-          formData.append(`id`, id.toString());
-          // Convert the string to a Blob
-          const blob = new Blob([juypterFile], { type: 'text/plain' });
-
-          // Create a File object from the Blob
-          const fileName = "example.txt";
-          const file = new File([blob], fileName, { type: 'text/plain' });
-          formData.append(`files`, file, `${msg.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9]/g, '')}.ipynb`);
-          axios.post(apiPaths.jyupterUpload, formData);
-        }
-      }
       return answer;
     } catch (error) {
       console.log("err getting ai response :(");
@@ -368,101 +484,127 @@ function ChatInterface(props) {
   }
 
 
+  /** @description handle when the user submits a message to the ai */
   const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!userCanSpeak) {
+      if (!window.confirm("Please wait until the ai responds to you for best results, hit okay to ignore this advice, cancel to cancel this message")) return "";
+    }
+
     let newMsgs: msg[] = [...messages];
 
-    event.preventDefault();
+    //record last tiem the user spoke to make sure they have to wait till ai responds
+    setTimeUserLastSpoke(Date.now());
+    setUserCanSpeak(false);
+
+    
     if (inputText.trim()) {
       //add our msg to the log
-      newMsgs = [...newMsgs, { text: inputText, sender: 'user' }];
+      newMsgs = [...newMsgs, { text: inputText, sender: 'user', question: inputText }];
       setMessages(newMsgs);
       //clear log
       setInputText('');
 
       //get response from gpt
-      newMsgs = [...newMsgs, { text: await getResponseFromGPT(inputText, jobId), sender: 'bot' }];
+      newMsgs = [...newMsgs, { text: await getResponseFromGPT(inputText, jobId), sender: 'bot', question: inputText }];
       setMessages(newMsgs);
+      setUserCanSpeak(true);
     }
   };
 
-  function updateSelection(data){
+  function updateSelection(data) {
     setCustomLegendWithSelectionState(data);
   }
 
-  let k =0;
+  let k = 0;
   return (
     <>
-      <Row>
+      <Row md={8}>
         <InstructionHeader title='please enter your openai api key below.' />
         <p>Your API key is never cached or stored in anyway on our servers, the second you close this tab it is gone.</p>
+        <p>Dont have a key? get one: <BtnLink src="https://www.maisieai.com/help/how-to-get-an-openai-api-key-for-chatgpt" title='here' /></p>
         <label htmlFor='apikeyInput'>OpenAI API key:</label>
         <input id="apikeyInput"
           value={apikey}
-          onChange={(e)=>setApiKey(e.target.value)}
+          onChange={(e) => setApiKey(e.target.value)}
           type="text"
         >
         </input>
         <label htmlFor='modelSelect'>Select AI Model:</label>
         <Select
-        id="modelSelect"
+          id="modelSelect"
           name="modelSelector"
           options={models}
           value={model}
-          onChange={(val,other)=>setModel(val)}
-          />
+          className="onTop"
+          onChange={(val, other) => setModel(val)}
+        />
       </Row>
-      <Row>
-      <InstructionHeader title="select what parts of the job's data your question pertains to." />
-      <CustomLegendWithSelection
-            max={50}
-            state={customLegendWithSelectionState}
-            setState={setCustomLegendWithSelectionState}
-            items={
-              Object.keys(dataSets).map(name => ({
-                "label": name,
-                "backgroundColor": props.clrs[k++]
-              }))
-            }
-            onSelect={updateSelection}
-          />
+      <Row md={8}>
+        <InstructionHeader title="select what parts of the job's data your question pertains to." />
+        <CustomLegendWithSelection
+          max={50}
+          state={customLegendWithSelectionState}
+          setState={setCustomLegendWithSelectionState}
+          items={
+            Object.keys(dataSets).map(name => ({
+              "label": name,
+              "backgroundColor": props.clrs[k++]
+            }))
+          }
+          onSelect={updateSelection}
+        />
       </Row>
-      <Container className="my-3" style={chatContainerStyle}>
+      <Container className="my-3">
         <Row>
-          <Col md={8} className="mx-auto">
+          <Col className="mx-auto">
             <Card>
               <Card.Body>
                 <div style={{ overflowY: 'auto' }}>
                   {messages.map((message, index) => (
                     <div key={index} className={`mb-2 text-${message.sender === 'user' ? 'right' : 'left'}`}>
                       <Card.Text className={`p-2 bg-${message.sender === 'user' ? 'primary' : 'secondary'} text-white rounded`}>
-                        <Markdown>{message.text}</Markdown>
+                        {message.sender === 'user' ?
+                          <Markdown>{message.text}</Markdown>
+                          : <MessageContainer
+                            updater={props.updater}
+                            message={message.text}
+                            question={message.question}
+                          />}
+
                       </Card.Text>
                     </div>
                   ))}
-                </div>
-                <Row>
-                  <Form onSubmit={handleSubmit} >
-                    <Form.Group className="d-flex">
-                      <Form.Control
-                        type="text"
-                        placeholder="Type your message here..."
-                        value={inputText}
-                        onChange={e => setInputText(e.target.value)}
-                      />
-                      <Button variant="primary" type="submit">Send</Button>
-                    </Form.Group>
-                  </Form>
-                </Row>
+                  {/** show loading dots when the ai is thinking */}
+                  {userCanSpeak ? "" :
+                  <Card.Text className={`p-2 bg-secondary`}>
+                    <div className="loader"/>
+                     </Card.Text>
+                 }
+              </div>
+              <Row>
+                <Form onSubmit={handleSubmit} >
+                  <Form.Group className="d-flex">
+                    <Form.Control
+                      type="text"
+                      placeholder="Type your message here..."
+                      value={inputText}
+                      onChange={e => setInputText(e.target.value)}
+                    />
+                    <Button variant="primary" type="submit">Send</Button>
+                  </Form.Group>
+                </Form>
+              </Row>
 
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        {/* <TempJyupterUploader
+      {/* <TempJyupterUploader
         fileName={name} setFileName={setName} file={file} setFile={setFile} /> */}
 
-      </Container>
+    </Container >
     </>
   );
 }
@@ -473,57 +615,91 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
   const params = useParams();
   const jobId = params.id || 1;
   const [messages, setMessages] = useState<msg[]>([]);
-  const [htmlFiles, setHtmlFiles] = useState<string[]>([]);
+  const [htmlFiles, setHtmlFiles] = useState<{ file: string, name: string, open:boolean, key:string }[]>([]);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
+  const [accodianCtrl, setAccodianCtrl] = useState<string[]>([])
 
-  const [timer, setTimer]=useState<number>(1);
-  setInterval(() => {
-    setTimer(timer+1);
-  }, 10000)
+  const [ticking, setTicking] = useState(true),
+        [count, setCount] = useState(0)
+   
+   useEffect(() => {
+    const timer = setTimeout(() => ticking && setCount(count+1), 1e4)
+    return () => clearTimeout(timer)
+   }, [count, ticking])
 
   useEffect(() => {
-    axios.get(apiPaths.htmlFiles + "?id=" + jobId).then((response) => {
-      console.log(response)
-      if (response.data.files)
-        if (response.data.files.length > 0)
-          setHtmlFiles([...response.data.files]);
-      setForceUpdate(k += 3 * 2);
-    });
-  }, [messages, timer])
+    setTimeout(() => {
+      axios.get(apiPaths.htmlFiles + "?id=" + jobId).then((response) => {
+        console.log(response)
+        if (response.data.files)
+          if (response.data.files.length > 0){
+            let l = 0;
+            const newFiles = [
+              ...response.data.files.map(fileObj=>(
+              {...fileObj,
+                key:l.toString(),
+                open:!(htmlFiles.map(obj=>obj.name)).includes(fileObj.name),
+                temp:l++
+              }))
+            ]
+            setHtmlFiles(newFiles);
+            console.log(htmlFiles)
+            newFiles.filter(fileObj=>fileObj.open).forEach(obj=>handleSelect(obj.key))
+            setForceUpdate(k += 3 * 2);
+          }
+            
+        
+      });
+      
+    }, 5000);
+  }, [count, messages])
 
+  const handleSelect = (eventKey) => {
+    console.log("selected" + eventKey)
+    const currentIndex = accodianCtrl.indexOf(eventKey);
+    const newActiveKeys = [...accodianCtrl];
+
+    if (currentIndex === -1) {
+      newActiveKeys.push(eventKey);
+    } else {
+      newActiveKeys.splice(currentIndex, 1);
+    }
+
+    setAccodianCtrl(newActiveKeys);
+  };
+
+  let j = 0;
   return (
-    <>
+    <Container>
       <Row>
-        <Col>
-          <InstructionHeader title='An AI Assistant for data visualization' />
-          <p>You may ask the AI to generate additional graphs and data visualizations for your data, it will write code that will execute and draw graphs from the data.
-            Keep in mind Large Language models do not particularly "know" what they are saying and often do not hold much regard for truth. Make sure to double check any result produced by the AI.
-            <hr />
-            When prompting, be specific as to what you want and what data you want it to use. It has acsess to all data assosiated with your job.
-            <hr />
-            DO NOT: tell the AI to write in a langauge other than python or tell it to use specific packages, it only has access to a few predownloaded packages.
-            <hr />
-            An easy way to test this tool is to ask it to generate a graph we have already properly created, for instance "Please generate a line graph of loop size compared to resolution"
-          </p>
+        <Col md={6}>
+          <AiInstructions />
           <ChatInterface
             clrs={props.clrs}
             messages={messages}
             setMessages={setMessages}
+            updater={accodianCtrl}
           />
         </Col>
-        <Col>
+        <Col md={6}>
           <InstructionHeader title='results will display here:' />
           <p>All produced results will be saved with your job. And remain avalible in this tab alongside their source code for you to copy if you would like to reproduce the results. Note that the AI should always put the raw data directly into the script to ensure they are self contained and can be reproduced anywhere. </p>
           {htmlFiles.map(file => {
-            return (<div key={k++}>
-              <div dangerouslySetInnerHTML={{ __html: file }} />
+            return (<div key={j++}>
+              <Accordion defaultActiveKey={accodianCtrl} activeKey={accodianCtrl} onSelect={handleSelect}>
+                <AccordionItem eventKey={`${file.key}`}>
+                  <Accordion.Header>{file.name.replace(/_/g, " ").replace(".html","")}</Accordion.Header>
+                  <AccordionBody>
+                    <div dangerouslySetInnerHTML={{ __html: file.file }} />
+                  </AccordionBody>
+                </AccordionItem>
+              </Accordion>
             </div>)
           })
           }
         </Col>
-
       </Row>
 
 
-    </>)
+    </Container>)
 }

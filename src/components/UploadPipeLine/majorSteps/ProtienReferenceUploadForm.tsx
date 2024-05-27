@@ -27,6 +27,9 @@ type ProtienReferenceUploadFormProps = {
      * @description optional ref to pass to store file names in
      */
     setRefFileNames:(files:string[])=>void,
+
+    refNames?:string[],
+    refFiles?:File[]
 }
 
 
@@ -38,8 +41,8 @@ type ProtienReferenceUploadFormProps = {
 export const ProtienReferenceUploadForm = (props:ProtienReferenceUploadFormProps) =>{
     const navigate = useNavigate();
     const params = useParams();
-    const [allFiles, setAllFiles] = useState<(File|undefined)[]>([]);
-    const [allFileNames, setAllFileNames] = useState<string[]>([]);
+    const [allFiles, setAllFiles] = useState<(File|undefined)[]>(props.refFiles||[]);
+    const [allFileNames, setAllFileNames] = useState<string[]>(props.refNames||[]);
     const [referenceFiles, setReferenceFiles] = useState<ReferenceFile[]>([new ReferenceFile(0)]);
 
     let i = 0;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, ToggleButton, ButtonGroup } from 'react-bootstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { hrefPaths as paths } from "../../config.mjs";
+import { hrefPaths as paths, paths as path2, config} from "../../config.mjs";
 import { Logo } from "../logo/logo";
 import { DarkModeToggle } from "../misc/darkmodeToggle";
 
@@ -19,9 +19,9 @@ export const AppNavbar: React.FC = (props: NavbarProps) => {
                 <Navbar.Collapse id="basic-navbar-nav" className="ml-auto">
                     <Nav className="mr-auto">
                         <Nav.Link href={paths.about}>About</Nav.Link>
-                        <Nav.Link href={paths.jobs}>View Jobs</Nav.Link>
+                        <Nav.Link href={path2.docs}>Documentation</Nav.Link>
                         <Nav.Link href={paths.example}>Example</Nav.Link>
-                        <Nav.Link href={paths.github}>GitHub</Nav.Link>
+                        <Nav.Link href={config.github}>GitHub</Nav.Link>
                         
                     </Nav>
                    
