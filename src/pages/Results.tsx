@@ -88,7 +88,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
 
   let jobId = params.id
-  if (props.example) jobId = "41";
+  if (props.example) jobId = config.exampleJobId;
 
 
   if (config.DEBUG) console.log(Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key], category: 'none' })));

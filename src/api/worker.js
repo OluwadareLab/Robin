@@ -512,7 +512,7 @@ async function jobWorker() {
         let overlapBashCmd = `bash ${config.callersOverlapScriptPath} ${fileList} ${resolution} ${jobID} ${labelsList}`;
 
         console.log(`running: overlap: ${overlapBashCmd}`);
-        promises.push(addChildScriptToQueue(overlapBashCmd, "overlap script"));
+        promises.push(addChildScriptToQueue(overlapBashCmd, "overlap script", medTimeoutOptions));
       });
 
       jobInfo.forEach(job => {

@@ -2,6 +2,12 @@ const config = {
     //used to enable more logging
     DEBUG:false,
 
+    /** the name that displays on the browser tab */
+    broswerName:"Robin",
+
+    /** the id of the job to display as an example */
+    exampleJobId:61,
+
     /** weather to allow users to upload cooler files to higlass or not */
     allowCoolerUploads:false,
 
