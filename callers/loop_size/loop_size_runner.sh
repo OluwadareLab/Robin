@@ -24,4 +24,4 @@ inputFile=$dataPath/$fileName
 mkdir -p $outputPath/$name/
 
 touch $outFile
-python ./loop_size.py $inputFile $outFile
+python ./loop_size.py $inputFile $outFile $resolution
