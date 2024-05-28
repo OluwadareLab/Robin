@@ -18,7 +18,7 @@ with open(inputPath, "r") as input:
         end = max(row[4], row[5])
         size = int(end) - int(start)
         ave_size += size
-        avg_bin_size += math.ceil(size/res)
+        avg_bin_size += math.ceil(size/int(res))
         count += 1
     ave_size = round(ave_size/count)
     avg_bin_size = round(avg_bin_size/count)
