@@ -14,7 +14,7 @@ jobPath=$storagePath/job_$jobId
 outputPath=$storagePath/job_$jobId/out
 dataPath=$storagePath/job_$jobId/data
 logPath=$storagePath/job_$jobId/log
-logFile=$logPath/rem_$bigName.log
+logFile=$logPath/loop_size_$bigName.log
 
 #i/o paths
 outputDir=$outputPath/$name
@@ -24,4 +24,9 @@ inputFile=$dataPath/$fileName
 mkdir -p $outputPath/$name/
 
 touch $outFile
+
+touch $logFile
+exec > $logFile 2>&1
+echo "generating h3k27ac recovery for $name"
+
 python ./loop_size.py $inputFile $outFile $resolution
