@@ -22,8 +22,8 @@ const upload = multer({ dest: config.dataFolderPath });
  */
 const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
 
-mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongooseErr:"+error));
-console.log(url);
+// mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongooseErr:"+error));
+// console.log(url);
 
 //TODO: check if this line is needed
 createDb();
@@ -113,7 +113,7 @@ app.get(apiPaths.jobResults, (req, res) => {
 
     
 
-    console.log(categories);
+    //console.log(categories);
     
 
     const data = {
@@ -166,8 +166,8 @@ app.get(apiPaths.jobResults, (req, res) => {
             if(!fs.lstatSync(toolPath).isDirectory()) return;
         } else return;
         const resultFiles = fs.readdirSync(toolPath);
-        console.log("tool");
-        console.log(tool);
+        // console.log("tool");
+        // console.log(tool);
         data[tool] = {
             "toolName":tool,
             "category":categories[tool],
@@ -209,7 +209,7 @@ app.get(apiPaths.jobResults, (req, res) => {
         tilesetUids:tilesetUids,
         overlapData:overlapData
     };
-    console.log(sendDataObj)
+    // console.log(sendDataObj)
       // If the file exists, set the appropriate headers
       res.set({
         'Content-Type': 'text/plain', // Set appropriate content type

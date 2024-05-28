@@ -24,7 +24,7 @@ inputFile=$outputDir/$fileName
 
 
 touch $logFile
-
+exec > $logFile 2>&1
 
 
 #find last line of file

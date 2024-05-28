@@ -11,8 +11,13 @@ import {
 import { Bar } from 'react-chartjs-2';
 import { UTIL } from '../../util';
 import { DownloadImg } from './downloadImg';
+import Zoom, * as zoom from 'chartjs-plugin-zoom'
+import ZoomPlugin from 'chartjs-plugin-zoom'
 
 ChartJS.register(
+  Zoom,
+  zoom,
+  ZoomPlugin,
   CategoryScale,
   LinearScale,
   BarElement,
@@ -28,6 +33,7 @@ export function BarChart(props: {
     labels:string[]
     title:string
     clrs? :string[] | undefined
+    width?:number
       /**
      * @description the name of the y-axis
      */
@@ -37,6 +43,10 @@ export function BarChart(props: {
      * @description the name of the x-axis
      */
     xAxisTitle:string
+
+
+    /** if provided use this as the data for the data set */
+    overrideDataPureNumberArray?:number[]
 
 }) {
     console.log(props)
@@ -91,7 +101,7 @@ export function BarChart(props: {
                         return label;
                     }
                 }
-            }
+            },  
         }
         },
         scales: {
@@ -108,26 +118,48 @@ export function BarChart(props: {
             },
           }
         },
-        
+        barThickness: props.width || undefined
       };
 
-
+      console.log("max="+Math.max(...props.data.map(e=>e.data).flat().filter(e=>!isNaN(e))))
+      console.log(props.data.map(e=>e.data).flat());
+      console.log(props.data.map(e=>e.data))
+      console.log(props.data.map(e=>e.data).flat().filter(e=>!isNaN(e)))
     let i = 0;
     const data = {
         labels,
         datasets: props.data.map(data=>{
             for (let index = 0; index < labels.indexOf(data.name.split("_")[0]); index++) {
-                data.data.unshift(0);
+                data.data.unshift(undefined);
             }
             
             return ({
+                skipNull:true,
+                minBarLength:3,
                 label: data.name,
                 data: data.data,
                 maxBarThickness: 80,
                 backgroundColor:(data.clr? data.clr : (props.clrs? props.clrs[i++] : UTIL.getColor())),
                 })
         })
+        // .sort((seta,setb)=>{
+        //   if(!props.sort) return 0;
+        //   let val = setb.data-seta.data;
+        //   console.log(val);
+        //   if(isNaN(val)){
+        //     val = setb.data.filter(e=>!isNaN(e))[0]-seta.data.filter(e=>!isNaN(e))[0];
+        //   }
+        //   console.log(val);
+        //   if(isNaN(val)){
+        //     val = setb.data[0].y-seta.data[0].y;
+        //   }
+        //   console.log("returned:"+val);
+
+        //   return val;
+
+        // })
     };
+    console.log(data);
 
   return <>
     <Bar options={options} data={data} ref={chartRef}/>

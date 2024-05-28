@@ -403,7 +403,7 @@ export async function scriptWorker() {
   if(getFreeMem()<minFreeMemOnSystem)return;
   const numberOfActiveScripts = getNumberOfActiveScriptsInQueue();
   if (scriptBacklog.length == 0) {
-    console.log(`No scripts in backlog`)
+    //console.log(`No scripts in backlog`)
     return;
   }
   if (numberOfActiveScripts < maxParralellScripts) {
@@ -519,7 +519,7 @@ async function jobWorker() {
         //-----------RECOVERY SCRIPTS-----------
         recoveryProtiens.forEach(referenceFile => {
           const recoveryProtienScript = `bash ${config.callersRecovereyScripPath} ${job.fileName} ${job.resolution} ${jobID} ${job.tool} ${referenceFile.fileName} ${referenceFile.protein}`
-          recoveryScriptPromises.push(addChildScriptToQueue(recoveryProtienScript, "recovery script"));
+          recoveryScriptPromises.push(runChildScript(recoveryProtienScript, "recovery script"));
         })
 
         //merge the promises with recovery promises script arrs
@@ -548,6 +548,9 @@ async function jobWorker() {
         // console.log(files)
         // console.log(pathOut)
 
+        console.log('----------------------here----------------------------')
+        console.log(files)
+        console.log(recoveryFiles)
         recoveryFiles.forEach(referenceFile => {
 
           //REM scripts

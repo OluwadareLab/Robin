@@ -23,7 +23,7 @@ const config = {
     /**
      * @description the highest resolution something can be before being low res
      */
-    highCuttoff:10001,
+    highCuttoff:50001,
 
     /**
      * @description full url of our higlass server

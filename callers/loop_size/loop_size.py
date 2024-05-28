@@ -16,9 +16,9 @@ with open(inputPath, "r") as input:
         row = line.split("\t")
         start = min(row[1], row[2])
         end = max(row[4], row[5])
-        size = int(end) - int(start)
+        size = int(float(end)) - int(float(start))
         ave_size += size
-        avg_bin_size += math.ceil(size/int(res))
+        avg_bin_size += math.ceil(size/int(float(res)))
         count += 1
     ave_size = round(ave_size/count)
     avg_bin_size = round(avg_bin_size/count)
