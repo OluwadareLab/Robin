@@ -26,7 +26,7 @@ export const HomePage = () => {
                 </Row>
                 <Row>
                     <h3 style={{color:"#708090"}}>Documentation</h3>
-                    <a className='justify-content-center' target="_blank" href={paths.docs}>📒 The full user manual is available at http://biomlearn.uccs.edu/robinrd/</a>
+                    <a className='justify-content-center' target="_blank" href={paths.docs}>📒 The full user manual is available at {paths.docs}</a>
                 </Row>
                 <Row>
                     <h3 style={{color:"#708090"}}>AI Assistant Example</h3>

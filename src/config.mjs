@@ -115,6 +115,7 @@ config.higlassApiUrlV1=`${config.higlassApiUrl}/api/v1`;
  * @description all relative paths within the website
  */
 const paths = {
+    docs:"http://biomlearn.uccs.edu/robinrd/",
     home: "/",
     upload: "/upload",
     setup: "/jobSetup",
