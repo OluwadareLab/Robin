@@ -132,8 +132,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       <Tab key="Regression" eventKey="Regression" title="Regression">
         <ScalableElement defaultSize={.5}>
           <Container>
-            <RegressionGraph dataset={binVsResDataset} xAxisTitle='Resolution' yAxisTitle='Bin Size (# bins)' title={`Size (# bins) vs. Resolution`} />
-            <RegressionGraph dataset={kbVsResDataset} xAxisTitle='Resolution' yAxisTitle='Bin Size (kB)' title={`Size (kB) vs Resolution`} />
+            <RegressionGraph dataset={binVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average Bin Bin Size (# bins)' title={`Average Bin Size (# bins) vs. Resolution`} />
+            <RegressionGraph dataset={kbVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average BinBin Size (kB)' title={`Average Bin Size (kB) vs Resolution`} />
             <LinierRegressionScatterPlot
               clrs={clrs}
               yAxisTitle={'Average Bin Size (KB) Vs. Resolution'}
@@ -145,8 +145,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
             />
             <LinierRegressionScatterPlot
               clrs={clrs}
-              yAxisTitle={'Size (KB) Vs. Resolution'}
-              xAxisTitle={'Size (# bins) Vs. Resolution'}
+              yAxisTitle={'Average Bin Size (KB) Vs. Resolution'}
+              xAxisTitle={'Average Bin Size (# bins) Vs. Resolution'}
               scatterData={Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key].data, category: binVsResVsKbVsResDataset[key].category }))}
               title={'Categorical Regression Plot'}
             />
