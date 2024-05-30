@@ -23,7 +23,7 @@ with open(inputPath, "r") as input:
     ave_size = round(ave_size/count)
     avg_bin_size = round(avg_bin_size/count)
     output.writelines('Total Loops: ' + str(count) + '\n')
-    output.writelines('Average Size (kb): ' + str(ave_size) + '\n')
+    output.writelines('Average Size (kb): ' + str(ave_size/1000) + '\n')
     output.writelines('Average Size (# bins): ' + str(avg_bin_size) + '\n')
     output.writelines('@{}KB\n'.format(res))
 output.close()

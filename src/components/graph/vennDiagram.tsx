@@ -43,6 +43,14 @@ const VennDiagramComponent = (props:VennDiagramComponentProps) => {
       ]
     },
     options: {
+      legend: {
+        display: false
+     },
+     plugins: {
+      legend: {
+          display: false
+      },
+  },
       backgroundColor: [
         "rgba(255, 26, 104, 0.2)",
         "rgba(54, 162, 235, 0.2)",

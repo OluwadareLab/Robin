@@ -136,8 +136,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
             <RegressionGraph dataset={kbVsResDataset} xAxisTitle='Resolution' yAxisTitle='Bin Size (kB)' title={`Size (kB) vs Resolution`} />
             <LinierRegressionScatterPlot
               clrs={clrs}
-              yAxisTitle={'Size (KB) Vs. Resolution'}
-              xAxisTitle={'Size (# bins) Vs. Resolution'}
+              yAxisTitle={'Average Bin Size (KB) Vs. Resolution'}
+              xAxisTitle={'Average Bin Size (# bins) Vs. Resolution'}
               scatterData={
                 Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key].data, category: 'none' }))
               }
