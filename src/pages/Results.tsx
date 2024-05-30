@@ -132,8 +132,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       <Tab key="Regression" eventKey="Regression" title="Regression">
         <ScalableElement defaultSize={.5}>
           <Container>
-            <RegressionGraph dataset={binVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average Bin Bin Size (# bins)' title={`Average Bin Size (# bins) vs. Resolution`} />
-            <RegressionGraph dataset={kbVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average BinBin Size (kB)' title={`Average Bin Size (kB) vs Resolution`} />
+            <RegressionGraph dataset={binVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average Bin Size (# bins)' title={`Average Bin Size (# bins) vs. Resolution`} />
+            <RegressionGraph dataset={kbVsResDataset} xAxisTitle='Resolution' yAxisTitle='Average Bin Size (kB)' title={`Average Bin Size (kB) vs Resolution`} />
             <LinierRegressionScatterPlot
               clrs={clrs}
               yAxisTitle={'Average Bin Size (KB) Vs. Resolution'}
