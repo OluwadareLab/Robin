@@ -123,7 +123,7 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
       {validData() ?
         <>
           <BarChart
-            yAxisTitle="Recovery Rate Efficency"
+            yAxisTitle="Recovery Efficiency Rate"
             title={props.bottomTitle}
             data={data}
             clrs={props.clrs}

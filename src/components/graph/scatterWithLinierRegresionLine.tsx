@@ -239,8 +239,10 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
       })
   });
 
+  realCatLegend.forEach(item=>item.label.replace(/,{0,1}.$/gi,""));
+
   return <>
-    <Chart options={options} data={data} type={'line'} ref={chartRef} />;
+    <Chart options={options} data={data} type={'line'} ref={chartRef} />
     {regressionLines.length>1?
       <CustomLegend
       items={realCatLegend}

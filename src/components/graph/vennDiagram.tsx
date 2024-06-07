@@ -46,9 +46,18 @@ const VennDiagramComponent = (props:VennDiagramComponentProps) => {
       legend: {
         display: false
      },
+     layout:{
+      "padding":50,
+     },
      plugins: {
       legend: {
           display: false
+      },
+      labels: {
+        padding: 50,
+        font: {
+          size: 14,
+        },
       },
   },
       backgroundColor: [

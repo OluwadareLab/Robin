@@ -88,7 +88,7 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
         <GraphComponent 
             datasets={lineData}
             xAxisTitle='Number of Loops Predicted'
-            yAxisTitle='Recovery Efficiency Rate'
+            yAxisTitle={props.isRem?'Recovery Efficiency Rate':'Recovery Rate'}
             title={props.topTitle}
             clrs={props.clrs}
           />
@@ -98,7 +98,7 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
           </Row>
           
           <BarChart 
-            yAxisTitle='Recovery Efficiency Rate'
+            yAxisTitle={props.isRem?'Recovery Efficiency Rate':'Recovery Rate'}
             title={props.bottomTitle}
             data={barData}
             clrs={props.clrs}

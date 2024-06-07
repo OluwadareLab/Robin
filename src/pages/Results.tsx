@@ -150,10 +150,6 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
               scatterData={Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key].data, category: binVsResVsKbVsResDataset[key].category }))}
               title={'Categorical Regression Plot'}
             />
-
-
-
-
           </Container>
         </ScalableElement>
       </Tab>
@@ -166,11 +162,13 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
                 <RecoveryAndRemWithResolutionSwitch
                   recoveryDatasets={recoveryDatasets}
                   recoveryDataSetKey={key}
+                  isRem={true}
                   clrs={clrs}
                   remValues={remValues}
                 />
                 {true ? <HighLowRecoveryChart
                   barData={remValues}
+                  isRem={true}
                   bottomTitle={`${recoveryMethodArr[0].method}`}
                   clrs={clrs}
                 /> : ""}

@@ -61,7 +61,7 @@ export const RemDisplay = (props: recoveryComponentTypes) => {
     return (
         <>
           <BarChart 
-            yAxisTitle="Recovery Rate Efficency"
+            yAxisTitle="Recovery Efficiency Rate"
             title={props.bottomTitle}
             data={data}
             clrs={props.clrs}

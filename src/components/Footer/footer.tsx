@@ -3,7 +3,7 @@ import "./footer.css"
 import {GitHubLink} from './githubLink/githubLink'
 import { Col, Row } from 'react-bootstrap';
 
-import uccsLogo from '../../images/UCCS_Logo.png';
+import uccsLogo from './../../images/UCCS_Logo.png';
 
 /** a simple footer for the website */
 export const Footer: React.FC = () => {
@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
           </div>
           <div style={{ float: 'left', marginLeft: '10px' }}>
             <span style={{ marginTop: '5px', fontSize: '14px' }}>
-              © {new Date().getFullYear()} <b><a target="_blank" href="https://uccs-bioinformatics.com/">UCCS Bioinformatics Lab</a></b>
+              © {new Date().getFullYear()} <b><a target="_blank" href="https://uccs-bioinformatics.com/">Oluwadare Lab</a></b>
             </span>
           </div>
         </Col>
