@@ -239,7 +239,9 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
       })
   });
 
-  realCatLegend.forEach(item=>item.label.replace(/,{0,1}.$/gi,""));
+  //todo: make this cleaner.
+  //this is just a simple formatting function to clean up baddly passed strings, so its fine to be a bit messy
+  realCatLegend.forEach(item=>item.label=item.label.replace(/,\s*$/,"").replace(/,{0,2}\s,/gi,",").replace(/,/gi,", "));
 
   return <>
     <Chart options={options} data={data} type={'line'} ref={chartRef} />
