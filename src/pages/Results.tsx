@@ -117,7 +117,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
   const higlasstab =
     <Container>
-      <HiGlassComponentWrapper uids={higlassUids} />
+      <HiGlassComponentWrapper uids={higlassUids} demo={props.example} />
       <p>If Higlass is not loading, please try clearing browsing data or using an incognito window/other browser, and clicking the reload higlass button at the top of this page</p>
     </Container>
   const normalPage =

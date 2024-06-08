@@ -89,7 +89,7 @@ function trackHasErrors(uid) {
 }
 
 
-export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: TrackType }[]) }) => {
+export const HiGlassComponentWrapper = (props: { demo:boolean, uids: ({ uid: string, type: TrackType }[]) }) => {
   const container = document.getElementById('higlass-container');
   const server = "//higlass.io/api/v1"; //"http://localhost:8888/api/v1"
   const [height, setHeight] = useState(100);
@@ -164,57 +164,6 @@ export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: Tra
         "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
         "tracks": {
           "top": [
-            //previous default heatmap
-            // {
-            //   "editable": true,
-            //   "filetype": "cooler",
-            //   "server": "http://higlass.io/api/v1",
-            //   "tilesetUid": "e5QaKN16SdWyIWKAidq2Kw",
-            //   "uid": "I3VHsqI-RxquUSZ3J42LwQ",
-            //   "type": "linear-heatmap",
-            //   "options": {
-            //     "backgroundColor": "#eeeeee",
-            //     "labelPosition": "bottomRight",
-            //     "labelLeftMargin": 0,
-            //     "labelRightMargin": 0,
-            //     "labelTopMargin": 0,
-            //     "labelBottomMargin": 0,
-            //     "labelShowResolution": true,
-            //     "labelShowAssembly": true,
-            //     "labelColor": "black",
-            //     "colorRange": [
-            //       "white",
-            //       "rgba(245,166,35,1.0)",
-            //       "rgba(208,2,27,1.0)",
-            //       "black"
-            //     ],
-            //     "minWidth": 100,
-            //     "minHeight": 40,
-            //     "trackBorderWidth": 0,
-            //     "trackBorderColor": "black",
-            //     "name": "Rao et al. (2014) GM12878 MboI (SRR1658572)"
-            //   },
-            //   "width": 1506,
-            //   "height": height,
-            //   "transforms": [
-            //     {
-            //       "name": "ICE",
-            //       "value": "weight"
-            //     },
-            //     {
-            //       "name": "KR",
-            //       "value": "KR"
-            //     },
-            //     {
-            //       "name": "VC",
-            //       "value": "VC"
-            //     },
-            //     {
-            //       "name": "VC_SQRT",
-            //       "value": "VC_SQRT"
-            //     }
-            //   ]
-            // },
             ...tracks
           ],
           "left": [],
@@ -248,6 +197,42 @@ export const HiGlassComponentWrapper = (props: { uids: ({ uid: string, type: Tra
       "locksDict": {}
     }
   };
+
+  if(props.demo){
+    config.views[0].tracks.top.unshift({
+      "filetype": "cooler",
+      "server": "//higlass.io/api/v1",
+      "tilesetUid": "dVBREuC2SvO01uXYMUh2aQ",
+      "uid": "SBNQT6vRSFqxTkJ1Ar7zBw",
+      "type": "linear-heatmap",
+      "options": {
+        "backgroundColor": "#eeeeee",
+        "labelPosition": "bottomRight",
+        "labelLeftMargin": 0,
+        "labelRightMargin": 0,
+        "labelTopMargin": 0,
+        "labelBottomMargin": 0,
+        "labelShowResolution": true,
+        "labelShowAssembly": true,
+        "labelColor": "black",
+        "colorRange": [
+          "white",
+          "rgba(245,166,35,1.0)",
+          "rgba(208,2,27,1.0)",
+          "black"
+        ],
+        "maxZoom": null,
+        "minWidth": 100,
+        "minHeight": 40,
+        "trackBorderWidth": 0,
+        "trackBorderColor": "black",
+        "name": "[hicnorm] Rao et al. (2014) GM12878 MboI Primary"
+      },
+      "width": 1800,
+      "height": 80,
+      "transforms": []
+    })
+  }
   const options = {
     bounded: false,
 
