@@ -25,6 +25,8 @@ import "./aiAssistant.css"
 type AiAssistantComponentProps = {
   datasets: any[];
   clrs: any[]
+  /** @description wether to disable all edit mode on this page */
+  demo: boolean;
 }
 
 type msg = {
@@ -393,7 +395,7 @@ const MessageContainer = (props: MessageContainerProps) => {
 
 function ChatInterface(props) {
   const params = useParams();
-  const jobId = params.id || 1;
+  const jobId = params.id || config.exampleJobId || 1;
   const { messages, setMessages } = props;
   const [inputText, setInputText] = useState<string>('');
   const [name, setName] = useState<string>("");
@@ -541,7 +543,7 @@ function ChatInterface(props) {
         />
       </Row>
       <Row md={8}>
-        <InstructionHeader title="select what parts of the job's data your question pertains to." />
+        <InstructionHeader title="select what part of the job's data your question pertains to." />
         <CustomLegendWithSelection
           max={50}
           state={customLegendWithSelectionState}
@@ -583,7 +585,8 @@ function ChatInterface(props) {
                      </Card.Text>
                  }
               </div>
-              <Row>
+
+              {!props.demo?<Row>
                 <Form onSubmit={handleSubmit} >
                   <Form.Group className="d-flex">
                     <Form.Control
@@ -595,7 +598,7 @@ function ChatInterface(props) {
                     <Button variant="primary" type="submit">Send</Button>
                   </Form.Group>
                 </Form>
-              </Row>
+              </Row>:<></>}
 
             </Card.Body>
           </Card>
@@ -614,7 +617,7 @@ export default ChatInterface;
 let k = 0;
 export function AiAssistantComponent(props: AiAssistantComponentProps) {
   const params = useParams();
-  const jobId = params.id || 1;
+  const jobId = params.id || config.exampleJobId || 1;
   const [messages, setMessages] = useState<msg[]>([]);
   const [htmlFiles, setHtmlFiles] = useState<{ file: string, name: string, open:boolean, key:string }[]>([]);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
@@ -676,9 +679,10 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
         <Col md={6}>
           <AiInstructions />
           <ChatInterface
+            demo={props.demo}
             clrs={props.clrs}
-            messages={messages}
-            setMessages={setMessages}
+            messages={props.demo ? [{text:"you may not type in the example as results are saved to the job.", sender: 'user'}] : messages}
+            setMessages={props.demo ? (foo)=>{} : setMessages}
             updater={accodianCtrl}
           />
         </Col>

@@ -89,6 +89,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
   let jobId = params.id
   if (props.example) jobId = config.exampleJobId;
+ 
 
 
   if (config.DEBUG) console.log(Object.keys(binVsResVsKbVsResDataset).map(key => ({ 'name': key, 'data': binVsResVsKbVsResDataset[key], category: 'none' })));
@@ -203,7 +204,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
       <Tab key="Ai Assistant" eventKey="Ai Assistant" title="AI Assistant">
         <Container>
-          <AiAssistantComponent clrs={clrs}/>
+          <AiAssistantComponent clrs={clrs} demo={props.example}/>
         </Container>
       </Tab>
 

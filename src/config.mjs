@@ -6,7 +6,7 @@ const config = {
     broswerName:"Robin",
 
     /** the id of the job to display as an example */
-    exampleJobId:"61",
+    exampleJobId:"64",
 
     /** weather to allow users to upload cooler files to higlass or not */
     allowCoolerUploads:false,
