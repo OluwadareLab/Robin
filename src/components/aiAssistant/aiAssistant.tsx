@@ -552,6 +552,7 @@ function ChatInterface(props) {
               "backgroundColor": props.clrs[k++]
             }))
           }
+          max={1}
           onSelect={updateSelection}
         />
       </Row>

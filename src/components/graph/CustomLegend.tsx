@@ -74,6 +74,7 @@ export const CustomLegendWithSelection = (props: { items: { backgroundColor: any
 
   function ToggleButton(id, bool?:boolean){
     let oldState = JSON.parse(JSON.stringify(state));
+    //TODO: add error msg here if you want to tell the user explictly they cannot select more.
     if(Object.keys(oldState).filter(key=>oldState[key]).length<maxSelections || !oldState[id]==false){
       console.log(oldState);
       oldState[id] = (typeof bool != 'undefined') ? bool : !oldState[id]
