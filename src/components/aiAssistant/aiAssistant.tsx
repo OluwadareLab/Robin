@@ -681,7 +681,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           <ChatInterface
             demo={props.demo}
             clrs={props.clrs}
-            messages={props.demo ? [{text:"you may not type in the example as results are saved to the job.", sender: 'user'}] : messages}
+            messages={props.demo ? [{text:"This example job is not editable.", sender: 'user'}] : messages}
             setMessages={props.demo ? (foo)=>{} : setMessages}
             updater={accodianCtrl}
           />
