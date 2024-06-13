@@ -55,8 +55,13 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
         return true;
     }
 
-    //the tool Data
-    const [toolData, _setToolData] = useState<ToolData[]>([new ToolData('')]);
+    //the tool Data. 2 results are required and cannot be removed
+    const [toolData, _setToolData] = useState<ToolData[]>(
+        [
+            new ToolData('').setCannotBeRemoved(true),
+            new ToolData('').setCannotBeRemoved(true)
+        ]
+    );
     const [files, setFiles] = useState<File[]>([]);
 
     /** @description wrap the setter for tool data to pass data upwards to any listening parents */
@@ -163,13 +168,15 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
 
     return (
         <div id="toolUploadComponentForm">
-            <InstructionHeader title="Upload Tool Data Files" />
+            <InstructionHeader title="Upload Loop Callers Results" />
+            {/* <p>Please submit atleast two results.</p> */}
             {toolData.map((tool, toolIndex) => (
                 <div key={`ToolContainer-${toolIndex}`} id={`ToolContainer-${toolIndex}`}>
                     <ToolNameInput key={`ToolNameInput-${toolIndex}`}
                         onInputChange={async (e) => handleInputChange(toolIndex, e)}
                         onToolRemove={async () => handleRemoveToolData(toolIndex)}
                         name={tool.name}
+                        cannotBeRemoved={toolData[toolIndex].cannotBeRemoved}
                     />
 
                     <Row>
