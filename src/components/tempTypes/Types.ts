@@ -85,6 +85,8 @@ export type OverlapDataSet = OverlapDataObj[];
 export interface ResolutionData {
     resolution: number | undefined;
     file: File | null;
+    /**if truthy this resolution input cannot be removed */
+    cannotBeRemoved?:boolean;
 }
 
 export type fileSet = (ToolData[]|{name:string,file:File}[])
@@ -133,6 +135,15 @@ export class ToolData {
      */
     setCannotBeRemoved(bool){
         this.cannotBeRemoved=bool;
+        return this;
+    }
+    
+    /**
+     * @description set the cannotBeRemoved value on a resolution of index n and return self
+     * @param bool 
+     */
+    setResolutionCannotBeRemoved(bool, n){
+        this.resolutions[n].cannotBeRemoved=bool;
         return this;
     }
 }

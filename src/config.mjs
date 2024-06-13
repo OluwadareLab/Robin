@@ -101,6 +101,9 @@ const config = {
     // apiPort:undefined
 
 
+    /** the minium number of resolutions the user must upload to compare */
+    minResolutionValues:2,
+
 
 }
 

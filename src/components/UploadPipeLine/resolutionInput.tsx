@@ -1,10 +1,11 @@
 import React from "react"
 import { RequiredAsterisk } from "../misc/RequiredAsterisk"
+import { ResolutionData } from "../tempTypes/Types";
 
 
 type resolutionInputProps = {
     /** @description the value resolution of the input */
-    resolution:number,
+    resolution:ResolutionData,
     /**
      * @description the function called when the user changes the resolution of this input
      */
@@ -12,6 +13,11 @@ type resolutionInputProps = {
 
 }
 
+/**
+ * @description the component for resolution input display, just the label and input
+ * @param props 
+ * @returns 
+ */
 export const ResolutionInput = (props:resolutionInputProps) => {
     return (
         <>
@@ -24,7 +30,7 @@ export const ResolutionInput = (props:resolutionInputProps) => {
                     type="number"
                     list="resolutions"
                     placeholder="IE: 1000, 5000..."
-                    value={props.resolution}
+                    value={props.resolution.resolution}
                     step={1}
                     onChange={(e) => props.handleResolutionChange(e)}
                 />

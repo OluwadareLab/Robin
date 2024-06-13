@@ -58,8 +58,8 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
     //the tool Data. 2 results are required and cannot be removed
     const [toolData, _setToolData] = useState<ToolData[]>(
         [
-            new ToolData('').setCannotBeRemoved(true),
-            new ToolData('').setCannotBeRemoved(true)
+            new ToolData('').setCannotBeRemoved(true).setResolutionCannotBeRemoved(true,0),
+            new ToolData('').setCannotBeRemoved(true).setResolutionCannotBeRemoved(true,0)
         ]
     );
     const [files, setFiles] = useState<File[]>([]);
@@ -206,15 +206,19 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
                     {tool.resolutions.map((resolution, resolutionIndex) => (
                         <Row key={`ToolContainer-ResolutionRow-${resolutionIndex}`} className='form-group row'>
                             <ResolutionInput
-                                resolution={resolution.resolution}
+                                resolution={resolution}
                                 handleResolutionChange={(e) => handleResolutionChange(toolIndex, resolutionIndex, e)}
                             />
+
                             <ToolFileInput
                                 onFileChange={(e) => handleFileChange(toolIndex, resolutionIndex, e)}
                             />
+
+                            {/* only display remove if resolution data obj allows it */}
+                            {!resolution.cannotBeRemoved ? 
                             <Col>
                                 <button type="button" className="btn btn-secondary" onClick={() => handleRemoveResolution(toolIndex, resolutionIndex)}>Remove</button>
-                            </Col>
+                            </Col> : <></>}
                         </Row>
                     ))}
                     <button type="button" className='btn btn-secondary' onClick={() => handleAddResolution(toolIndex)}>Add Additional Resolution</button>
