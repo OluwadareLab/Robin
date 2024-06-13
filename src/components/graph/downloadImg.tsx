@@ -18,12 +18,11 @@ export const DownloadImg = (props: DownloadImgProps) => {
         link.click();
       }
     
-      console.log(props.chartRef.current)
 
       //only used to update the button. displayed in a hidden div just to be safe
       useEffect(()=>{
         setNumber(number+1);
-      },[number, props.chartRef])
+      },[props.chartRef])
     return(
         <>
             {
