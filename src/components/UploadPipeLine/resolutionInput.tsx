@@ -21,7 +21,7 @@ type resolutionInputProps = {
 export const ResolutionInput = (props:resolutionInputProps) => {
     return (
         <>
-            <label htmlFor='resolutionInput' className='col-2 col-form-label'>Resolution<RequiredAsterisk active={true} /></label>
+            <label htmlFor='resolutionInput' className='col-2 col-form-label'>Resolution (Bases)<RequiredAsterisk active={true} /></label>
             <div className='col-sm-2'>
                 <input
                     required={true}
