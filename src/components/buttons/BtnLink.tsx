@@ -15,6 +15,9 @@ type btnLinkProps = {
      * @default blue
      * */
     bgClr?:string
+
+    /**html link target */
+    target:string
 }
 
 
@@ -24,6 +27,7 @@ type btnLinkProps = {
 export const BtnLink = (props: btnLinkProps) => (
     <>
         <a className="btn btn-primary btn-sm" href={props.src} 
+        target={props.target}
         style={{
             textDecoration: 'none',
             padding:"15px 40px",
@@ -32,6 +36,7 @@ export const BtnLink = (props: btnLinkProps) => (
             background:props.bgClr || "#0d6efd"
           
         }}>
+            
             <span className="visible-xs-block">{props.title}</span>
             
         </a>

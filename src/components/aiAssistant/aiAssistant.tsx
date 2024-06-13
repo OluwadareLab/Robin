@@ -524,7 +524,7 @@ function ChatInterface(props) {
       <Row md={8}>
         <InstructionHeader title='please enter your openai api key below.' />
         <p>Your API key is never cached or stored in anyway on our servers, the second you close this tab it is gone.</p>
-        <p>Dont have a key? get one: <BtnLink src="https://www.maisieai.com/help/how-to-get-an-openai-api-key-for-chatgpt" title='here' /></p>
+        <p>Dont have a key? get one: <BtnLink target="_blank" src="https://www.maisieai.com/help/how-to-get-an-openai-api-key-for-chatgpt" title='here' /></p>
         <label htmlFor='apikeyInput'>OpenAI API key:</label>
         <input id="apikeyInput"
           value={apikey}
