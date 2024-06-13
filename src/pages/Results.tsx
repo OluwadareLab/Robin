@@ -183,7 +183,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       }
 
       {renderHiglass ?
-        <Tab key="higlass" eventKey="higlass" title="higlass">
+        <Tab key="higlass" eventKey="higlass" title="HiGlass">
           {(renderHiglass != 2) ?
             <>
               <InstructionHeader title='Your data is not fully injested into higlass yet...' />
