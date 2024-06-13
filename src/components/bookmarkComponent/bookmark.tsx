@@ -24,7 +24,7 @@ const Bookmark: React.FC = () => {
 
     if (window.navigator.userAgent.indexOf('Chrome') > -1 || window.navigator.userAgent.indexOf('Safari') > -1) {
         // For Chrome and Safari browsers
-        alert('Press Ctrl+D to bookmark this page.');
+        alert('Press Ctrl+D (Cmd+D on Mac) to bookmark this page.');
       } else if (window.navigator.userAgent.indexOf('Firefox') > -1) {
         // For Firefox
         alert('Press Ctrl+D (Cmd+D on Mac) to bookmark this page.');
@@ -33,7 +33,7 @@ const Bookmark: React.FC = () => {
         window["external"]["AddFavorite"](url, title);
       } else {
         // For other browsers
-        alert('Press Ctrl+D to bookmark this page.');
+        alert('Press Ctrl+D (Cmd+D on Mac) to bookmark this page.');
       }
     
     handleClose();
