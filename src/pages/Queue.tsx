@@ -43,7 +43,7 @@ const QueuePage: React.FC<QueuePageProps> = () => {
     axios.get(apiPaths.quePosition + "?id=" + params.id).then((response) => {
       if(response.status==200)
       setPosition(response.data.queueNum);
-    });
+    }).catch(err=>console.log("axios err:"+err));
 
     axios.get(apiPaths.jobStatus + "?id=" + params.id).then((response) => {
       try {
@@ -52,7 +52,7 @@ const QueuePage: React.FC<QueuePageProps> = () => {
       } catch (error) {
         console.log("unexpected error occured while getting job status: " + error);
       }
-    });
+    }).catch(err=>console.log("axios err:"+err));
   }
   useEffect(() => {
     const fetchQueuePosition = async () => {

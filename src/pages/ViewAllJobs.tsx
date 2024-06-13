@@ -17,7 +17,7 @@ export const ViewAllJobsPage = () => {
                 }
                 console.log(response)
                 
-            })  
+            }).catch(err=>console.log("axios err:"+err));  
         } catch (error) {
             
         }

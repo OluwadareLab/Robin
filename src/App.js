@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-
+import StandardErrorBoundary from './components/error/standardErrorBoundry';
 import './css/master_style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
@@ -35,7 +35,7 @@ function App() {
   return (
     <>
       <AppNavbar/>
-      <WebRoutes/>
+        <WebRoutes/>
       <Footer/>
     </>
     

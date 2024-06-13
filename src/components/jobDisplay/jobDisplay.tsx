@@ -34,7 +34,7 @@ export const JobDisplay = (props: JobProps) => {
       else {
         alert("something went wrong." + response.data.err);
       }
-    });
+    }).catch(err=>console.log("axios err:"+err));
   }
 
   useEffect(()=>{
@@ -68,7 +68,7 @@ export const JobDisplay = (props: JobProps) => {
       } else {
           alert("something went wrong." + response.data.err);
       }
-      });
+      }).catch(err=>console.log("axios err:"+err));
   }
 
   return (

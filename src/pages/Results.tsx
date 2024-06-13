@@ -82,7 +82,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       if (response.status == 200) {
         setRenderHiglass(response.data.higlassToggle);
       }
-    })
+    }).catch(err=>console.log("axios err:"+err));
   }, [])
 
 
@@ -213,7 +213,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   function getJobResults() {
     axios.get(apiPaths.jobResults + "?id=" + jobId).then((response) => {
       setJobResults(response.data);
-    });
+    }).catch(err=>console.log("axios err:"+err));
   }
 
   async function setupDataSets() {
@@ -369,7 +369,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       if (config.DEBUG) console.log(tempLoopSizes)
 
       setDataHasLoaded(true);
-    });
+    }).catch(err=>console.log("axios err:"+err));
     
 
   }

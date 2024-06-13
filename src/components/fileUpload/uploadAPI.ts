@@ -33,5 +33,5 @@ export const uploadFiles = (id:number, files:File[], fileNames:string[]=[], prog
             }
             progressCb(progress);
         },
-      })
+      }).catch(err=>console.log("axios err:"+err));
 }

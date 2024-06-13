@@ -212,7 +212,7 @@ export function setupDataSets(jobId: number): Promise<resultData> {
       if (config.DEBUG) console.log(tempRegressionPoints)
       if (config.DEBUG) console.log(tempLoopSizes)
       res(dataObj);
-    });
+    }).catch(err=>console.log("axios err:"+err));
   })
 
 }
@@ -298,7 +298,7 @@ function submitSnippet(answer, jobId, jobTitle) {
       const fileName = "example.txt";
       const file = new File([blob], fileName, { type: 'text/plain' });
       formData.append(`files`, file, `${jobTitle.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9]/g, '_')}.ipynb`);
-      axios.post(apiPaths.jyupterUpload, formData);
+      axios.post(apiPaths.jyupterUpload, formData).catch(err=>console.log("axios err:"+err));;
     }
   }
 }
@@ -653,7 +653,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           }
             
         
-      });
+      }).catch(err=>console.log("axios err:"+err));
       
     }, 5000);
   }, [count, messages])

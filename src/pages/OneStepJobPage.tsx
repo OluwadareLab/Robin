@@ -89,7 +89,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
             if(response.status==200){
                 navigate(`${paths.setup}/${response.data.id}/`)
             }
-        })
+        }).catch(err=>console.log("axios err:"+err));
     },[])
 
     //update files and fileNames whenever any of these change
@@ -165,7 +165,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                 } else {
                     alert("An Unexpected error occurred.")
                 }
-            })
+            }).catch(err=>console.log("axios err:"+err));
             once=true;
         }
         
@@ -201,7 +201,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                 else {
                     alert("something went wrong." + response.data.err);
                 }
-            });
+            }).catch(err=>console.log("axios err:"+err));
     }
 
     return (
