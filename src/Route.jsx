@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Routes, BrowserRouter as Router, Route } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { paths } from './config';
@@ -8,10 +8,23 @@ import { ViewAllJobsPage } from './pages/ViewAllJobs';
 import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass/HIGlass';
 import { OneStepJobUploadPage } from './pages/OneStepJobPage';
 import { AiAssistantComponent } from './components/aiAssistant/aiAssistant';
+import ReactGA from 'react-ga';
+import { useLocation } from 'react-router-dom';
 import { AboutPage } from './pages/aboutPage';
+
+const TrackPageViews = () => {
+    const location = useLocation();
+  
+    useEffect(() => {
+      ReactGA.pageview(location.pathname + location.search);
+    }, [location]);
+  
+    return null;
+  };
 
 export const WebRoutes = () => (
     <Router basename="robin/">
+        <TrackPageViews/>
         <Routes>
             <Route exact path={paths.home} element={<HomePage />}/>
             <Route path={`${paths.aiTest}`} element={<AiAssistantComponent />}/>

@@ -9,6 +9,7 @@ import { AppNavbar } from "./components/navbar/Navbar";
 import { Footer } from "./components/Footer/footer";
 import config from './config.mjs';
 import axios from 'axios';
+import ReactGA from 'react-ga';
 
 axios.defaults.baseURL = config.apiPath;
 axios.defaults.headers.post['Access-Control-Allow-Origin'] ='*';
