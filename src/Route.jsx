@@ -8,7 +8,7 @@ import { ViewAllJobsPage } from './pages/ViewAllJobs';
 import { HiGlassComponentWrapper } from './components/visualizationTools/HiGlass/HIGlass';
 import { OneStepJobUploadPage } from './pages/OneStepJobPage';
 import { AiAssistantComponent } from './components/aiAssistant/aiAssistant';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { useLocation } from 'react-router-dom';
 import { AboutPage } from './pages/aboutPage';
 
@@ -16,7 +16,7 @@ const TrackPageViews = () => {
     const location = useLocation();
   
     useEffect(() => {
-      ReactGA.pageview(location.pathname + location.search);
+        ReactGA.send({ hitType: "pageview", page:window.location.pathname + window.location.search});;
     }, [location]);
   
     return null;

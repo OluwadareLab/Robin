@@ -4,13 +4,13 @@ import './index.css';
 import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
 import StandardErrorBoundary from './components/error/standardErrorBoundry';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 // Initialize Google Analytics
 ReactGA.initialize('G-021HZV22E3');
 
 // To log the initial page view
-ReactGA.pageview(window.location.pathname + window.location.search);
+ReactGA.send({ hitType: "pageview", page:window.location.pathname + window.location.search});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
