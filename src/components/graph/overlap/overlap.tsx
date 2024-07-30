@@ -176,7 +176,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
     console.log("------------------setting defaults--------------------------");
     console.log(filterResolution);
     console.log(options);
-    if(!filterResolution){
+    if(!filterResolution && options.length > 0){
       console.log("setting filter resolution")
       console.log(options);
       setFilterResolution({value: options[0].value, label: options[0].label});
