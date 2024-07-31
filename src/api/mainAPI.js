@@ -484,7 +484,6 @@ const uploadData = multer({
             cb(null, path);
             return path + "/";
         },
-
         filename: (req, file, cb) => {
             const id = req.body.id;
             const fileName = id + "data";
