@@ -1,3 +1,5 @@
+A poorly named component that is used in many places in the website. Be aware that this is a wrapper for the html Form element named the exact same 
+as the component its wrapping.  
 Form example:
 
 ```js

@@ -29,7 +29,7 @@ interface QueuePageProps {
   // Additional props can be added here
 }
 
-const QueuePage: React.FC<QueuePageProps> = () => {
+const QueuePage = () => {
   let counter = 0
   const [position, setPosition] = useState<number | null>(null);
   const [jobStatus, setJobStatus] = useState<STATUSES>(STATUSES.NO_DATA);

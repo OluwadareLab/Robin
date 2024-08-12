@@ -1,6 +1,6 @@
 import config from "../../config.mjs";
 import { UTIL } from "../../util";
-import { CustomLegend } from "../graph/CustomLegend";
+import { CustomLegend } from "../graph/customLegend";
 import { BarChart } from "../graph/barChart"
 import React, { ReactElement, useEffect, useState } from "react"
 

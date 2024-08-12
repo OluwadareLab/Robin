@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
+/** @description a button that allows for json data to be converted to a string and downloaded. */
 function DownloadJsonButton({ jsonData }) {
   const downloadJson = () => {
     // Convert JSON data to a string

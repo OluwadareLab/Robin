@@ -1,0 +1,1 @@
+A function used to setup datasets, into a cleaner form before sending to the ai.

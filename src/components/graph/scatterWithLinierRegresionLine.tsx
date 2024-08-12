@@ -16,7 +16,7 @@ import { UTIL } from '../../util';
 import { lineChartProps } from './simpleGraph';
 import { linearRegression } from 'simple-statistics'
 import { DownloadImg } from './downloadImg';
-import { CustomLegend } from './CustomLegend';
+import { CustomLegend } from './customLegend';
 
 ChartJS.register(
   LinearScale,

@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { UTIL } from "../../../util";
 import { InputActionMeta } from "react-select";
 import { Button, Col, Row } from "react-bootstrap";
-import { CustomLegendWithSelection } from "../CustomLegend";
+import { CustomLegendWithSelection } from "../customLegend";
 import { InstructionHeader } from "../../misc/instructionHeader";
 
 type OverlapComponentProps = {

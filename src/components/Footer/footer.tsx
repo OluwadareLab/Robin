@@ -6,7 +6,7 @@ import { Col, Row } from 'react-bootstrap';
 import uccsLogo from './../../images/UCCS_Logo.png';
 
 /** a simple footer for the website */
-export const Footer: React.FC = () => {
+export const Footer = () => {
   return (
     <footer className="footer" style={{marginTop:"auto"}} >
       <Row>

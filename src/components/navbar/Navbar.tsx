@@ -10,7 +10,7 @@ type NavbarProps = {
 }
 
 /** the navbar for the site. Has little configurability intentionally as it shouldn't be reused elsewhere. */
-export const AppNavbar: React.FC = (props: NavbarProps) => {
+export const AppNavbar = (props: NavbarProps) => {
     return (
         <Router basename="robin">
             <Navbar bg="" expand="lg" style={{padding:0, margin:0}}>

@@ -9,7 +9,7 @@ interface BookmarkProps {
   title: string;
 }
 
-const Bookmark: React.FC = () => {
+const Bookmark = () => {
     const url = window.location.href;
     const title = document.title;
 

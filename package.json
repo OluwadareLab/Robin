@@ -67,7 +67,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3006 craco start",
+    "start": "GENERATE_SOURCEMAP=false PORT=3006 craco start",
     "dev": "start npm run start-api && start react-scripts start",
     "start-api": "node ./src/api/mainAPI.js",
     "start-api-worker": "node ./src/api/worker.js",
@@ -75,7 +75,7 @@
     "build": "webpack --mode=production --node-env=production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-docs": "npx styleguidist server",
+    "start-docs": "GENERATE_SOURCEMAP=false npx styleguidist server",
     "build-docs": "npx styleguidist build",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",

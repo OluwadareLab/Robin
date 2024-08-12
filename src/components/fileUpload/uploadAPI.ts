@@ -8,6 +8,7 @@ import { apiPaths } from "../../api/apiConfig";
  * @param files, an array of the files to upload
  * @param fileNames, an optional array of the filenames if file names other their actual names should be used when sent.
  * @param progressCb an optional callback to be called within the axios progress thingy
+ * @ignore
  */
 export const uploadFiles = (id:number, files:File[], fileNames:string[]=[], progressCb:any=undefined) => {
     const formData = new FormData();

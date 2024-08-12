@@ -10,13 +10,13 @@ import config from '../../config.mjs';
 import { InstructionHeader } from '../misc/instructionHeader';
 import Select from 'react-select'
 import { UTIL } from '../../util';
-import { CustomLegendWithSelection } from '../graph/CustomLegend';
+import { CustomLegendWithSelection } from '../graph/customLegend.tsx';
 import { resultData } from '../tempTypes/Types';
 
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { oneDark } from '@codemirror/theme-one-dark';
-import { AiInstructions } from './aiInstructions';
+import { AiInstructions } from './AiInstructions.tsx';
 import { BtnLink } from '../buttons/BtnLink';
 
 //import style sheet

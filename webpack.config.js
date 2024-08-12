@@ -9,7 +9,7 @@ const version = require('./package.json').version
 
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-global.XYLOPHON =JSON.stringify(version)
+global.XYLOPHON = JSON.stringify(version)
 
 const config = {
     entry: './src/index.js',
@@ -20,6 +20,15 @@ const config = {
         open: true,
         host: 'localhost',
     },
+    resolve: {
+        fallback: {
+          http: require.resolve('stream-http'),
+          https: require.resolve('https-browserify'),
+          stream: require.resolve('stream-browserify'),
+          url: require.resolve('url/'),
+          process: require.resolve('process/browser')
+        }
+      },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'index.html',
@@ -28,8 +37,20 @@ const config = {
         new webpack.DefinePlugin({
             global: 'globalThis',
             XYLOPHON: JSON.stringify(version)
-          }),
-        
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', 'Buffer']
+        }),
+        new webpack.DefinePlugin({
+            global: 'globalThis',
+            XYLOPHON: JSON.stringify(version)
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', 'Buffer']
+        }),
+
 
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
@@ -37,11 +58,18 @@ const config = {
     module: {
         rules: [
             {
-            test: /\.(js|jsx)$/,
-            exclude: /node_modules/,
-            use: {
-                loader: "babel-loader",
-            }},
+                test: /\.m?js/,
+                resolve: {
+                  fullySpecified: false
+                }
+              },
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                }
+            },
             {
                 test: /\.(ts|tsx)$/i,
                 loader: 'ts-loader',
@@ -49,7 +77,7 @@ const config = {
             },
             {
                 test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                use: [stylesHandler, 'css-loader'],
             },
             {
                 test: /\.s[ac]ss$/i,
@@ -66,24 +94,27 @@ const config = {
             {
                 test: /\.json$/,
                 loader: 'json-loader'
+            },
+            {
+                test: /\.m?js/,
+                resolve: {
+                  fullySpecified: false
+                }
               }
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
-    },
 };
 
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        
+
         config.plugins.push(new MiniCssExtractPlugin());
-        
-        
+
+
     } else {
         config.mode = 'development';
     }
