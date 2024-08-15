@@ -113,7 +113,7 @@ export const JobDisplay = (props: JobProps) => {
     <Card>
       <Card.Body>
 
-        <Card.Title>{props.title || job.title}</Card.Title>
+        <Card.Title> <b>{props.title || job.title}</b></Card.Title>
         {props.status === STATUSES.DONE && false ?
           <Accordion>
             <AccordionItem eventKey='preview'>

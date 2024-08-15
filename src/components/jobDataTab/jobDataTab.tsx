@@ -5,7 +5,7 @@ import { CustomLegendWithSelection } from "../graph/CustomLegend";
 import { InstructionHeader } from "../misc/instructionHeader";
 import Select from 'react-select';
 import { BtnConfirm } from "../buttons/BtnConfirm";
-import { Col, Row, Tabs } from "react-bootstrap";
+import { Button, Col, Row, Tabs } from "react-bootstrap";
 
 type JobDataTabProps = {
     /** the id of the job */
@@ -31,15 +31,19 @@ export default function (props: JobDataTabProps) {
         _setSelectedTool(val);
         console.log(val.value);
         console.log(uploadData);
-        if (Object.keys(uploadData).includes(val.value)) {
-            console.log(uploadData[val.value]);
-            setFilesInSelectedTools(uploadData[val.value]);
-        } else if (val.value == "all") {
-            setFilesInSelectedTools(allUploads)
-        }
+        updateList(uploadData,val);
         //wipe when a user switches tools.
         setSelectedFiles({});
 
+    }
+
+    function updateList(_uploadData, val){
+        if (Object.keys(_uploadData).includes(val.value)) {
+            console.log(_uploadData[val.value]);
+            setFilesInSelectedTools(_uploadData[val.value]);
+        } else if (val.value == "all") {
+            setFilesInSelectedTools(allUploads)
+        }
     }
 
     /** @description an array of all files avalible in selected tool */
@@ -63,6 +67,10 @@ export default function (props: JobDataTabProps) {
         })
 
         console.log(files);
+        if(files.length <= 0) {
+            alert("You have not selected any files. You must select atleast 1.");
+            return;
+        }
         files.forEach(file => {
             let data = {
                 id: props.jobId,
@@ -118,7 +126,13 @@ export default function (props: JobDataTabProps) {
                     console.log(names);
                     setToolNames(names);
                     setUploadData(data);
+                   
                     setAllUploadData(response.data.files);
+
+                    setSelectedTool(names[0]);
+                    updateList(data,names[0]);
+                   
+                    
                 }
 
 
@@ -161,8 +175,11 @@ export default function (props: JobDataTabProps) {
                     forceUpdate={1}
                     max={100}
                 />
-
-                <BtnConfirm onClick={downloadFiles} title="download selected files" />
+                
+                <Button onClick={downloadFiles} variant={Object.keys(selectedFiles).reduce(
+                        (accumulator, currentValue) => accumulator + (selectedFiles[currentValue]?1:0),
+                        0,)
+                     >=1?"primary":"secondary"}>Download Selected Files</Button>
             </Col>
 
         </Row>
