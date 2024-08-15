@@ -113,7 +113,7 @@ export const JobDisplay = (props: JobProps) => {
     <Card>
       <Card.Body>
 
-        <Card.Title> <b>{props.title || job.title}</b></Card.Title>
+        <Card.Title> <b style={{color:"#708090"}}>{props.title || job.title}</b></Card.Title>
         {props.status === STATUSES.DONE && false ?
           <Accordion>
             <AccordionItem eventKey='preview'>
@@ -127,12 +127,12 @@ export const JobDisplay = (props: JobProps) => {
 
           : ""}
         <hr></hr>
-        {!minimal?<Card.Text>ID: {props.id}</Card.Text>:""}
-        {!minimal?<Card.Text>Status: {props.status || job.status}</Card.Text>:""}
-        <Card.Text>Description: {props.description || job.description}</Card.Text>
+        {!minimal?<Card.Text><b style={{color:"#708090"}}>ID:</b> {props.id}</Card.Text>:""}
+        {!minimal?<Card.Text><b style={{color:"#708090"}}>Status:</b> {props.status || job.status}</Card.Text>:""}
+        <Card.Text><b style={{color:"#708090"}}>Description:</b> {props.description || job.description}</Card.Text>
         {!minimal?<>
-        {(props.date !== 'null' && props.date) || job.date ? <Card.Text>Date: {props.date || job.date}</Card.Text> : ""}
-        {(props.email !== 'null' && props.email) || job.email ? <Card.Text>Email: {props.email || job.email}</Card.Text> : ""}
+        {(props.date !== 'null' && props.date) || job.date ? <Card.Text><b style={{color:"#708090"}}>Date:</b> {props.date || job.date}</Card.Text> : ""}
+        {(props.email !== 'null' && props.email) || job.email ? <Card.Text><b style={{color:"#708090"}}>Email:</b> {props.email || job.email}</Card.Text> : ""}
         {props.status === STATUSES.DONE && showAdminBtns ? <BtnLink src={`${paths.results}/${props.id}`} title="viewJob" /> : ""}
         {props.status === STATUSES.FAIL && showAdminBtns ? <BtnLink src={`${paths.results}/${props.id}`} title="View Potentially Incorrect Results" /> : ""}
         </>:""}
