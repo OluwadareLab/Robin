@@ -225,6 +225,7 @@ Or if you are sure this file is formatted properly click cancel.
     return (
         <div id="toolUploadComponentForm">
             <InstructionHeader title="Upload Loop Callers Results" />
+            <h5 style={{color:"#7e8a96"}}>Headers are not allowed in result files.</h5>
             {/* <p>Please submit atleast two results.</p> */}
             {toolData.map((tool, toolIndex) => (
                 <div key={`ToolContainer-${toolIndex}`} id={`ToolContainer-${toolIndex}`}>
