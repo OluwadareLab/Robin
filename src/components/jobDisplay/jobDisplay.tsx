@@ -50,7 +50,7 @@ export const JobDisplay = (props: JobProps) => {
                   if(response.data.job){
                     console.log("gehsilhaligheag")
                     console.log(response.data.job)
-                    setJob(response.data.job[0]);
+                    setJob(response.data.job);
                   }
               }
               console.log(response)
@@ -155,7 +155,7 @@ export const JobDisplay = (props: JobProps) => {
                     <Button onClick={() => onAddToJobQueue(props.id)}>Add to Job Queue</Button>
                   </Col>
                   <Col>
-                    <BtnLink src={`${paths.results}/${props.id}`} title="Force View Job" />
+                    <BtnLink src={`${paths.results}/${props.id}`} title="Force View Job" target={''} />
                   </Col>
                   <Col>
                     <DownloadJsonButton

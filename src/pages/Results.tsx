@@ -29,6 +29,7 @@ import { getJobStatus } from '../api/mainAPI';
 import { InstructionHeader } from '../components/misc/instructionHeader';
 import { AiAssistantComponent } from '../components/aiAssistant/aiAssistant';
 import { JobDisplay } from '../components/jobDisplay/jobDisplay';
+import JobDataTab from '../components/jobDataTab/jobDataTab';
 
 
 interface AnalysisResult {
@@ -212,6 +213,12 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         <Container>
           <AiAssistantComponent clrs={clrs} demo={props.example}/>
         </Container>
+      </Tab>
+
+      <Tab key="Data" eventKey="Data" title="Data">
+        <Container>
+            <JobDataTab clrs={clrs} jobId={jobId}/>
+          </Container>
       </Tab>
 
     </Tabs>

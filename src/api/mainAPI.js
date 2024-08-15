@@ -247,7 +247,21 @@ app.get(apiPaths.getJobInfo,  async (req, response) => {
     } catch (error) {
         response.json({ status: 400, error: "failed fetching job info" });
     }
+})
 
+app.post(apiPaths.fileDownload,  async (req, response) => {
+    const id = req.body.id;
+    const fileName = req.body.fileName;
+    try {
+        const filePath = generateJobDataFolderPath(id);
+        if(!fs.existsSync(filePath + fileName)) response.json({ status: 400, error: "file does not exist" });
+        const fullPath = fs.realpathSync(filePath + fileName);
+        console.log(fullPath)
+        response.download(fullPath);
+        console.log(`tried to download file`);   
+    } catch (error) {
+        response.json({ status: 400, error: "failed fetching job info" });
+    }
 })
 
 /** 

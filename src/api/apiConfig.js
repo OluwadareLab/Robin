@@ -11,6 +11,9 @@ const apiPaths = {
 
     /** @description the path for a get request to job info */
     getJobInfo: "/getJobInfo",
+
+    /** download a file from a job */
+    fileDownload:"/jobFileDownload",
     /** get the next id from the db */
     getNextID: "/nextID",
 
