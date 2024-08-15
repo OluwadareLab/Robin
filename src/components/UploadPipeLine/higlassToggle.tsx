@@ -24,10 +24,7 @@ export const HiglassToggle = (props:HiglassToggleProps) => {
     return(
         <>
         <Row>
-            <Col sm={3}>
-                <InstructionHeader title="Enable Higlass?"/>
-            </Col>
-            <Col>
+            <Col sm={1}>
                 <Form.Check 
                 type="switch"
                 id="higlass"
@@ -36,6 +33,10 @@ export const HiglassToggle = (props:HiglassToggleProps) => {
                 onChange={toggle}
                 />
             </Col>
+            <Col sm={3}>
+                <InstructionHeader title="Enable Higlass?"/>
+            </Col>
+            
             
         </Row>
         <Row>
