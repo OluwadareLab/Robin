@@ -8,6 +8,9 @@ const minFreeMemOnSystem = 200;
 const apiPaths = {
     /** @description the path for the put request to put general info onto the server */
     jobInfo: "/jobInfo",
+
+    /** @description the path for a get request to job info */
+    getJobInfo: "/getJobInfo",
     /** get the next id from the db */
     getNextID: "/nextID",
 

@@ -28,6 +28,7 @@ import { OverlapDataSet } from '../components/tempTypes/Types';
 import { getJobStatus } from '../api/mainAPI';
 import { InstructionHeader } from '../components/misc/instructionHeader';
 import { AiAssistantComponent } from '../components/aiAssistant/aiAssistant';
+import { JobDisplay } from '../components/jobDisplay/jobDisplay';
 
 
 interface AnalysisResult {
@@ -122,6 +123,11 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       <p>If Higlass is not loading, please try clearing browsing data or using an incognito window/other browser, and clicking the reload higlass button at the top of this page</p>
     </Container>
   const normalPage =
+    <>
+    <JobDisplay
+      id={jobId}
+      minimal={true}
+    />
     <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
       <Tab key="Overlap" eventKey="Apa_Score" title="Overlap">
         <OverlapComponent
@@ -209,6 +215,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       </Tab>
 
     </Tabs>
+    </>
 
   function getJobResults() {
     axios.get(apiPaths.jobResults + "?id=" + jobId).then((response) => {

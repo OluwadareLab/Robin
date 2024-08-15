@@ -28,7 +28,7 @@ export const ViewAllJobsPage = () => {
     return (
         <>
             <ol>
-            {jobs.map((e:JobProps)=>{id++;return(<><JobDisplay {...e} id={id}/></>) })}
+            {jobs.map((e:JobProps)=>{id++;return(<><JobDisplay {...e} id={id} includeBtns={true}/></>) })}
             </ol>
             
         </>

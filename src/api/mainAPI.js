@@ -236,6 +236,20 @@ app.get(apiPaths.allJobsInfo,  async (req, response) => {
 
 })
 
+app.get(apiPaths.getJobInfo,  async (req, response) => {
+    const id = req.query.id;
+    try {
+        //const title = req.body.title;
+        
+        response.json({ job: await getJobInfo(id), status: 200 });
+        console.log(`tried to fetch job info`);
+            
+    } catch (error) {
+        response.json({ status: 400, error: "failed fetching job info" });
+    }
+
+})
+
 /** 
  * the get path for getting the status of a job
  * provide id in query
@@ -796,6 +810,20 @@ function getJob(jobId){
             })
     })
     
+}
+
+/**
+ * @description return job with id
+ */
+function getJobInfo(jobId){
+    return new Promise(resolve =>{
+        db.all(`
+        SELECT *
+        FROM jobs
+        WHERE ROWID=${jobId}`, (err, res) => {
+            resolve(res[0]);
+        })
+    })
 }
 
 function getAllJobs(){
