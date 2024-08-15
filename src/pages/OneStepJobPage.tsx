@@ -49,7 +49,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     let storedProtienRefArr:string[]=[];
     let storedProtienRefFileNames:string[]=[];
     let storedToolData:ToolData[]=[];
-    let storedUseHiGlass:boolean=true;
+    let storedUseHiGlass:boolean=false;
     let storedChromFile=new ChromFile();
     let storedFileSets:fileSet[]=[];
     let storedBasicInfo:any={};
