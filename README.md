@@ -24,7 +24,7 @@ Email: ooluwada@uccs.edu<br>
 
 ## Runnning Robin
 Robin can be run by using the provided docker compose file to launch the required docker containers and link their ports together for you.
-#### start cmd
+#### docker compose start cmd
 ```bash 
     docker compose up
 ```
