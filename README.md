@@ -1,33 +1,61 @@
 # Robin:  An Advanced Tool for Comparative Loop Caller Result Analysis Leveraging Large Language Models
+***
+#### [OluwadareLab, University of Colorado, Colorado Springs](https://uccs-bioinformatics.com/)
+***
+#### Developers:
+H. M. A. Mohit Chowdhury<br>
+Department of Computer Science<br>
+University of Colorado at Colorado Springs<br>
+Email:hchowdhu@uccs.edu<br>
 
-## Developers:
-1)  H. M. A. Mohit Chowdhury (hchowdhu@uccs.edu)  
-Department of Computer Science  
-University of Colorado at Colorado Springs  
+Mattie Fuller<br>
+Department of Computer Science<br>
+University of Colorado at Colorado Springs<br>
+Email:mfuller@uccs.edu<br>
 
-2) Mattie Fuller (mfuller@uccs.edu)  
-Department of Computer Science  
-University of Colorado at Colorado Springs  
+##### Corresponding:
+1) Oluwatosin Oluwadare, PhD<br>
+Department of Computer Science<br>
+University of Colorado at Colorado Springs<br>
+(Secondary) Department of Biomedical Informatics<br>
+University of Colorado School of Medicine, Anschutz Medical Campus<br>
+Email:ooluwada@uccs.edu<br>
+***
 
-## Corresponding:
-1) Oluwatosin Oluwadare (ooluwada@uccs.edu), PhD  
-Department of Computer Science  
-University of Colorado at Colorado Springs  
-(Secondary) Department of Biomedical Informatics  
-University of Colorado School of Medicine, Anschutz Medical Campus  
-
-
-
-
-
-
-
-
-
-# start cmd
+## Runnning Robin
+Robin can be run by using the provided docker compose file to launch the required docker containers and link their ports together for you.
+#### start cmd
 ```bash 
     docker compose up
 ```
+
+## Setup instructions
+
+1) run ```git submodule update --recursive --remote``` to pull the included subrepo of HiGlass.
+2) run ```npm clean-install``` from inside /src/components/visualizationTools/HiGlass to install HiGlasses dependancies.
+3) run ```npm install``` from the root of the project (IE: folder with package.json) to install robin's dependancies.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # old readme
 to start the robin docker
