@@ -22,13 +22,17 @@ University of Colorado School of Medicine, Anschutz Medical Campus<br>
 Email: ooluwada@uccs.edu<br>
 ***
 
+## Using Robin
+all information about using Robin can be found here: http://biomlearn.uccs.edu/robinrd/tutorial.html
+***
+
 ## Runnning Robin
 Robin can be run by using the provided docker compose file to launch the required docker containers and link their ports together for you.
 #### docker compose start cmd
 ```bash 
     docker compose up
 ```
-
+***
 ## Setup instructions
 
 1) run ```git submodule update --recursive --remote``` to pull the included subrepo of HiGlass.
