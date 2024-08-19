@@ -6,12 +6,12 @@
 H. M. A. Mohit Chowdhury<br>
 Department of Computer Science<br>
 University of Colorado at Colorado Springs<br>
-Email:hchowdhu@uccs.edu<br>
+Email: hchowdhu@uccs.edu<br>
 
 Mattie Fuller<br>
 Department of Computer Science<br>
 University of Colorado at Colorado Springs<br>
-Email:mfuller@uccs.edu<br>
+Email: mfuller@uccs.edu<br>
 
 #### Corresponding:
 Oluwatosin Oluwadare, PhD<br>
@@ -19,7 +19,7 @@ Department of Computer Science<br>
 University of Colorado at Colorado Springs<br>
 (Secondary) Department of Biomedical Informatics<br>
 University of Colorado School of Medicine, Anschutz Medical Campus<br>
-Email:ooluwada@uccs.edu<br>
+Email: ooluwada@uccs.edu<br>
 ***
 
 ## Runnning Robin
