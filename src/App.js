@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-
+import StandardErrorBoundary from './components/error/standardErrorBoundry';
 import './css/master_style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
@@ -9,6 +9,7 @@ import { AppNavbar } from "./components/navbar/Navbar";
 import { Footer } from "./components/Footer/footer";
 import config from './config.mjs';
 import axios from 'axios';
+import ReactGA from 'react-ga';
 
 axios.defaults.baseURL = config.apiPath;
 axios.defaults.headers.post['Access-Control-Allow-Origin'] ='*';
@@ -35,7 +36,7 @@ function App() {
   return (
     <>
       <AppNavbar/>
-      <WebRoutes/>
+        <WebRoutes/>
       <Footer/>
     </>
     

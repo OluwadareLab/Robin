@@ -16,17 +16,17 @@ import Creatable, { useCreatable } from 'react-select/creatable';
 import MyDropdown from '../categoryInput';
 
 
-type ToolFormUploadFormProps =  {
+type ToolFormUploadFormProps = {
     /**
      * @description optional cb to call when the tool data for the form is changed
      * @param data the data
      * @returns void
      */
-    setToolDataCb?:(data:ToolData[])=>void;
+    setToolDataCb?: (data: ToolData[]) => void;
 }
 
-const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
-    const [categories, setCategories] = useState<{"value":string,"label":string}[]>([]);
+const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
+    const [categories, setCategories] = useState<{ "value": string, "label": string }[]>([]);
     const navigate = useNavigate();
 
     function onSubmit() {
@@ -55,14 +55,19 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
         return true;
     }
 
-    //the tool Data
-    const [toolData, _setToolData] = useState<ToolData[]>([new ToolData('')]);
+    //the tool Data. 2 results are required and cannot be removed
+    const [toolData, _setToolData] = useState<ToolData[]>(
+        [
+            new ToolData('').setCannotBeRemoved(true).setResolutionCannotBeRemoved(true, 0),
+            new ToolData('').setCannotBeRemoved(true).setResolutionCannotBeRemoved(true, 0)
+        ]
+    );
     const [files, setFiles] = useState<File[]>([]);
 
     /** @description wrap the setter for tool data to pass data upwards to any listening parents */
-    const setToolData = (data:ToolData[]) =>{ 
+    const setToolData = (data: ToolData[]) => {
         _setToolData(data);
-        if(props.setToolDataCb) props.setToolDataCb(data);
+        if (props.setToolDataCb) props.setToolDataCb(data);
     }
 
     /**
@@ -72,9 +77,9 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
         setToolData([...toolData, new ToolData('')]);
     };
 
-     /**
-     * @description on removing a tool data input
-     */
+    /**
+    * @description on removing a tool data input
+    */
     const handleRemoveToolData = (toolIndex) => {
         const newData = [...toolData];
         newData.splice(toolIndex, 1)
@@ -122,17 +127,73 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
      */
     const handleFileChange = (toolIndex: number, resIndex: number, event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
-            const newData = [...toolData];
-            newData[toolIndex].resolutions[resIndex].file = file;
-            setToolData(newData);
+            let file = event.target.files[0];
+            file.text().then(fileBody => {
+                const newData = [...toolData];
+                checkFileForHeaders(file).then(result => {
+                    if (result) {
+                        //check with the user if we should remove the header for them.
+                        let response = window.confirm(`This file appears to have a header which is not allowed in our format. 
+Click Okay to remove the header from your upload (the file on your computer will not be changed).
+Or if you are sure this file is formatted properly click cancel.
+`);
+                        //ask the user if we should remove header if they say no we wont touch the file upload
+                        if (response) {
+                            console.log(`header test ${result}`)
+                            const fileBodyWithoutHeader = fileBody.split("\n").slice(1).join('\n');
+                            console.log(fileBodyWithoutHeader);
+                            var blob = new Blob([fileBodyWithoutHeader], { type: 'text/plain' });
+                            //update file to no longer have header
+                            file = new File([blob], file.name, { type: "text/plain" });
+                        }
+                    }
+                    
+                    newData[toolIndex].resolutions[resIndex].file = file;
+                    setToolData(newData);
+                });
+                
+            })
+
+
         }
 
         let files: (File)[] = []
         toolData.forEach(tool => tool.resolutions.forEach(res => { if (res.file) files.push(res.file) }))
         setFiles(files)
-        console.log(files)
     };
+
+    /**
+     * @description a simple utility function that checks a file if it has headers/labels as its first line.
+     * @param file 
+     * @returns {boolean} whether there are headers
+     */
+    const checkFileForHeaders = async (file: File) => {
+        const regex = /\S+\s/g;
+        const fileBody = await file.text();
+        const firstLine = fileBody.split('\n')[0];
+        //get all words from first line
+        const wordsInFirstLine: string[] = firstLine.split(/\s/);
+
+        if (wordsInFirstLine) {
+            //check if any words are solely numbers\
+            console.log(wordsInFirstLine);
+            const atLeastOneWordIsANumber = wordsInFirstLine.some(word => {
+                //check if the word is a number
+                const isNumber = /^(\d|\s)+$/.test(word) || !isNaN(parseFloat(word));
+                return isNumber;
+            });
+            //if atleast one word is soley numeric we will assume the line is not a header
+            if (atLeastOneWordIsANumber) {
+                return false;
+            } else {
+                //if no words are numbers that would violate our formats and thus this is a header.
+                return true;
+            }
+        }
+
+        //if all the above executes without returning it is not a header
+        return false;
+    }
 
     /**
      * @description handle a change to the resolution of a tool
@@ -146,12 +207,12 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
         setToolData(newData);
     };
 
-     /**
-     * @description handle a change to the category of a tool
-     * @param index the index of the tool
-     * @param event the html event
-     */
-     const handleCategoryChange = (toolIndex: number, event: { value: string; label: string; }) => {
+    /**
+    * @description handle a change to the category of a tool
+    * @param index the index of the tool
+    * @param event the html event
+    */
+    const handleCategoryChange = (toolIndex: number, event: { value: string; label: string; }) => {
         const value = event.value;
         const newData = [...toolData];
         newData[toolIndex].category = value;
@@ -163,13 +224,16 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
 
     return (
         <div id="toolUploadComponentForm">
-            <InstructionHeader title="Upload Tool Data Files" />
+            <InstructionHeader title="Upload Loop Callers Results" />
+            <h5 style={{color:"#7e8a96"}}>Results files with Headers are not allowed</h5>
+            {/* <p>Please submit atleast two results.</p> */}
             {toolData.map((tool, toolIndex) => (
                 <div key={`ToolContainer-${toolIndex}`} id={`ToolContainer-${toolIndex}`}>
                     <ToolNameInput key={`ToolNameInput-${toolIndex}`}
                         onInputChange={async (e) => handleInputChange(toolIndex, e)}
                         onToolRemove={async () => handleRemoveToolData(toolIndex)}
                         name={tool.name}
+                        cannotBeRemoved={toolData[toolIndex].cannotBeRemoved}
                     />
 
                     <Row>
@@ -183,31 +247,35 @@ const ToolFormUploadForm = (props:ToolFormUploadFormProps) => {
                                 placeholder="(optional) Type a category name to group this tool with other tools."
                                 name={`Cat-${tool.name}`}
                                 options={categories}
-                                onCreateOption={(option)=>{
-                                    let newOption = {"value":option.trim().replaceAll(' ','-'),"label":option};
-                                    setCategories([...categories,newOption]);
+                                onCreateOption={(option) => {
+                                    let newOption = { "value": option.trim().replaceAll(' ', '-'), "label": option };
+                                    setCategories([...categories, newOption]);
                                     let e = newOption;
                                     handleCategoryChange(toolIndex, e);
                                 }}
                             />
                         </div>
-                        
-                        
+
+
                     </Row>
-                    
+
 
                     {tool.resolutions.map((resolution, resolutionIndex) => (
                         <Row key={`ToolContainer-ResolutionRow-${resolutionIndex}`} className='form-group row'>
                             <ResolutionInput
-                                resolution={resolution.resolution}
+                                resolution={resolution}
                                 handleResolutionChange={(e) => handleResolutionChange(toolIndex, resolutionIndex, e)}
                             />
+
                             <ToolFileInput
                                 onFileChange={(e) => handleFileChange(toolIndex, resolutionIndex, e)}
                             />
-                            <Col>
-                                <button type="button" className="btn btn-secondary" onClick={() => handleRemoveResolution(toolIndex, resolutionIndex)}>Remove</button>
-                            </Col>
+
+                            {/* only display remove if resolution data obj allows it */}
+                            {!resolution.cannotBeRemoved ?
+                                <Col>
+                                    <button type="button" className="btn btn-secondary" onClick={() => handleRemoveResolution(toolIndex, resolutionIndex)}>Remove</button>
+                                </Col> : <></>}
                         </Row>
                     ))}
                     <button type="button" className='btn btn-secondary' onClick={() => handleAddResolution(toolIndex)}>Add Additional Resolution</button>

@@ -30,6 +30,16 @@ const VennDiagramComponent = (props:VennDiagramComponentProps) => {
   const [chart,setChart] = useState<VennDiagramChart>();
   const dimensions = useDimensions(containerRef);
   const chartRef = useRef();
+
+  //make sure labels are visible
+  let maxLetters = props.data.reduce(
+    (accumulator, currentValue) => accumulator < currentValue.label.length ? currentValue.label.length : accumulator,
+    0,
+  );
+  let padding = props.data.length==3 ? maxLetters *1.6 : 50;
+
+  //make sure we dont add do much padding, if labels are too long id rather them get cut off than the graph to disappear.
+  if(padding >= 200) padding = 200;
   
   const config = {
     type: 'venn',
@@ -47,7 +57,7 @@ const VennDiagramComponent = (props:VennDiagramComponentProps) => {
         display: false
      },
      layout:{
-      "padding":50,
+      "padding":padding,
      },
      plugins: {
       legend: {

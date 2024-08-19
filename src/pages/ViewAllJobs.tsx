@@ -17,7 +17,7 @@ export const ViewAllJobsPage = () => {
                 }
                 console.log(response)
                 
-            })  
+            }).catch(err=>console.log("axios err:"+err));  
         } catch (error) {
             
         }
@@ -28,7 +28,7 @@ export const ViewAllJobsPage = () => {
     return (
         <>
             <ol>
-            {jobs.map((e:JobProps)=>{id++;return(<><JobDisplay {...e} id={id}/></>) })}
+            {jobs.map((e:JobProps)=>{id++;return(<><JobDisplay {...e} id={id} includeBtns={true}/></>) })}
             </ol>
             
         </>

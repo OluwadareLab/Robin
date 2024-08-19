@@ -236,6 +236,34 @@ app.get(apiPaths.allJobsInfo,  async (req, response) => {
 
 })
 
+app.get(apiPaths.getJobInfo,  async (req, response) => {
+    const id = req.query.id;
+    try {
+        //const title = req.body.title;
+        
+        response.json({ job: await getJobInfo(id), status: 200 });
+        console.log(`tried to fetch job info`);
+            
+    } catch (error) {
+        response.json({ status: 400, error: "failed fetching job info" });
+    }
+})
+
+app.post(apiPaths.fileDownload,  async (req, response) => {
+    const id = req.body.id;
+    const fileName = req.body.fileName;
+    try {
+        const filePath = generateJobDataFolderPath(id);
+        if(!fs.existsSync(filePath + fileName)) response.json({ status: 400, error: "file does not exist" });
+        const fullPath = fs.realpathSync(filePath + fileName);
+        console.log(fullPath)
+        response.download(fullPath);
+        console.log(`tried to download file`);   
+    } catch (error) {
+        response.json({ status: 400, error: "failed fetching job info" });
+    }
+})
+
 /** 
  * the get path for getting the status of a job
  * provide id in query
@@ -484,7 +512,6 @@ const uploadData = multer({
             cb(null, path);
             return path + "/";
         },
-
         filename: (req, file, cb) => {
             const id = req.body.id;
             const fileName = id + "data";
@@ -797,6 +824,20 @@ function getJob(jobId){
             })
     })
     
+}
+
+/**
+ * @description return job with id
+ */
+function getJobInfo(jobId){
+    return new Promise(resolve =>{
+        db.all(`
+        SELECT *
+        FROM jobs
+        WHERE ROWID=${jobId}`, (err, res) => {
+            resolve(res[0]);
+        })
+    })
 }
 
 function getAllJobs(){

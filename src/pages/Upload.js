@@ -16,7 +16,7 @@ export const UploadPage = () => {
         else {
             alert("something went wrong." + response.data.err);
         }
-          });
+          }).catch(err=>console.log("axios err:"+err));
         
     }
 

@@ -77,7 +77,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
         //console.log(response)
         if (response.status === 200)
           setUploadData(response.data.files);
-      });
+      }).catch(err=>console.log("axios err:"+err));
     };
     fetchQueuePosition();
   }, [uploadComplete, id]);

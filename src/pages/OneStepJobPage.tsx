@@ -24,7 +24,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { ChromFile, ToolData, fileSet } from "../components/tempTypes/Types"
 import { jobSetupFormData } from "../components/tempTypes/Types"
 import { apiPaths } from "../api/apiConfig"
-import { paths } from "../config.mjs"
+import config, { paths } from "../config.mjs"
 import axios from "axios"
 import { HiglassUploadForm } from "../components/UploadPipeLine/higlassUploadForm"
 import { HiglassToggle } from "../components/UploadPipeLine/higlassToggle"
@@ -49,7 +49,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     let storedProtienRefArr:string[]=[];
     let storedProtienRefFileNames:string[]=[];
     let storedToolData:ToolData[]=[];
-    let storedUseHiGlass:boolean=true;
+    let storedUseHiGlass:boolean=false;
     let storedChromFile=new ChromFile();
     let storedFileSets:fileSet[]=[];
     let storedBasicInfo:any={};
@@ -89,7 +89,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
             if(response.status==200){
                 navigate(`${paths.setup}/${response.data.id}/`)
             }
-        })
+        }).catch(err=>console.log("axios err:"+err));
     },[])
 
     //update files and fileNames whenever any of these change
@@ -117,10 +117,37 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     let jobId = params.id ? parseInt(params.id) : undefined;
     let once = false;
     function canSubmit(e){
+        //ensure all resolutions have a file
         if(toolData.some(tool=>tool.resolutions.some(res=>!res.file))) return false;
         const formElement = e.target;
-        const isValid = formElement.checkValidity() && formRef.current.checkValidity();
-        if(!isValid) return;
+        let isValid = formElement.checkValidity() && formRef.current.checkValidity();
+        if(!isValid) {
+            alert("you have not filled out one or more required fields");
+            return 
+        }
+
+        //ensure every resolutions has atleast 2 result files
+        //-extract resolutions from tooldata as a flat arr
+        let allResolutionsResults = toolData.map(toolData=>toolData.resolutions).flat();
+        //find all unquie resolutions. we do this by creating an array of all, then convert to a dict/set, then back to array
+        let allResolutionsValues = [...new Set(allResolutionsResults.map(res=>res.resolution))];
+        console.log(allResolutionsValues)
+
+        let invalidResolutionInputs:number[] = [];
+        isValid = allResolutionsValues.every(res=>{
+            console.log(res);
+            let val = allResolutionsResults.reduce((previousValue, resObj)=>{
+                return previousValue + (resObj.resolution ? ((resObj.resolution == res) ? 1 : 0) : 0);
+            },0);
+            if(val < config.minResolutionValues){
+                invalidResolutionInputs.push(res);
+            } 
+            return val >= config.minResolutionValues;
+        })
+
+        if(!isValid) {
+            alert(`You must uplaoded atleast ${config.minResolutionValues} results for each resolution you have specified, the following resolution needs one or more results:\n`+invalidResolutionInputs.join("\n"));
+            return;}
 
         let data: jobSetupFormData = {
             email: basicInfo.email,
@@ -138,7 +165,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                 } else {
                     alert("An Unexpected error occurred.")
                 }
-            })
+            }).catch(err=>console.log("axios err:"+err));
             once=true;
         }
         
@@ -174,7 +201,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
                 else {
                     alert("something went wrong." + response.data.err);
                 }
-            });
+            }).catch(err=>console.log("axios err:"+err));
     }
 
     return (

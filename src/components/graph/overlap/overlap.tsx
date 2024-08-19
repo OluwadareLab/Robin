@@ -118,7 +118,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   const params = useParams();
   const id = params.id ? parseInt(params.id) : undefined;
   const [invalidComboWarn, setInvalidComboWarn] = useState<boolean>(false);
-  const [filterResolution, setFilterResolution] = useState<any>(props.resolutionFilter ? props.resolutionFilter : (props.data[0] ? props.data[0].resolution : false))
+  const [filterResolution, setFilterResolution] = useState<any>(props.resolutionFilter ? props.resolutionFilter : (props.data[0] ? {"value":props.data[0].resolution, label:`${props.data[0].resolution/1000} kb`} : false))
   const [currentCombo, setCurrentCombo] = useState<OverlapDataObj | undefined>(props.data[0] ? props.data[0] : undefined);
   const [updater, setUpdater] = useState<number>(0);
   const [labels, setLabels] = useState<string[]>([]);
@@ -174,9 +174,12 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
    */
   function setDefaultFilterResolution(){
     console.log("------------------setting defaults--------------------------");
-    if(!filterResolution){
+    console.log(filterResolution);
+    console.log(options);
+    if(!filterResolution && options.length > 0){
       console.log("setting filter resolution")
-      setFilterResolution(options[0]);
+      console.log(options);
+      setFilterResolution({value: options[0].value, label: options[0].label});
     }
   }
 
@@ -291,7 +294,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
             value={filterResolution}
             inputValue=""
             className="onTop"
-            onChange={(val, other) => setFilterResolution(val)}
+            onChange={(val, other) => {console.log(val);setFilterResolution(val)}}
           >
           </Select>
           <hr />

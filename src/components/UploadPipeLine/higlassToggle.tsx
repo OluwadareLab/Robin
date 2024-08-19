@@ -1,5 +1,5 @@
 import React from "react"
-import { Form, Row } from "react-bootstrap"
+import { Col, Form, Row } from "react-bootstrap"
 import { InstructionHeader } from "../misc/instructionHeader"
 
 /**
@@ -24,16 +24,20 @@ export const HiglassToggle = (props:HiglassToggleProps) => {
     return(
         <>
         <Row>
-            <InstructionHeader title="Enable Higlass?"/>
-        </Row>
-        <Row>
-        <Form.Check 
-            type="switch"
-            id="higlass"
-            label=""
-            checked={props.checked}
-            onChange={toggle}
-        />
+            <Col sm={1}>
+                <Form.Check 
+                type="switch"
+                id="higlass"
+                label=""
+                checked={props.checked}
+                onChange={toggle}
+                />
+            </Col>
+            <Col sm={3}>
+                <InstructionHeader title="Enable Higlass?"/>
+            </Col>
+            
+            
         </Row>
         <Row>
             {props.checked ? props.children : ""}

@@ -28,6 +28,8 @@ import { OverlapDataSet } from '../components/tempTypes/Types';
 import { getJobStatus } from '../api/mainAPI';
 import { InstructionHeader } from '../components/misc/instructionHeader';
 import { AiAssistantComponent } from '../components/aiAssistant/aiAssistant';
+import { JobDisplay } from '../components/jobDisplay/jobDisplay';
+import JobDataTab from '../components/jobDataTab/jobDataTab';
 
 
 interface AnalysisResult {
@@ -82,7 +84,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       if (response.status == 200) {
         setRenderHiglass(response.data.higlassToggle);
       }
-    })
+    }).catch(err=>console.log("axios err:"+err));
   }, [])
 
 
@@ -122,6 +124,13 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       <p>If Higlass is not loading, please try clearing browsing data or using an incognito window/other browser, and clicking the reload higlass button at the top of this page</p>
     </Container>
   const normalPage =
+    <>
+    <br></br>
+    <JobDisplay
+      id={jobId}
+      minimal={true}
+    />
+    <hr></hr>
     <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
       <Tab key="Overlap" eventKey="Apa_Score" title="Overlap">
         <OverlapComponent
@@ -183,7 +192,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       }
 
       {renderHiglass ?
-        <Tab key="higlass" eventKey="higlass" title="higlass">
+        <Tab key="higlass" eventKey="higlass" title="HiGlass">
           {(renderHiglass != 2) ?
             <>
               <InstructionHeader title='Your data is not fully injested into higlass yet...' />
@@ -208,12 +217,19 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
         </Container>
       </Tab>
 
+      <Tab key="Data" eventKey="Data" title="Data">
+        <Container>
+            <JobDataTab clrs={clrs} jobId={jobId}/>
+          </Container>
+      </Tab>
+
     </Tabs>
+    </>
 
   function getJobResults() {
     axios.get(apiPaths.jobResults + "?id=" + jobId).then((response) => {
       setJobResults(response.data);
-    });
+    }).catch(err=>console.log("axios err:"+err));
   }
 
   async function setupDataSets() {
@@ -369,7 +385,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       if (config.DEBUG) console.log(tempLoopSizes)
 
       setDataHasLoaded(true);
-    });
+    }).catch(err=>console.log("axios err:"+err));
     
 
   }

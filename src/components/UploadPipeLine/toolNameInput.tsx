@@ -20,6 +20,9 @@ type ToolNameInputProps = {
      * might need to be async, I dont remember
      */
     onToolRemove:()=>void,
+
+    /** if truthy, the remove button will not exist on this input. */
+    cannotBeRemoved?:boolean,
 }
 
 /**
@@ -35,6 +38,7 @@ export const ToolNameInput = (props:ToolNameInputProps) =>{
             handleRemoveToolData={props.onToolRemove}
             placeholder="IE: Lasca, CLoops, etc..."
             value={props.name}
+            cannotBeRemoved={props.cannotBeRemoved}
             
         />
     )

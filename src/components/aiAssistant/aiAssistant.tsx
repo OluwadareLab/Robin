@@ -212,7 +212,7 @@ export function setupDataSets(jobId: number): Promise<resultData> {
       if (config.DEBUG) console.log(tempRegressionPoints)
       if (config.DEBUG) console.log(tempLoopSizes)
       res(dataObj);
-    });
+    }).catch(err=>console.log("axios err:"+err));
   })
 
 }
@@ -298,7 +298,7 @@ function submitSnippet(answer, jobId, jobTitle) {
       const fileName = "example.txt";
       const file = new File([blob], fileName, { type: 'text/plain' });
       formData.append(`files`, file, `${jobTitle.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9]/g, '_')}.ipynb`);
-      axios.post(apiPaths.jyupterUpload, formData);
+      axios.post(apiPaths.jyupterUpload, formData).catch(err=>console.log("axios err:"+err));;
     }
   }
 }
@@ -524,7 +524,7 @@ function ChatInterface(props) {
       <Row md={8}>
         <InstructionHeader title='please enter your openai api key below.' />
         <p>Your API key is never cached or stored in anyway on our servers, the second you close this tab it is gone.</p>
-        <p>Dont have a key? get one: <BtnLink src="https://www.maisieai.com/help/how-to-get-an-openai-api-key-for-chatgpt" title='here' /></p>
+        <p>Dont have a key? get one: <BtnLink target="_blank" src="https://www.maisieai.com/help/how-to-get-an-openai-api-key-for-chatgpt" title='here' /></p>
         <label htmlFor='apikeyInput'>OpenAI API key:</label>
         <input id="apikeyInput"
           value={apikey}
@@ -653,7 +653,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           }
             
         
-      });
+      }).catch(err=>console.log("axios err:"+err));
       
     }, 5000);
   }, [count, messages])
