@@ -13,7 +13,7 @@ Department of Computer Science<br>
 University of Colorado at Colorado Springs<br>
 Email:mfuller@uccs.edu<br>
 
-##### Corresponding:
+#### Corresponding:
 Oluwatosin Oluwadare, PhD<br>
 Department of Computer Science<br>
 University of Colorado at Colorado Springs<br>
