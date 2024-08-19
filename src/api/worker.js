@@ -75,7 +75,7 @@ const medTimeoutOptions = {
 };
 
 const highTimeoutOptions = {
-  timeout: 60000 * 120, // timeout in milliseconds
+  timeout: 60000 * 200, // timeout in milliseconds
 };
 
 var transporter = nodemailer.createTransport({
@@ -512,7 +512,7 @@ async function jobWorker() {
         let overlapBashCmd = `bash ${config.callersOverlapScriptPath} ${fileList} ${resolution} ${jobID} ${labelsList}`;
 
         console.log(`running: overlap: ${overlapBashCmd}`);
-        promises.push(addChildScriptToQueue(overlapBashCmd, "overlap script", medTimeoutOptions));
+        promises.push(addChildScriptToQueue(overlapBashCmd, "overlap script", highTimeoutOptions));
       });
 
       jobInfo.forEach(job => {
