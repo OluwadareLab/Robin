@@ -1,11 +1,33 @@
+# Robin:  An Advanced Tool for Comparative Loop Caller Result Analysis Leveraging Large Language Models
+
+## Developers:
+1)  H. M. A. Mohit Chowdhury (hchowdhu@uccs.edu)  
+Department of Computer Science  
+University of Colorado at Colorado Springs  
+
+2) Mattie Fuller (mfuller@uccs.edu)  
+Department of Computer Science  
+University of Colorado at Colorado Springs  
+
+## Corresponding:
+1) Oluwatosin Oluwadare (ooluwada@uccs.edu), PhD  
+Department of Computer Science  
+University of Colorado at Colorado Springs  
+(Secondary) Department of Biomedical Informatics  
+University of Colorado School of Medicine, Anschutz Medical Campus  
+
+
+
+
+
+
+
+
+
 # start cmd
 ```bash 
     docker compose up
 ```
-
-
-
-
 
 # old readme
 to start the robin docker
