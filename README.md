@@ -40,8 +40,10 @@ Robin can be run by using the provided docker compose file to launch the require
 3) run ```npm install``` from the root of the project (IE: folder with package.json) to install robin's dependancies.
 
 
-
-
+## Developer Documentation
+[Component Documentation](http://biomlearn.uccs.edu/robin/styleguide/index.html). Robin uses React StyleGuidist for component documentation and isolated component development.
+[Full Documentation](http://biomlearn.uccs.edu/robin/docs/). Generated from in code comments using typeDoc
+The Component documentation contains all documentation for react components in the site, whereas the full documentation contains the auto generated documenation for all code in the project.
 
 
 
