@@ -22,6 +22,10 @@ const TrackPageViews = () => {
     return null;
   };
 
+/**
+ * the component that handles all routing for the website
+ * @returns the component
+ */
 export const WebRoutes = () => (
     <Router basename="robin/">
         <TrackPageViews/>

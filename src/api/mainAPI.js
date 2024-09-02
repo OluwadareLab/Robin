@@ -63,12 +63,12 @@ app.listen(config.apiPort);
 
 
 /**
- *  sum all rows with the provided status with lower id than id provided
+ * Sum all rows with the provided status with lower id than id provided
  * @param {*} id 
  * @param {*} status 
  * @returns 
  */
-function getQueuePos(id, status){
+export function getQueuePos(id, status){
     return new Promise((resolve) =>{
         db.all(`SELECT COUNT(status) FROM jobs WHERE status="${status}" AND ROWID<${id}`, (err, res) => {
             if(res && res[0]){
@@ -473,9 +473,9 @@ app.get(apiPaths.htmlFiles, async (req, response) =>{
 })
 
 /**
- *  handle uploading data to correct spot
+ *  handle uploading data to correct spot.
  */
-const uploadData = multer({
+export const uploadData = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             const id = req.body.id;
@@ -495,9 +495,9 @@ const uploadData = multer({
 })
 
 /**
- *  handle uploading data to correct spot
+ *  handle uploading juypter files to correct spot
  */
-const uploadJupyterFile= multer({
+export const uploadJupyterFile= multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             const id = req.body.id;
@@ -539,7 +539,13 @@ const uploadCoolerData = multer({
 )
 })
 
-function handleFileUpload(req,response,STATUS=STATUSES.HAS_SOME_DATA){
+/**
+ * Handle a file being uploaded to the api
+ * @param {*} req the request being recived by the api
+ * @param {*} response the response that it will send
+ * @param {STATUSES} STATUS the status to update the job to after the file upload
+ */
+export function handleFileUpload(req,response,STATUS=STATUSES.HAS_SOME_DATA){
     const timeout = setTimeout(() => {
         response.json({ id: null, status: 408 });
     }, 10000);
@@ -656,7 +662,7 @@ app.post(apiPaths.jobSubmit, async(req, response) =>{
 })
 
 /**
- * 
+ * update a job to have a new status
  * @param {number} jobId the id of the job in the db
  * @param {STATUSES} newStatus the new status to upadate to
  */
@@ -668,6 +674,7 @@ export function updateJobStatus(jobId, newStatus){
 }
 
 /**
+ * Update a job's higlass toggle
  * @param {number} jobId the id of the job in the db
  * @param {boolean} higlassToggle the new status to upadate to
  * 0=disabled
@@ -786,7 +793,7 @@ export function getJobHiglassStatus(jobId){
  * @param {number} jobId the job iid
  * @param {STATUSES} newStatus the new status to upadate to
  */
-function getJob(jobId){
+export function getJob(jobId){
     return new Promise(resolve =>{
         db.all(`
             SELECT *
@@ -798,7 +805,11 @@ function getJob(jobId){
     
 }
 
-function getAllJobs(){
+/**
+ * get all jobs from the database
+ * @returns 
+ */
+export function getAllJobs(){
     return new Promise(resolve =>{
         db.all(`
         SELECT *
@@ -809,7 +820,15 @@ function getAllJobs(){
     })
 }
 
-function addJob(title, description, email = null, status = STATUSES.NO_DATA, higlassToggle=1) {
+/**
+ * Add a new job to the db
+ * @param {string} title the title of the job
+ * @param {string} description the description of the job 
+ * @param {string} email (optional) email
+ * @param {STATUSES} status the status
+ * @param {number} higlassToggle number 0=off
+ */
+export function addJob(title, description, email = null, status = STATUSES.NO_DATA, higlassToggle=1) {
     var pad = function(num) { return ('00'+num).slice(-2) };
     var date;
     date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -818,8 +837,10 @@ function addJob(title, description, email = null, status = STATUSES.NO_DATA, hig
          VALUES ("${title}","${description}","${email}","${status}", "${date}", "${higlassToggle}");
     `)
 }
-
-function createDb() {
+/**
+ * a function to create the db again
+ */
+export function createDb() {
     db.serialize(() => {
         try {
             //db.run("CREATE TABLE jobs (title TEXT, description TEXT, email TEXT, status TINYTEXT, date TIMESTAMP)");
@@ -846,7 +867,7 @@ function createDb() {
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs data folder (string)
  */
-function generateJobDataFolderPath(jobid){
+export function generateJobDataFolderPath(jobid){
     return config.dataFolderPath +'/job_' + jobid + "/data/";
 }
 
@@ -855,7 +876,7 @@ function generateJobDataFolderPath(jobid){
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs jupyter folder (string)
  */
-function generateJobjupyterFolderPath(jobid){
+export function generateJobjupyterFolderPath(jobid){
     return config.dataFolderPath +'/job_' + jobid + "/jupyter/";
 }
 
@@ -863,7 +884,7 @@ function generateJobjupyterFolderPath(jobid){
 
 
 /**
- *  get the path to a job's output folder
+ * get the path to a job's output folder
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs output folder (string)
  */

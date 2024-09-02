@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.js": "./build/bundle.7d34bf6d.js",
+    "main.css": "./static/css/main.c75c0424.css",
+    "home.mp4": "./5417d791b56eb9ecbe0e.mp4",
+    "logo.png": "./4107dd52070ea3ee5225.png",
+    "UCCS_Logo.png": "./9af7a3847b986f46b343.png",
+    "index.html": "./index.html"
+  },
+  "entrypoints": [
+    "build/bundle.7d34bf6d.js",
+    "static/css/main.c75c0424.css"
+  ]
+}

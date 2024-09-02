@@ -8,6 +8,7 @@ type HighLowRecoveryChartProps = {
   bottomTitle,
   barData,
   clrs,
+  isRem,
   /**  a raect element to display if the data provided to the chart is invalid, defaults to nothing */
   displayIfEmpty?: ReactElement
 }

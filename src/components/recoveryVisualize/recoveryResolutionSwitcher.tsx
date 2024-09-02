@@ -9,6 +9,7 @@ type RecoveryAndRemWithResolutionSwitchProps = {
     recoveryDataSetKey
     clrs
     remValues
+    isRem
 }
 
 /**

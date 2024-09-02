@@ -32,6 +32,7 @@
     "higlass": "^1.13.4",
     "https-browserify": "^1.0.0",
     "install": "^0.13.0",
+    "jsdoc": "^4.0.3",
     "lodash": "^4.17.21",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.2",
@@ -76,13 +77,15 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start-docs": "GENERATE_SOURCEMAP=false npx styleguidist server",
-    "build-docs": "npx styleguidist build",
+    "build-docs": "npx styleguidist build && typedoc",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "serve": "webpack serve",
     "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src"
+    "lint:fix": "eslint --fix ./src",
+    "jsdoc": "jsdoc ./src/ -c ./jsdoc.config.js",
+    "typedoc": "typedoc"
   },
   "eslintConfig": {
     "extends": [
@@ -103,6 +106,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.25.6",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-typescript": "^7.24.7",
     "@craco/craco": "^7.1.0",
     "@craco/types": "^7.1.0",
     "@eslint/js": "^9.9.1",
@@ -116,6 +124,7 @@
     "file-loader": "^6.2.0",
     "globals": "^15.9.0",
     "html-webpack-plugin": "^5.6.0",
+    "jsdoc-babel": "^0.5.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^2.8.0",
     "prettier": "^3.2.5",
@@ -127,6 +136,7 @@
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
+    "typedoc": "^0.26.6",
     "typescript": "*",
     "typescript-eslint": "^8.4.0",
     "webpack": "^5.90.1",

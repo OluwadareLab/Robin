@@ -25,6 +25,14 @@ export class ReferenceFile {
     }
 }
 
+/**
+ * @description a dataset for chart.js
+ */
+export type DataSet = {
+    data:any[];
+    category:string;
+}
+
 export type resultData = {
     recoveryDatasets: any;
     remData: any[];

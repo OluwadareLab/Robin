@@ -11,5 +11,6 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
   },
-  "files": ["src/index.ts"]
+  "files": ["src/**/*"],
+  "include": ["src/**/*"]
 }

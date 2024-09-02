@@ -23,7 +23,7 @@ import { RecoveryAndRemWithResolutionSwitch } from '../components/recoveryVisual
 import { HighLowRecoveryChart } from '../components/recoveryVisualize/highlowRecovery';
 import { TrackType } from '../types';
 import { OverlapComponent } from '../components/graph/overlap/OverlapComponent';
-import { OverlapDataSet } from '../components/tempTypes/Types';
+import { DataSet, OverlapDataSet } from '../components/tempTypes/Types';
 import { getJobStatus } from '../api/mainAPI';
 import { InstructionHeader } from '../components/misc/InstructionHeader';
 import { AiAssistantComponent } from '../components/aiAssistant/aiAssistant';
@@ -37,6 +37,7 @@ interface AnalysisResult {
 
 type ChromatinLoopAnalysisResultsPageProps = {
   example?: boolean;
+  clrs?:string[];
 }
 
 const clrs: any = {};
@@ -58,7 +59,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
   const [kbVsResDataset, setKbVsResDataset] = useState<any[]>([]);
   const [binVsResDataset, setBinVsResDataset] = useState<any[]>([]);
   const [binVsResVsKbVsResDataset, setBinVsResVsKbVsResDataset] = useState<any>({});
-  const [renderHiglass, setRenderHiglass] = useState<boolean>(false);
+  const [renderHiglass, setRenderHiglass] = useState<number>(false);
 
   const [dataHasLoaded, setDataHasLoaded] = useState<boolean>(false);
 
@@ -263,6 +264,8 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
           h3k27acResults: { data: any }[],
           remResults: { data: any }[],
           rnapiiResults: { data: any }[],
+          loopSizeResults: { data: any }[],
+          results:any[],
           toolName: string
         } = results[name];
 
@@ -340,9 +343,11 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
             return (a.x - b.x)
           });
 
-          const obj2 = {}
-          obj2.data = tempBinVsResVsKbVsResDataset[obj.toolName];
-          obj2.category = obj.category;
+          const obj2:DataSet = {
+            data:tempBinVsResVsKbVsResDataset[obj.toolName],
+            category:obj.category
+          };
+
           tempBinVsResVsKbVsResDataset[obj.toolName] = obj2;
 
           if (config.DEBUG) console.log(tempKbVsRes)

@@ -26,8 +26,8 @@ import { jobSetupFormData } from "../components/tempTypes/Types"
 import { apiPaths } from "../api/apiConfig"
 import config, { paths } from "../config.mjs"
 import axios from "axios"
-import { HiglassUploadForm } from "../components/UploadPipeLine/higlassUploadForm"
-import { HiglassToggle } from "../components/UploadPipeLine/higlassToggle"
+import { HiglassUploadForm } from "../components/UploadPipeLine/HiglassUploadForm"
+import { HiglassToggle } from "../components/UploadPipeLine/HiglassToggle"
 
 type OneStepJobUploadPageProps = {
 

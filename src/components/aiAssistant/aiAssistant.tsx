@@ -23,7 +23,7 @@ import { BtnLink } from '../buttons/BtnLink';
 import "./aiAssistant.css"
 
 type AiAssistantComponentProps = {
-  datasets: any[];
+  /** array of colors */
   clrs: any[]
   /**  wether to disable all edit mode on this page */
   demo: boolean;

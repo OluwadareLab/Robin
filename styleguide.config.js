@@ -1,6 +1,7 @@
 const webpack = require("webpack")
 const path = require('path')
 const { createWebpackDevConfig, createWebpackProdConfig } = require("@craco/craco");
+const craco = require("@craco/craco");
 
 const cracoConfig = require("./craco.config.js");
 const webpackConfig = process.env.NODE_ENV === 'production' ? createWebpackProdConfig(cracoConfig) : createWebpackDevConfig(cracoConfig);
@@ -30,4 +31,5 @@ module.exports = {
     components: 'src/components/**/*.{js,jsx,ts,tsx}',
     ignore: ['src/components/visualizationTools/**/*', './src/components/visualizationTools/HiGlass/**/*','src/components/tempTypes/**/*', "/**/_test_*"],
     skipComponentsWithoutExample:true,
+    styleguideDir:"./public/styleguide"
 }
