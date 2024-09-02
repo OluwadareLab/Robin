@@ -18,7 +18,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { UTIL } from '../../util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { DownloadImg } from './downloadImg';
+import { DownloadImg } from './DownloadImg';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 
@@ -62,6 +62,11 @@ ChartJS.register(
 const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 1)`;
 
 let k =0;
+/**
+ * @description simple line chart
+ * @param props 
+ * @returns 
+ */
 export const GraphComponent = (props: lineChartProps) => {
   let [baseRadius,setBaseRadius] = useState(0);
   let [showAllPoints,setShowAllPoints] = useState(0);

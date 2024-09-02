@@ -1,6 +1,6 @@
 import React from "react"
 import { Form, Row } from "react-bootstrap"
-import { InstructionHeader } from "../misc/instructionHeader"
+import { InstructionHeader } from "../misc/InstructionHeader"
 
 /**
  * @description props for the ToolFileInputProps compoenent

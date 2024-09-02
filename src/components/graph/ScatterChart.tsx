@@ -9,7 +9,7 @@ import {
 } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
 import { UTIL } from '../../util';
-import { lineChartProps } from './simpleGraph';
+import { lineChartProps } from './GraphComponent';
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 

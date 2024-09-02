@@ -2,7 +2,7 @@ import {  Chart as ChartJS, LinearScale } from 'chart.js';
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { VennDiagramChart, VennDiagramController } from "chartjs-chart-venn";
 import { UTIL } from '../../util';
-import { DownloadImg } from './downloadImg';
+import { DownloadImg } from './DownloadImg';
 
 ChartJS.register(
   LinearScale,
@@ -25,7 +25,7 @@ type VennDiagramComponentProps = {
   /** array of colors */
   clrs?:any[]
 }
-const VennDiagramComponent = (props:VennDiagramComponentProps) => {
+const VennDiagram = (props:VennDiagramComponentProps) => {
   const containerRef = useRef(null);
   const [chart,setChart] = useState<VennDiagramChart>();
   const dimensions = useDimensions(containerRef);
@@ -132,4 +132,4 @@ function useDimensions(targetRef) {
   return dimensions;
 }
 
-export default VennDiagramComponent;
+export default VennDiagram;

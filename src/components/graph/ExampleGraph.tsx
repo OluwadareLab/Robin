@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -38,7 +38,7 @@ export const options = {
 const labels = [1,2,3,4,5];
 
 let i =0;
-const randomDataSet = () => (
+export const randomDataSet = () => (
         {
             label: `Dataset ${++i}`,
             data: labels.map(() => Math.random()*100),
@@ -48,8 +48,12 @@ const randomDataSet = () => (
 
 
 
-
-export function Graph() {
+/**
+ * 
+ * @param props a object with the attribute ref optionally used for passing the ref
+ * @returns 
+ */
+export const ExampleGraph = forwardRef(function ExampleGraph(props,ref) {
 const data = {
     labels,
     datasets: [
@@ -60,5 +64,5 @@ const data = {
         
     ],
     };
-  return <Line options={options} data={data} />;
-}
+  return <Line options={options} data={data} ref={ref}/>;
+});

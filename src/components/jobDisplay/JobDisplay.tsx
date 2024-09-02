@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Accordion, AccordionBody, AccordionCollapse, AccordionHeader, AccordionItem, Button, Card, Container, Row, Col } from 'react-bootstrap';
-import { STATUSES } from '../../api/apiConfig.js';
+import { STATUSES } from '../../api/apiConfig';
 import { BtnLink } from '../buttons/BtnLink';
 import { hrefPaths as paths } from '../../config.mjs';
-import { apiPaths } from '../../api/apiConfig.js';
-import { Graph } from '../graph/exampleGraph';
+import { apiPaths } from '../../api/apiConfig';
 import Popup from 'reactjs-popup';
 import { ChromatinLoopAnalysisResultsPage } from '../../pages/Results';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { InstructionHeader } from '../misc/instructionHeader';
+import { InstructionHeader } from '../misc/InstructionHeader';
 import FileUploadDisplay from '../fileUpload/FileUploadDisplay';
-import DownloadJsonButton from '../downloadjson/download';
+import { DownloadJsonButton } from '../downloadjson/DownloadJsonButton';
 
 type JobProps = {
   id: number;

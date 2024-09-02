@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import VennDiagramComponent from "../vennDiagram";
+import VennDiagram from "../VennDiagram";
 import { useParams } from "react-router-dom";
 import { OverlapDataSet, OverlapDataObj } from "../../tempTypes/Types";
 import Select from 'react-select';
@@ -7,7 +7,7 @@ import { UTIL } from "../../../util";
 import { InputActionMeta } from "react-select";
 import { Button, Col, Row } from "react-bootstrap";
 import { CustomLegendWithSelection } from "../customLegend";
-import { InstructionHeader } from "../../misc/instructionHeader";
+import { InstructionHeader } from "../../misc/InstructionHeader";
 
 type OverlapComponentProps = {
   clrs: any;
@@ -319,7 +319,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
           <p>this could mean there is no overlap, a formatting issue, or something else went wrong</p>
           </>:""
           }
-          <VennDiagramComponent
+          <VennDiagram
             id={id}
             data={data}
             labels={labels}

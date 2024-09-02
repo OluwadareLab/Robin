@@ -28,6 +28,12 @@ ChartJS.register(
 );
 
 let i = 0;
+/**
+ * @description a primitive form of regression plot
+ * @deprecated
+ * @param props 
+ * @returns 
+ */
 export function ScatterChartWithLine(props: lineChartProps) {
     const data = {
         datasets: [

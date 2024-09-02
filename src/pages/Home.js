@@ -2,8 +2,8 @@ import React from 'react';
 import config, { paths } from '../config.mjs';
 import { Container, Row, Col } from 'react-bootstrap';
 import { BtnLink } from '../components/buttons/BtnLink';
-import { InstructionHeader } from '../components/misc/instructionHeader';
-import { OverlapComponent } from '../components/graph/overlap/overlap';
+import { InstructionHeader } from '../components/misc/InstructionHeader';
+import { OverlapComponent } from '../components/graph/overlap/OverlapComponent';
 import HomeVideo from '../components/homePageVideo/HomeVideo';
 
 // import uccsLogo from '../images/homePageExample.png';

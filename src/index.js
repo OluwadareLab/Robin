@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
-import StandardErrorBoundary from './components/error/standardErrorBoundry';
+import { StandardErrorBoundary } from './components/error/StandardErrorBoundary.js';
 import ReactGA from 'react-ga4';
 
 // Initialize Google Analytics

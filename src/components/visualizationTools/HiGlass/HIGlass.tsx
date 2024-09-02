@@ -8,7 +8,7 @@ import { Track, TrackType } from "../../../types.ts"
 import Popup from 'reactjs-popup';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
-import { HiglassCoolPopup } from '../../higlassCoolFileUploader/higlassCoolPopup.tsx';
+import { HiglassCoolPopup } from '../../higlassCoolFileUploader/HiglassCoolPopup.tsx';
 
 let i = 0;
 

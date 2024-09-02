@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
-import { HiglassToggle } from "./higlassToggle"
-import { InstructionHeader } from "../misc/instructionHeader"
+import { HiglassToggle } from "./HiglassToggle"
+import { InstructionHeader } from "../misc/InstructionHeader"
 import { Row } from "react-bootstrap"
 import { UploadEntryAndInput } from "../userInputComponents/removablelistbtn/UploadEntryAndInput"
 import { ChromFile } from "../tempTypes/Types"
@@ -17,7 +17,7 @@ type HiglassUploadFormProps = {
 }
  
 /**
- * @description the component for the toggle button to enable higlass, also renders anything contained inside once flipped
+ * The component for the toggle button to enable higlass, also renders anything contained inside once flipped
  * @param props 
  * @returns The React component
  */

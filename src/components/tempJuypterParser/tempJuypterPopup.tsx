@@ -1,7 +1,7 @@
 import { Button, Container, Form, Row, Col } from "react-bootstrap"
 import React, { useEffect, useState } from "react"
 import Popup from 'reactjs-popup';
-import { InstructionHeader } from "../misc/instructionHeader";
+import { InstructionHeader } from "../misc/InstructionHeader";
 import { UploadEntryAndInput } from "../userInputComponents/removablelistbtn/UploadEntryAndInput";
 import FileUploadDisplay from "../fileUpload/FileUploadDisplay";
 import { fileSet } from "../tempTypes/Types";

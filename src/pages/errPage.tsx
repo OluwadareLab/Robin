@@ -1,5 +1,5 @@
 import React from "react";
-import { AppNavbar } from "../components/navbar/Navbar";
+import { AppNavbar } from "../components/navbar/AppNavbar";
 import { Footer } from "../components/Footer/footer";
 
 export default function ErrorPage(props) {

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 
-import StandardErrorBoundary from './components/error/standardErrorBoundry';
+import { StandardErrorBoundary } from "./components/error/StandardErrorBoundary";
 import './css/master_style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/App.css';
 import { WebRoutes } from './Route';
-import { AppNavbar } from "./components/navbar/Navbar";
+import { AppNavbar } from "./components/navbar/AppNavbar";
 import { Footer } from "./components/Footer/footer";
 import config from './config.mjs';
 import axios from 'axios';

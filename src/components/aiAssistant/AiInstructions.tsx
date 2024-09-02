@@ -1,5 +1,5 @@
 import { Accordion, AccordionBody, AccordionItem, Button } from "react-bootstrap";
-import { InstructionHeader } from "../misc/instructionHeader";
+import { InstructionHeader } from "../misc/InstructionHeader";
 import React from "react";
 
 export const AiInstructions = () =>

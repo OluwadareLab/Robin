@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { apiPaths } from '../api/apiConfig';
-import { JobDisplay } from '../components/jobDisplay/jobDisplay';
+import { JobDisplay } from '../components/jobDisplay/JobDisplay';
 
 /** the page for viewing all jobs */
 export const ViewAllJobsPage = () => {

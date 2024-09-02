@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 import { apiPaths } from "../../../api/apiConfig"
 import axios from "axios"
-import { InstructionHeader } from "../../misc/instructionHeader"
+import { InstructionHeader } from "../../misc/InstructionHeader"
 import { UploadEntryWithRemoveAndInput } from "../../userInputComponents/removablelistbtn/UploadEntryWithRemoveAndInput"
 import {FileUploadDisplay} from "../../fileUpload/FileUploadDisplay"
 import { useNavigate, useParams } from "react-router-dom"
@@ -19,7 +19,7 @@ type ProtienReferenceUploadFormProps = {
     renderSubmitBtn?:boolean,
 
     /**
-     * @description optional ref to pass to store files 
+     * optional ref to pass to store files 
      */
     setRefFiles:(files:File[])=>void,
 
@@ -35,7 +35,7 @@ type ProtienReferenceUploadFormProps = {
 
 /**
  * @description the component for the protien reference form
- * @param props 
+ * @param props {ProtienReferenceUploadFormProps}
  * @returns 
  */
 export const ProtienReferenceUploadForm = (props:ProtienReferenceUploadFormProps) =>{

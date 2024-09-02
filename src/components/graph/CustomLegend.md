@@ -2,19 +2,21 @@ A component for making a custom legend for interactive graphs that matches chart
 CustomLegend example:
 
 ```js
+
 let items = [
     {
-        backgroundColor:"black";
-        label:"black label";
-        borders?: false;
+        backgroundColor:"black",
+        label:"black label",
+        borders: false,
     },
     {
-        backgroundColor:"white";
-        label:"white label";
-        borders?: false;
+        backgroundColor:"white",
+        label:"white label",
+        borders: false,
     }
-]
-<CustomLegend
+    ]
+    
+    return <CustomLegend
       items={items}
-      />
+    />
 ```

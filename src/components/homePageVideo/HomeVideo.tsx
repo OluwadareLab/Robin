@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import video from "../../video/home.mp4";
 import { Container } from "react-bootstrap";
+
+import video from "../../video/home.mp4";
 
 class HomeVideo extends Component {
   render() {
     return (
-        <Container>
+      <Container>
         <div>
-            <video src={video} width="100%" autoPlay={true} controls={true} loop={true}/>
+          <video src={video} width="100%" autoPlay={true} controls={true} loop={true} />
         </div>
       </Container>
     );

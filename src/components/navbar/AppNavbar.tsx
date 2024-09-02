@@ -3,7 +3,7 @@ import { Navbar, Nav, ToggleButton, ButtonGroup } from 'react-bootstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { hrefPaths as paths, paths as path2, config} from "../../config.mjs";
 import { Logo } from "../logo/logo";
-import { DarkModeToggle } from "../misc/darkmodeToggle";
+import { DarkModeToggle } from "../misc/DarkModeToggle";
 
 type NavbarProps = {
 

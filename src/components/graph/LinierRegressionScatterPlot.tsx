@@ -13,9 +13,9 @@ import {
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import { UTIL } from '../../util';
-import { lineChartProps } from './simpleGraph';
+import { lineChartProps } from './GraphComponent';
 import { linearRegression } from 'simple-statistics'
-import { DownloadImg } from './downloadImg';
+import { DownloadImg } from './DownloadImg';
 import { CustomLegend } from './customLegend';
 
 ChartJS.register(

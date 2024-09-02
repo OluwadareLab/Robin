@@ -4,7 +4,7 @@ import { paths } from '../../../config.mjs';
 import axios from 'axios';
 import { apiPaths } from '../../../api/apiConfig';
 import { Form } from '../../Form/Form';
-import { InstructionHeader } from '../../misc/instructionHeader';
+import { InstructionHeader } from '../../misc/InstructionHeader';
 import { FormField } from '../../Form/FormField/FormField';
 import { jobSetupFormData } from '../../tempTypes/Types';
 

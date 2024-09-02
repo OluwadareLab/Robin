@@ -2,31 +2,30 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Accordion, AccordionBody, AccordionItem, Col, Container, Tab, Tabs, Button } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import { HiGlassComponent, HiGlassComponentWrapper } from '../components/visualizationTools/HiGlass/HIGlass';
-import { GraphComponent } from '../components/graph/simpleGraph';
-import { Graph } from '../components/graph/exampleGraph';
+import { GraphComponent } from '../components/graph/GraphComponent';
+import { Graph } from '../components/graph/ExampleGraph';
 import _ from "lodash"; // _ is low-dash
 import Select from 'react-select'
-import { ScalableElement } from '../components/misc/scaleableElement';
+import { ScalableElement } from '../components/misc/ScalableElement';
 
 import { RecoveryComponent, formatDataset } from '../components/recoveryVisualize/recoveryDisplay';
 import axios from 'axios';
 import { apiPaths } from '../api/apiConfig';
 import config from '../config.mjs';
 import { useParams } from 'react-router-dom';
-import { BarChart } from '../components/graph/barChart';
+import { BarChart } from '../components/graph/BarChart';
 import { UTIL } from '../util';
 import { RemDisplay } from '../components/recoveryVisualize/remDisplay';
-import { ScatterChart } from '../components/graph/scatterGraph';
-import { ScatterChartWithLine } from '../components/graph/scatterWithLine';
-import { LinierRegressionScatterPlot } from '../components/graph/scatterWithLinierRegresionLine';
-import VennDiagramComponent from '../components/graph/vennDiagram';
+import { ScatterChart } from '../components/graph/ScatterChart';
+import { LinierRegressionScatterPlot } from '../components/graph/LinierRegressionScatterPlot';
+import VennDiagram from '../components/graph/VennDiagram';
 import { RecoveryAndRemWithResolutionSwitch } from '../components/recoveryVisualize/recoveryResolutionSwitcher';
 import { HighLowRecoveryChart } from '../components/recoveryVisualize/highlowRecovery';
 import { TrackType } from '../types';
-import { OverlapComponent } from '../components/graph/overlap/overlap';
+import { OverlapComponent } from '../components/graph/overlap/OverlapComponent';
 import { OverlapDataSet } from '../components/tempTypes/Types';
 import { getJobStatus } from '../api/mainAPI';
-import { InstructionHeader } from '../components/misc/instructionHeader';
+import { InstructionHeader } from '../components/misc/InstructionHeader';
 import { AiAssistantComponent } from '../components/aiAssistant/aiAssistant';
 
 

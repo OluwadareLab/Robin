@@ -1,4 +1,4 @@
-The component used for rendering scatter plots
+The component used for rendering line plots
 
 ```jsx
 let i =0;
@@ -9,7 +9,7 @@ const randomDataSet = () => (
             data: [1,1,1,1,1,1,1,1,1,1,1].map(() => ({"x":Math.random()*100,"y":Math.random()*100}))
         });
 
-<ScatterChart
+<GraphComponent
     datasets={
         [
             randomDataSet(),

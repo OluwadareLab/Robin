@@ -1,7 +1,7 @@
 import config from "../../config.mjs";
 import { UTIL } from "../../util";
 import { CustomLegend } from "../graph/customLegend";
-import { BarChart } from "../graph/barChart"
+import { BarChart } from "../graph/BarChart"
 import React, { ReactElement, useEffect, useState } from "react"
 
 type HighLowRecoveryChartProps = {

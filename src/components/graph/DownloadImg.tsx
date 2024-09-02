@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, Ref } from 'react';
-import config from "../../config.mjs";
+import React, { useState, useEffect, Ref } from 'react';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Chart } from 'chart.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 type DownloadImgProps = {
     chartRef: Ref<Chart>
 }
+
+/**
+ * @description an element used to download a image of a graph in its current state
+ * @param props {DownloadImgProps} MUST PASS REF
+ * @returns 
+ */
 export const DownloadImg = (props: DownloadImgProps) => {
     //used to upadte element
     const [number,setNumber] = useState(0);

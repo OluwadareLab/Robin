@@ -1,5 +1,5 @@
-import { GraphComponent } from "../graph/simpleGraph"
-import { BarChart } from "../graph/barChart"
+import { GraphComponent } from "../graph/GraphComponent"
+import { BarChart } from "../graph/BarChart"
 import React from "react"
 
 

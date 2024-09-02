@@ -1,5 +1,0 @@
-AppNavbar example:
-
-```js
-<AppNavbar />
-```

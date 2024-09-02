@@ -6,14 +6,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { apiPaths } from '../../../api/apiConfig';
 import { paths } from '../../../config.mjs';
-import { InstructionHeader } from '../../misc/instructionHeader';
+import { InstructionHeader } from '../../misc/InstructionHeader';
 import { EntryWithRemove } from '../../userInputComponents/removablelistbtn/EntryWithRemove';
-import { ResolutionInput } from '../resolutionInput';
-import { ToolFileInput } from '../fileInput';
-import { ToolNameInput } from '../toolNameInput';
+import { ResolutionInput } from '../ResolutionInput';
+import { ToolFileInput } from '../ToolFileInput';
+import { ToolNameInput } from '../ToolNameInput';
 import { ToolData } from '../../tempTypes/Types';
 import Creatable, { useCreatable } from 'react-select/creatable';
-import MyDropdown from '../categoryInput';
+import MyDropdown from '../_categoryInput';
 
 
 type ToolFormUploadFormProps = {

@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { UTIL } from '../../util';
-import { DownloadImg } from './downloadImg';
+import { DownloadImg } from './DownloadImg';
 import Zoom, * as zoom from 'chartjs-plugin-zoom'
 import ZoomPlugin from 'chartjs-plugin-zoom'
 
@@ -27,12 +27,22 @@ ChartJS.register(
 );
 
 export function BarChart(props: {
+    /** @description a array of objects each containing clr,name and data. RENAME:datasets*/
     data:{
-      clr?: any;"name":string,data:any
+      /** @description if provided override the color of this HTMLCLR */
+      clr?: string;
+      /** the name of this data point */
+      "name":string;
+      /** a number, the data of this point  */
+      data:any;
   }[]
+    /** the labels to display */
     labels:string[]
+    /** @description the title of the chart */
     title:string
+    /** @description an array of string html colors or undefined in which case auto color */
     clrs? :string[] | undefined
+    /** @description bar thickness*/
     width?:number
       /**
      * @description the name of the y-axis
@@ -78,7 +88,7 @@ export function BarChart(props: {
                 parsedValue = context.parsed.y;
               }
 
-              if(parsedValue==0 || isNaN(parsedValue) || typeof parsedValue == 'undefined'){
+              if(parsedValue===0 || isNaN(parsedValue) || typeof parsedValue === 'undefined'){
                 parsedValue = context.raw.y;
               }
               return `${label}: ${parsedValue}`;

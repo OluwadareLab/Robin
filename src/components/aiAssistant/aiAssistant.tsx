@@ -7,7 +7,7 @@ import axios from 'axios';
 import { apiPaths } from '../../api/apiConfig';
 import { useParams } from 'react-router-dom';
 import config from '../../config.mjs';
-import { InstructionHeader } from '../misc/instructionHeader';
+import { InstructionHeader } from '../misc/InstructionHeader.tsx';
 import Select from 'react-select'
 import { UTIL } from '../../util';
 import { CustomLegendWithSelection } from '../graph/customLegend.tsx';
