@@ -1,0 +1,24 @@
+<VirtualHost biomlearn.uccs.edu:80>
+    ServerName biomlearn.uccs.edu
+    ProxyPreserveHost On
+#   RewriteEngine  On
+#  RewriteRule    "/django_plotly_dash/"  "/TADMaster/django_plotly_dash/" [PT]
+#  RewriteEngine On
+#RewriteRule /django_plotly_dash/app/  /TADMaster/django_plotly_dash/app/$1 [R]
+ ProxyPass /django_plotly_dash/ http://biomlearn.uccs.edu/TADMaster/django_plotly_dash/
+<Location /TADMaster/>
+	ProxyPass http://localhost:4312/ retry=0
+	ProxyPassReverse /
+	UseCanonicalName On
+	ProxyPreserveHost On
+	ProxyHTMLFixups On
+	ProxyHTMLEnable On
+	SetEnv force-proxy-request-1.0 1
+	SetEnv proxy-nokeepalive On
+	ProxyAddHeaders Off
+	#setOutputFilter proxy-html
+	ProxyHTMLURLMap / /TADMaster/
+#ProxyHTMLInterp On
+
+</Location>
+</VirtualHost>

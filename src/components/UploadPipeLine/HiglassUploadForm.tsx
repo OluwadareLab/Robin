@@ -24,7 +24,7 @@ type HiglassUploadFormProps = {
 export const HiglassUploadForm= (props:HiglassUploadFormProps) => {
     /** set the name of the chrom file obj */
     function setName(chromName:string){
-        let newChromFileObj = new ChromFile().fromExisting(props.chromSizesFile);
+        const newChromFileObj = new ChromFile().fromExisting(props.chromSizesFile);
         newChromFileObj.chromName=chromName;
         newChromFileObj.fileName=`chrom.sizes.${chromName}`;
         console.log(newChromFileObj);
@@ -33,7 +33,7 @@ export const HiglassUploadForm= (props:HiglassUploadFormProps) => {
 
     /** set the file of the chrom file obj */
     function setFile(file:File){
-        let newChromFileObj = new ChromFile().fromExisting(props.chromSizesFile);
+        const newChromFileObj = new ChromFile().fromExisting(props.chromSizesFile);
         newChromFileObj.file=file;
         props.setChromSizesFile(newChromFileObj);
     }

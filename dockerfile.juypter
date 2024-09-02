@@ -1,2 +1,0 @@
-# Use an appropriate base image
-FROM jupyter/datascience-notebook

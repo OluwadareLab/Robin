@@ -32,14 +32,14 @@ export const Form = (props: FormProps) => {
 
     let formId = 0;
     formId++;
-    let thisFormId: string = `Id-${formId}`; 
-    let fields:React.JSX.Element[] = [];
+    const thisFormId: string = `Id-${formId}`; 
+    const fields:React.JSX.Element[] = [];
     for (let index = 0; index < props.fields.length; index++) {
         /** @type {FormFieldProps}*/
         const element = props.fields[index];
         fields.push(
             <FormField {...element} key={`form-Id-${formId}-Field-${index}`} setValue={val=>{
-                let newData = {...data};
+                const newData = {...data};
                 if(element.name)newData[element.name]=val
                 setData(newData);
 

@@ -99,16 +99,16 @@ export const HiGlassComponentWrapper = (props: { demo:boolean, uids: ({ uid: str
 
   useEffect(() => {
     // window.location.reload();
-    let tempTracks: Track[] = [];
-    let loadingPromises: Promise<void>[] = [];
+    const tempTracks: Track[] = [];
+    const loadingPromises: Promise<void>[] = [];
     //add all reference lines first
     props.uids.filter(uuid => uuid.type == "line" && uuid.uid).forEach(uidObj => {
       loadingPromises.push(new Promise((res) => {
         trackHasErrors(uidObj.uid).then(hasError => {
           if (!hasError) {
-            let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+            const track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
             track._config.height *= 2;
-            let config = track.getConfig();
+            const config = track.getConfig();
             tempTracks.push(config);
           }
           res();
@@ -122,7 +122,7 @@ export const HiGlassComponentWrapper = (props: { demo:boolean, uids: ({ uid: str
       loadingPromises.push(new Promise((res) => {
         trackHasErrors(uidObj.uid).then(hasError => {
           if (!hasError) {
-            let track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
+            const track = new HiglassTrack(uidObj.uid, uidObj.type, uidObj.uid.split(".")[0].split("_").join(" "));
             tempTracks.push(track.getConfig());
           }
           res();

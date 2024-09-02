@@ -17,7 +17,7 @@ type OverlapComponentProps = {
   /**  the current resolution to filter by defaults to the first resolution found */
   resolutionFilter?: string
 }
-let i = 0;
+const i = 0;
 
 // function parseSymbols(inputString){
 //   let setMinus = "∖";
@@ -45,8 +45,8 @@ function parseString(inputString) {
   const regex = /\((.*?)\)/g;
 
   // Arrays to store included and not included symbols
-  let includedSymbols = [];
-  let notIncludedSymbols = [];
+  const includedSymbols = [];
+  const notIncludedSymbols = [];
 
   let match;
   while ((match = regex.exec(inputString)) !== null) {
@@ -68,29 +68,29 @@ function parseString(inputString) {
  * @param string 
  */
 const logicalParser = (string: string) => {
-  let stack = [];
-  let setMinus = "∖";
-  let setIntersect = "∩";
-  let setInclusion = "∪";
+  const stack = [];
+  const setMinus = "∖";
+  const setIntersect = "∩";
+  const setInclusion = "∪";
 
   string = string.replace(/\<U\+2216\>/gi, setMinus) // set minus
   string = string.replace(/\<U\+2229\>/gi, setIntersect) // set intersection
   string = string.replace(/\<U\+222A\>/gi, setInclusion) // set inclusion
 
 
-  let stringUntilSetMinus = string.split(setMinus)[0];
+  const stringUntilSetMinus = string.split(setMinus)[0];
   return stringUntilSetMinus.split(new RegExp(`${setIntersect}|${setInclusion}`, "gi")).map(e => e.replace(/\(|\)|"/gi, ""));
 }
 
 /**  parse the data from an overlapDataObj*/
 const parseOverlapData = (obj: OverlapDataObj) => {
-  let data: {
+  const data: {
     label?: any; sets: string[], value: any
   }[] = [];
-  let lines = obj.data.split('\n');
+  const lines = obj.data.split('\n');
   lines.shift(); //first line is headers we do not need them.
   lines.forEach(line => {
-    let cols = line.split(",")
+    const cols = line.split(",")
       .map(col => col.replace(/\"/gi, "")) //remove uneccecary "
       .map(col => col.replace(/\<U\+2216\>/gi, "∖")) //parse unicode set minus symbol
       .map(col => col.replace(/\<U\+2229\>/gi, "∩")) //parse unicode set intersection symbol
@@ -128,13 +128,13 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   let validCombos: string[] = [];
 
   //find resolutions and then filter by unique
-  let resolutions = props.data.map(e => e.resolution).filter(UTIL.onlyUnique);
+  const resolutions = props.data.map(e => e.resolution).filter(UTIL.onlyUnique);
   console.log(resolutions);
 
   let tempx = 0;
   function updateLabelsAndData() {
     if (typeof currentCombo != 'undefined') {
-      let currentDataObj = currentCombo;
+      const currentDataObj = currentCombo;
       let tempData = parseOverlapData(currentDataObj)
 
       tempData.forEach(dataObj => {
@@ -160,7 +160,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
 
       tempData = tempData.sort((a, b) => sorter(a.sets, b.sets))
 
-      let tempLabels = tempData.map(data => data.label)
+      const tempLabels = tempData.map(data => data.label)
       setLabels(tempLabels)
       setData(tempData)
     } else {
@@ -194,7 +194,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
       //if we know what is valid for this resolution choose the first valid combo
       console.log(validCombos);
       if(validCombos[0]){
-        let obj = {};
+        const obj = {};
         validCombos[0].split(":").forEach(toolName=>{
           obj[toolName]=true;
         })
@@ -261,7 +261,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   console.log(options)
 
   function updateSelection(data) {
-    let selections = Object.keys(data).filter(key => data[key]);
+    const selections = Object.keys(data).filter(key => data[key]);
     let valid = false;
     if (selections.length > 1) {
       getValidCombos()

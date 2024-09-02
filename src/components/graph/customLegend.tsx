@@ -8,7 +8,7 @@ import { ListGroup, ToggleButton } from 'react-bootstrap';
  * @param borders optional, if provided draw borders
  * @returns 
  */
-export const CustomLegend = (props: { items: { backgroundColor: any, label: string, borders?:Boolean }[] }) => {
+export const CustomLegend = (props: { items: { backgroundColor: any, label: string, borders?:boolean }[] }) => {
   return (
     <>
       {
@@ -43,10 +43,10 @@ export const CustomLegend = (props: { items: { backgroundColor: any, label: stri
  * @param borders optional, if provided draw borders
  * @returns 
  */
-export const CustomLegendWithSelection = (props: { items: { backgroundColor: any, label: string, borders?:Boolean}[], onSelect:(state)=>void, forceUpdate?:number, max?:number, state?:any,setState?:any,passup?:boolean}) => {
+export const CustomLegendWithSelection = (props: { items: { backgroundColor: any, label: string, borders?:boolean}[], onSelect:(state)=>void, forceUpdate?:number, max?:number, state?:any,setState?:any,passup?:boolean}) => {
   const [state,setState] = useState({});
-  let labels:string[] = [];
-  let maxSelections = props.max || 3;
+  const labels:string[] = [];
+  const maxSelections = props.max || 3;
 
   useEffect(()=>{
     setState(props.state)
@@ -54,7 +54,7 @@ export const CustomLegendWithSelection = (props: { items: { backgroundColor: any
   },[props.state])
 
   useEffect(()=>{
-    let tempState = {};
+    const tempState = {};
     props.items.forEach(item=>{
       tempState[item.label]=false;
     })
@@ -73,7 +73,7 @@ export const CustomLegendWithSelection = (props: { items: { backgroundColor: any
   
 
   function ToggleButton(id, bool?:boolean){
-    let oldState = JSON.parse(JSON.stringify(state));
+    const oldState = JSON.parse(JSON.stringify(state));
     //TODO: add error msg here if you want to tell the user explictly they cannot select more.
     if(Object.keys(oldState).filter(key=>oldState[key]).length<maxSelections || !oldState[id]==false){
       console.log(oldState);

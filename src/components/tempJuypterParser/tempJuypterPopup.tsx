@@ -20,11 +20,11 @@ type HiglassCoolPopupProps = {
 export const TempJyupterUploader = (props: HiglassCoolPopupProps) => {
     const params = useParams();
     const [fileSets, setFilesets] = useState<fileSet[]>([]);
-    let jobId = params.id ? parseInt(params.id) : 1;
+    const jobId = params.id ? parseInt(params.id) : 1;
 
     useEffect(()=>{
         console.log(props.file)
-        let fileSet = [
+        const fileSet = [
             {
                 name:props.fileName,
                 file:props.file

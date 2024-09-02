@@ -10,7 +10,7 @@ ChartJS.register(
 
 );
 
-var i = 0;
+let i = 0;
 
 type VennDiagramComponentProps = {
   /**  the id of the component (use if in lists otherwise allow auto id) */

@@ -50,7 +50,7 @@ export type linierRegressionScatterPlotProps = {
 
   clrs?: string[] | undefined
 
-  radius?: Number
+  radius?: number
 
   /**  default true */
   shouldAvg?: boolean
@@ -60,22 +60,22 @@ let i = 0;
 let k = 0;
 export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotProps) {
   const shouldAvg = typeof props.shouldAvg != 'undefined' ? props.shouldAvg : true;
-  let chartRef = useRef(null);
-  let radius = props.radius ? props.radius : 5;
+  const chartRef = useRef(null);
+  const radius = props.radius ? props.radius : 5;
   //an array of all slope intercepts for the regression lines
-  let regressionFormulas: {
+  const regressionFormulas: {
     m: number;
     b: number;
   }[] = [];
   //an array of all rgression lines bounded by the  highest and lowest x values of their categories
-  let regressionLines: { name: string, data: { x: number, y: number }[] }[] = []
-  let categoricalLegend = {};
+  const regressionLines: { name: string, data: { x: number, y: number }[] }[] = []
+  const categoricalLegend = {};
   console.log(props.scatterData);
   //average all tools to 1 point based on their resolutions.
-  let categories = {};
+  const categories = {};
   props.scatterData.forEach(dataSet => {
     if (shouldAvg) {
-      let count = dataSet.data.length;
+      const count = dataSet.data.length;
       dataSet.data = [dataSet.data.reduce((sumObj, curObj) => {
         return ({
           x: sumObj.x + curObj.x,
@@ -108,7 +108,7 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
       smallestX = dataSet.data[0].x;
       largestX = dataSet.data[0].x;
     }
-    let data: number[][] = []
+    const data: number[][] = []
     dataSet.data.forEach(coord => {
       if (coord.x < smallestX) smallestX = coord.x;
       else if (coord.x > largestX) largestX = coord.x;
@@ -118,9 +118,9 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
     const regressionData = linearRegression(data);
     regressionFormulas.push(regressionData);
 
-    let regressionPointLow = { y: regressionData.m * smallestX + regressionData.b, x: smallestX };
-    let regressionPointHigh = { y: regressionData.m * largestX + regressionData.b, x: largestX };
-    let regressionLineDataset = {
+    const regressionPointLow = { y: regressionData.m * smallestX + regressionData.b, x: smallestX };
+    const regressionPointHigh = { y: regressionData.m * largestX + regressionData.b, x: largestX };
+    const regressionLineDataset = {
       name: dataSet.name,
       data: [regressionPointLow, regressionPointHigh],
       category: dataSet.category
@@ -141,13 +141,13 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
 
   //add data to datasets array in order of category line, all data points for that category, category line, ...
   regressionLines.forEach(lineData=>{
-    let category = lineData.category;
-    let categoryColor = (props.clrs && regressionLines.length>1) ? props.clrs[k] : clr=UTIL.getColor();
+    const category = lineData.category;
+    const categoryColor = (props.clrs && regressionLines.length>1) ? props.clrs[k] : clr=UTIL.getColor();
     k++;
     //call a function to match the color of the category to the external legend that displays below the chart
     regressionMatcher(categoryColor,category);
 
-    let categoryRegressionLineDataObj = {
+    const categoryRegressionLineDataObj = {
       radius: 0,
       type: 'line' as const,
       yAxisId: props.yAxisTitle,
@@ -160,10 +160,10 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
     data.datasets.push(categoryRegressionLineDataObj);
     //filter for only scatter data sets that have the same category
     props.scatterData.filter(scatterData=>scatterData.category==category).forEach(scatterData=>{
-        let borderClr = (props.clrs) ? (props.clrs[i]) : clr=UTIL.getColor();
-        let backgroundColor = (props.clrs) ?  ( regressionLines.length>1 ? categoricalLegend[scatterData.category].backgroundColor : props.clrs[i]) : clr;
+        const borderClr = (props.clrs) ? (props.clrs[i]) : clr=UTIL.getColor();
+        const backgroundColor = (props.clrs) ?  ( regressionLines.length>1 ? categoricalLegend[scatterData.category].backgroundColor : props.clrs[i]) : clr;
         i++;
-        let scatterDataObj = {
+        const scatterDataObj = {
           type: 'scatter' as const,
           yAxisId: props.yAxisTitle,
           label: `${scatterData.name}`,
@@ -229,9 +229,9 @@ export function LinierRegressionScatterPlot(props: linierRegressionScatterPlotPr
 
   console.log(categoricalLegend)
 
-  let realCatLegend:any = [];
+  const realCatLegend:any = [];
   Object.keys(categoricalLegend).forEach((key)=>{
-    let tools = categoricalLegend[key];
+    const tools = categoricalLegend[key];
     console.log(tools);
     realCatLegend.push({
       "label":`Category ${key}: ${tools.map(tool=>`${tool.title}, `)}`,

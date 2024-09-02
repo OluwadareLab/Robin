@@ -102,7 +102,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
         if (fileSet[0]) {
           if (fileSet[0] instanceof ToolData || fileSet[0].resolutions) {
             console.log("toolData found")
-            let toolData = fileSet as ToolData[];
+            const toolData = fileSet as ToolData[];
             toolData.forEach((tool) => {
               console.log("tool:")
               console.log(tool)

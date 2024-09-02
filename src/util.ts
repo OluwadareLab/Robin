@@ -32,7 +32,7 @@ export abstract class UTIL {
       
       
         // Return the color in RGBA format
-        let clr = tinycolor.random();
+        const clr = tinycolor.random();
         this.lastClr = clr;
         return clr?.toRgbString()
     }
@@ -46,14 +46,14 @@ export abstract class UTIL {
     static getCombinations(valuesArray)
     {
 
-        var combi = [];
-        var temp = [];
-        var slent = Math.pow(2, valuesArray.length);
+        const combi = [];
+        let temp = [];
+        const slent = Math.pow(2, valuesArray.length);
 
-        for (var i = 0; i < slent; i++)
+        for (let i = 0; i < slent; i++)
         {
             temp = [];
-            for (var j = 0; j < valuesArray.length; j++)
+            for (let j = 0; j < valuesArray.length; j++)
             {
                 if ((i & Math.pow(2, j)))
                 {

@@ -44,7 +44,7 @@ export type lineChartProps = {
 
   clrs?: string[] | undefined
 
-  radius?: Number
+  radius?: number
 }
 
 ChartJS.register(
@@ -68,9 +68,9 @@ let k =0;
  * @returns 
  */
 export const GraphComponent = (props: lineChartProps) => {
-  let [baseRadius,setBaseRadius] = useState(0);
-  let [showAllPoints,setShowAllPoints] = useState(0);
-  let radius = props.radius ? props.radius : baseRadius;
+  const [baseRadius,setBaseRadius] = useState(0);
+  const [showAllPoints,setShowAllPoints] = useState(0);
+  const radius = props.radius ? props.radius : baseRadius;
 
   const toggleShowAllPoints = () => {
     setShowAllPoints(!showAllPoints);

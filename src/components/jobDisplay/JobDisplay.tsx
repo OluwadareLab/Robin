@@ -12,7 +12,7 @@ import { InstructionHeader } from '../misc/InstructionHeader';
 import FileUploadDisplay from '../fileUpload/FileUploadDisplay';
 import { DownloadJsonButton } from '../downloadjson/DownloadJsonButton';
 
-type JobProps = {
+export type JobProps = {
   id: number;
   status: string;
   title: string;

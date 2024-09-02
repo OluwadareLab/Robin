@@ -14,7 +14,7 @@ type UploadEntryWithRemoveAndTitleProps = {
     entryValue:string
 }
 
-let i = 0;
+const i = 0;
 /**
  * @component
  * @param props 

@@ -133,7 +133,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
                 checkFileForHeaders(file).then(result => {
                     if (result) {
                         //check with the user if we should remove the header for them.
-                        let response = window.confirm(`This file appears to have a header which is not allowed in our format. 
+                        const response = window.confirm(`This file appears to have a header which is not allowed in our format. 
 Click Okay to remove the header from your upload (the file on your computer will not be changed).
 Or if you are sure this file is formatted properly click cancel.
 `);
@@ -142,7 +142,7 @@ Or if you are sure this file is formatted properly click cancel.
                             console.log(`header test ${result}`)
                             const fileBodyWithoutHeader = fileBody.split("\n").slice(1).join('\n');
                             console.log(fileBodyWithoutHeader);
-                            var blob = new Blob([fileBodyWithoutHeader], { type: 'text/plain' });
+                            const blob = new Blob([fileBodyWithoutHeader], { type: 'text/plain' });
                             //update file to no longer have header
                             file = new File([blob], file.name, { type: "text/plain" });
                         }
@@ -157,7 +157,7 @@ Or if you are sure this file is formatted properly click cancel.
 
         }
 
-        let files: (File)[] = []
+        const files: (File)[] = []
         toolData.forEach(tool => tool.resolutions.forEach(res => { if (res.file) files.push(res.file) }))
         setFiles(files)
     };
@@ -247,9 +247,9 @@ Or if you are sure this file is formatted properly click cancel.
                                 name={`Cat-${tool.name}`}
                                 options={categories}
                                 onCreateOption={(option) => {
-                                    let newOption = { "value": option.trim().replaceAll(' ', '-'), "label": option };
+                                    const newOption = { "value": option.trim().replaceAll(' ', '-'), "label": option };
                                     setCategories([...categories, newOption]);
-                                    let e = newOption;
+                                    const e = newOption;
                                     handleCategoryChange(toolIndex, e);
                                 }}
                             />

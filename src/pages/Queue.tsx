@@ -30,7 +30,7 @@ interface QueuePageProps {
 }
 
 const QueuePage = () => {
-  let counter = 0
+  const counter = 0
   const [position, setPosition] = useState<number | null>(null);
   const [jobStatus, setJobStatus] = useState<STATUSES>(STATUSES.NO_DATA);
   const [body, setBody] = useState<ReactNode>(<></>);
@@ -101,7 +101,7 @@ const QueuePage = () => {
     )
   }
 
-  let baseBody = <>
+  const baseBody = <>
     {position !== null ? (
       <div>
         {position > 0 ? (
@@ -133,7 +133,7 @@ const QueuePage = () => {
       />
     )}
   </>
-  let failurePage = <>
+  const failurePage = <>
     <h1>Possible Failure</h1>
     <p>This job has completed, but might be missing some information.</p>
     <p>

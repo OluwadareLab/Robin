@@ -19,11 +19,11 @@ type HiglassCoolPopupProps = {
 export const HiglassCoolPopup = (props: HiglassCoolPopupProps) => {
     const params = useParams();
     const [fileSets, setFilesets] = useState<fileSet[]>([]);
-    let jobId = params.id ? parseInt(params.id) : undefined;
+    const jobId = params.id ? parseInt(params.id) : undefined;
 
     useEffect(()=>{
         console.log(props.file)
-        let fileSet = [
+        const fileSet = [
             {
                 name:props.fileName,
                 file:props.file

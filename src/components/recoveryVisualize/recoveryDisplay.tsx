@@ -43,9 +43,9 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
             }));
     
         if(shouldAvg){
-          let avgData = {};
+          const avgData = {};
           data.forEach((dataSet)=>{
-            let name = dataSet.name.split('_')[0];
+            const name = dataSet.name.split('_')[0];
             if(!avgData[name]) avgData[name] = [];
             avgData[name] = [...avgData[name], ...dataSet.data]
           })
@@ -54,7 +54,7 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
           
           Object.keys(avgData).forEach((key)=>{
             let obj = avgData[key];
-            let count = obj.length;
+            const count = obj.length;
             console.log(obj)
             obj = obj.reduce((lastValue,thisValue)=>{
               lastValue.x+=thisValue.x;
@@ -76,8 +76,8 @@ export const RecoveryComponent = (props: recoveryComponentTypes) => {
         return data;
     }
 
-    let barData = prepareDatasets(props.barData);
-    let lineData = prepareDatasets(props.lineData);
+    const barData = prepareDatasets(props.barData);
+    const lineData = prepareDatasets(props.lineData);
     lineData.forEach(obj=>obj.data=obj.data.flat());
     console.log(prepareDatasets(formatDataset(props.lineData)));
     console.log(lineData);

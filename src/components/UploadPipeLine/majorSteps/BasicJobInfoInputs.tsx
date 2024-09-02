@@ -10,7 +10,7 @@ import { jobSetupFormData } from '../../tempTypes/Types';
 
 
 export const BasicJobInfoInputs = (props:{setData?:(any)=>void}) => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     return  (
     <>
@@ -51,7 +51,7 @@ export const BasicJobInfoInputs = (props:{setData?:(any)=>void}) => {
      */
     function onSubmitJobInfo(formEvent){
         formEvent.preventDefault();
-        let data: jobSetupFormData = {
+        const data: jobSetupFormData = {
             email: formEvent.target.elements.email.value,
             description: formEvent.target.elements.description.value,
             title: formEvent.target.elements.jobTitle.value,

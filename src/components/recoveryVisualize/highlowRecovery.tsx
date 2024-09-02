@@ -16,12 +16,12 @@ type DataSet = { toolName: string, data: any }[];
 
 export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
   //the component to display if our data is invalid
-  let invalidComponent = props.displayIfEmpty ? props.displayIfEmpty : <></>
+  const invalidComponent = props.displayIfEmpty ? props.displayIfEmpty : <></>
 
   //clrs for high and low
-  let highClr = props.clrs ? props.clrs[0] : UTIL.getColor();
-  let lowClr = props.clrs ? props.clrs[1] : UTIL.getColor();
-  let legendItems = [
+  const highClr = props.clrs ? props.clrs[0] : UTIL.getColor();
+  const lowClr = props.clrs ? props.clrs[1] : UTIL.getColor();
+  const legendItems = [
     { "label": "high", "backgroundColor": highClr },
     { "label": "low", "backgroundColor": lowClr }
 
@@ -29,7 +29,7 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
 
 
   //categories to be displayed at the bottom of the bar chart
-  let [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
 
   //clean data
@@ -40,7 +40,7 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
   })
 
   useEffect(() => {
-    let tempCategories = [];
+    const tempCategories = [];
     props.barData.forEach(data => {
       if (!tempCategories.includes(data.toolName)) {
         tempCategories.push(data.toolName)
@@ -52,13 +52,13 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
   }, [])
 
 
-  let highlowData: { string: { high: DataSet, low: DataSet } } = {};
+  const highlowData: { string: { high: DataSet, low: DataSet } } = {};
 
   //find cut off for middle res
   let allRes: {} | [] = {}
   props.barData.forEach(data => allRes[data.resolution] = data.resolution);
   allRes = Object.keys(allRes).map(n => parseInt(n)).sort() as number[];
-  let middleRes = allRes[Math.round((allRes as number[]).length / 2) - 1]
+  const middleRes = allRes[Math.round((allRes as number[]).length / 2) - 1]
 
   console.log("highlow: cuttoff" + middleRes)
 
@@ -68,25 +68,25 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
       //is low res
 
       highlowData[data.toolName].low.data = [];
-      let indexOfToolName = categories.indexOf(data.toolName);
+      const indexOfToolName = categories.indexOf(data.toolName);
       highlowData[data.toolName].low.data[indexOfToolName] = [...highlowData[data.toolName].low.data, data.data];
     } else {
       //is high res
       highlowData[data.toolName].high.data = [];
-      let indexOfToolName = categories.indexOf(data.toolName);
+      const indexOfToolName = categories.indexOf(data.toolName);
       highlowData[data.toolName].high.data[indexOfToolName] = [...highlowData[data.toolName].high.data, data.data];
     }
   });
 
   Object.keys(highlowData).forEach(key => {
-    let highCount = allRes.length / 2;
-    let lowCount = allRes.length / 2;
+    const highCount = allRes.length / 2;
+    const lowCount = allRes.length / 2;
     highlowData[key].high.data = highlowData[key].high.data.reduce((x, y) => (x + y), 0) / highCount
     console.log(`element counts: ${highCount}`)
     highlowData[key].low.data = highlowData[key].low.data.reduce((x, y) => (x + y), 0) / lowCount
   })
 
-  let data: { name: string, data: any }[] = [];
+  const data: { name: string, data: any }[] = [];
 
   Object.keys(highlowData)
     .forEach(key => {

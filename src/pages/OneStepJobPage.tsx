@@ -46,13 +46,13 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     //are uploading a big job
     //---------------------
     // //stored data to make form persist
-    let storedProtienRefArr:string[]=[];
-    let storedProtienRefFileNames:string[]=[];
-    let storedToolData:ToolData[]=[];
-    let storedUseHiGlass:boolean=true;
-    let storedChromFile=new ChromFile();
-    let storedFileSets:fileSet[]=[];
-    let storedBasicInfo:any={};
+    const storedProtienRefArr:string[]=[];
+    const storedProtienRefFileNames:string[]=[];
+    const storedToolData:ToolData[]=[];
+    const storedUseHiGlass:boolean=true;
+    const storedChromFile=new ChromFile();
+    const storedFileSets:fileSet[]=[];
+    const storedBasicInfo:any={};
 
     // //these are all wrapped with try catches since we are just checking if the data
     // //exists and loading if so, hence we dont need any more than a simple try catch
@@ -95,14 +95,14 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     //update files and fileNames whenever any of these change
     useEffect(()=>{
         let i = 0;
-        let protienRefFilesets = protienRefFiles.map(file=>{
+        const protienRefFilesets = protienRefFiles.map(file=>{
             return {
                 file:file,
                 name:protienRefFileNames[i++]
             }
         })
 
-        let arr = [toolData, protienRefFilesets];
+        const arr = [toolData, protienRefFilesets];
 
         if(chromSizesFile.isValid()) arr.push([{file:chromSizesFile.file, name:chromSizesFile.fileName}]);
         console.log({file:chromSizesFile.file, name:chromSizesFile.fileName});
@@ -128,15 +128,15 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
 
         //ensure every resolutions has atleast 2 result files
         //-extract resolutions from tooldata as a flat arr
-        let allResolutionsResults = toolData.map(toolData=>toolData.resolutions).flat();
+        const allResolutionsResults = toolData.map(toolData=>toolData.resolutions).flat();
         //find all unquie resolutions. we do this by creating an array of all, then convert to a dict/set, then back to array
-        let allResolutionsValues = [...new Set(allResolutionsResults.map(res=>res.resolution))];
+        const allResolutionsValues = [...new Set(allResolutionsResults.map(res=>res.resolution))];
         console.log(allResolutionsValues)
 
-        let invalidResolutionInputs:number[] = [];
+        const invalidResolutionInputs:number[] = [];
         isValid = allResolutionsValues.every(res=>{
             console.log(res);
-            let val = allResolutionsResults.reduce((previousValue, resObj)=>{
+            const val = allResolutionsResults.reduce((previousValue, resObj)=>{
                 return previousValue + (resObj.resolution ? ((resObj.resolution == res) ? 1 : 0) : 0);
             },0);
             if(val < config.minResolutionValues){
@@ -149,7 +149,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
             alert(`You must uplaoded atleast ${config.minResolutionValues} results for each resolution you have specified, the following resolution needs one or more results:\n`+invalidResolutionInputs.join("\n"));
             return;}
 
-        let data: jobSetupFormData = {
+        const data: jobSetupFormData = {
             email: basicInfo.email,
             description: basicInfo.description,
             title: basicInfo.jobTitle,

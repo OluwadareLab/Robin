@@ -1,7 +1,0 @@
-# Use higlass base img
-FROM higlass/higlass-docker
-
-COPY ./gethiglassserverpasswordfromdocker.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]

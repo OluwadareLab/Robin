@@ -60,7 +60,7 @@ export function BarChart(props: {
 
 }) {
     console.log(props)
-    let chartRef = useRef(null);
+    const chartRef = useRef(null);
     const labels =props.labels;
     const options = {
         responsive: true,
@@ -76,7 +76,7 @@ export function BarChart(props: {
           // Custom tooltip handling to display values in scientific notation
           callbacks: {
             label: function(context) {
-              let label = context.dataset.label
+              const label = context.dataset.label
               let value = context.raw.y;
               let parsedValue = value;
               if(value < .00001){

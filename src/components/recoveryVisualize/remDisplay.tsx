@@ -29,9 +29,9 @@ export const RemDisplay = (props: recoveryComponentTypes) => {
 
             console.log(props.barData);
     if(shouldAvg){
-      let avgData = {};
+      const avgData = {};
       data.forEach((dataSet)=>{
-        let name = dataSet.name.split('_')[0];
+        const name = dataSet.name.split('_')[0];
         if(!avgData[name]) avgData[name] = [];
         avgData[name] = [...avgData[name], ...dataSet.data]
       })
@@ -40,7 +40,7 @@ export const RemDisplay = (props: recoveryComponentTypes) => {
       
       Object.keys(avgData).forEach((key)=>{
         let obj = avgData[key];
-        let count = obj.length;
+        const count = obj.length;
         console.log(obj)
         obj = obj.reduce((lastValue,thisValue)=>{
           lastValue+=parseFloat(typeof thisValue == 'string' ? thisValue.replace("\n",'') : thisValue);

@@ -45,7 +45,7 @@ export const ProtienReferenceUploadForm = (props:ProtienReferenceUploadFormProps
     const [allFileNames, setAllFileNames] = useState<string[]>(props.refNames||[]);
     const [referenceFiles, setReferenceFiles] = useState<ReferenceFile[]>([new ReferenceFile(0)]);
 
-    let i = 0;
+    const i = 0;
     const onAddNewReferenceInput = () => {
         setReferenceFiles([...referenceFiles, new ReferenceFile(referenceFiles.length)])
         getFiles();

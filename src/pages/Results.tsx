@@ -248,13 +248,13 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
       }
 
       //clear all datasets as we update
-      let tempDatasets: any = {}
+      const tempDatasets: any = {}
       let tempRemData: any[] = [];
-      let tempLoopSizes: any = {};
-      let tempRegressionPoints: any = {}
-      let tempKbVsRes: any = {};
-      let tempBinVsRes: any = {};
-      let tempBinVsResVsKbVsResDataset: any = {};
+      const tempLoopSizes: any = {};
+      const tempRegressionPoints: any = {}
+      const tempKbVsRes: any = {};
+      const tempBinVsRes: any = {};
+      const tempBinVsResVsKbVsResDataset: any = {};
 
       const toolsNames = Object.keys(results);
       toolsNames.forEach(name => {
@@ -286,7 +286,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
 
         //if we have enough points to plot our regression
         // if(tempLoopSizes[obj.method].length > 1){
-        let obj = toolData.results[0] || toolData.loopSizeResults[0] || toolData.remResults[0];
+        const obj = toolData.results[0] || toolData.loopSizeResults[0] || toolData.remResults[0];
         if (config.DEBUG) console.log(obj)
         console.log("-------------------firstObj----------------------")
         console.log(obj);
@@ -340,7 +340,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
             return (a.x - b.x)
           });
 
-          let obj2 = {}
+          const obj2 = {}
           obj2.data = tempBinVsResVsKbVsResDataset[obj.toolName];
           obj2.category = obj.category;
           tempBinVsResVsKbVsResDataset[obj.toolName] = obj2;

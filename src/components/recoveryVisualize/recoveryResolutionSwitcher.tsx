@@ -18,7 +18,7 @@ type RecoveryAndRemWithResolutionSwitchProps = {
  */
 const getRecoveryMax = (data) =>{
 
-    let testData = _.cloneDeep(data);
+    const testData = _.cloneDeep(data);
 
     testData.forEach(data=>{
       data.data = data.data[data.data.length-2];

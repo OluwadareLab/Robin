@@ -27,7 +27,7 @@ export const HomePage = () => {
                 </Row>
                 <Row>
                     <h3 style={{ color: "#708090" }}>Documentation</h3>
-                    <a className='justify-content-center' target="_blank" href={paths.docs}>📒 The full user manual is available here.</a>
+                    <a className='justify-content-center' target="_blank" href={paths.docs} rel="noreferrer">📒 The full user manual is available here.</a>
                 </Row>
                 <Row>
                     <h3 style={{ color: "#708090" }}>AI Assistant Example</h3>
