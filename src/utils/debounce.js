@@ -1,7 +1,7 @@
 /**
  * Debounce a function call.
  *
- * @description
+ * 
  * Function calls are delayed by `wait` milliseconds and only one out of
  * multiple function calls is executed.
  *

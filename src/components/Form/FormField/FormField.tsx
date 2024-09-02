@@ -2,7 +2,7 @@ import React, { HTMLInputTypeAttribute, useState } from "react";
 import { RequiredAsterisk } from "../../misc/RequiredAsterisk";
 
 /**
- * @description the type for a form field
+ *  the type for a form field
  * @prop {string} title: the title of the field
  * @prop {bool} required: whether the filed is required or not
  * @prop {HTMLInputTypeAttribute} inputType: the type of the input
@@ -29,13 +29,13 @@ export type FormFieldProps = {
      */
     name?: string
 
-    /** @description optional cb to pass value up */
+    /**  optional cb to pass value up */
     setValue?:(e)=>void
 }
 
 
 /**
- * @description a field within a form
+ *  a field within a form
  * @param {FormFieldProps} props 
  * title (string) (optional): the title of the label for this field.
  * required (boolean) (optional default=true): is this field a required field? 

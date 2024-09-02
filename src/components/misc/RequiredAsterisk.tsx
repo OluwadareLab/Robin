@@ -2,7 +2,7 @@ import React from "react";
 
 
 /**
- * @description the types for the asterisk component
+ *  the types for the asterisk component
  * @prop active, whether to render or not
  */
 type RequiredAsteriskProps = {

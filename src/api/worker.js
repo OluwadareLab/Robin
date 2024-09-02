@@ -18,7 +18,7 @@ const baseLog = console.log;
 /** an array of all children scripts that are being run */
 let children = [];
 
-/** @description get the free mem on the system in gb */
+/**  get the free mem on the system in gb */
 function getFreeMem() {
   // Get the free memory in bytes
   const freeMemory = os.freemem();
@@ -237,7 +237,7 @@ mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongoose
 
 
 /**
- * @description find all files that start with reference_ and then parse them accordingly
+ *  find all files that start with reference_ and then parse them accordingly
  * @param {*} files 
  * @returns 
  */
@@ -254,7 +254,7 @@ function getRecoveryProtiens(files, job) {
 }
 
 /**
- * @description find all files that start with chrom.sizes and parse accordingly
+ *  find all files that start with chrom.sizes and parse accordingly
  * @param {*} files 
  */
 function getChromSizesFiles(files) {
@@ -267,7 +267,7 @@ function getChromSizesFiles(files) {
   });
 }
 /**
- * @description all tool files f
+ *  all tool files f
  * @param {*} files 
  */
 function getAllToolData(files) {
@@ -282,7 +282,7 @@ function getAllToolData(files) {
 }
 
 /**
- * @description 
+ *  
  * @param {*} jobsGroupedByResolution 
  * @returns 
  */
@@ -309,7 +309,7 @@ function getCombinationsArrayFromjob(jobInfo) {
 }
 
 /**
- * @description injest a reference file into higlass
+ *  injest a reference file into higlass
  * @param {*} referenceFile 
  * @param {*} chromSizes 
  * @returns promise for script to complete
@@ -325,7 +325,7 @@ function injestReferenceFile(referenceFile, chromSizes) {
 }
 
 /**
- * @description injest a .cool file into higlass
+ *  injest a .cool file into higlass
  * @param {*} coolFile 
  * @param {*} job the job this cool file is for
  * @returns promise for script to complete
@@ -362,7 +362,7 @@ function addChildScriptToQueue(script, name, options = shortTimeoutOptions) {
 }
 
 /**
- * @description a simple script to run a child script in bash and catch/log errors
+ *  a simple script to run a child script in bash and catch/log errors
  * @param {*} script the script to run
  * @param {*} name a descriptive name to print to console for info
  * @param {options obj from exec} options optional options for changing timeout
@@ -395,7 +395,7 @@ function getNumberOfActiveScriptsInQueue() {
 }
 
 /**
- * @description this runs once every second to check for scripts that need to be ran
+ *  this runs once every second to check for scripts that need to be ran
  * @param {{script:string,name:string}} scriptObj 
  */
 export async function scriptWorker() {
@@ -419,7 +419,7 @@ export async function scriptWorker() {
 }
 
 /**
- * @description called once every min checking for new jobs to start if one is not already running
+ *  called once every min checking for new jobs to start if one is not already running
  */
 async function jobWorker() {
   let recoveryProtiens;

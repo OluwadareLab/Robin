@@ -74,7 +74,7 @@ class HiglassTrack {
 }
 
 /**
- * @description check if a tilesetuuid exists on our server
+ *  check if a tilesetuuid exists on our server
  * @param uid 
  * @returns 
  */

@@ -15,6 +15,11 @@ type UploadEntryAndInputProps = {
 
 
 let i = 0;
+/**
+ * @component
+ * @param props 
+ * @returns 
+ */
 export const UploadEntryAndInput = (props: UploadEntryAndInputProps) => (
     <>
         <div className='col-2'>

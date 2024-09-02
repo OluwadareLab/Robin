@@ -5,7 +5,7 @@ export abstract class UTIL {
     static timesSpun: number = 0;
 
     /**
-     * @description get a set of random {x,y} value dicts
+     *  get a set of random {x,y} value dicts
      * @param length length of the array
      * @param range math.random will be multiplied by this.
      */
@@ -38,7 +38,7 @@ export abstract class UTIL {
     }
 
     /**
-     * @description get all combinations of an array of values
+     *  get all combinations of an array of values
      * with:
      * No repeats
      * Order does not matter.
@@ -71,7 +71,7 @@ export abstract class UTIL {
         return combi;
     }
 
-    /** @description ment to be used with .filter IE: array.filter(UTIL.onlyUnique) */
+    /**  ment to be used with .filter IE: array.filter(UTIL.onlyUnique) */
     static onlyUnique(value, index, array) {
         return array.indexOf(value) === index;
     }

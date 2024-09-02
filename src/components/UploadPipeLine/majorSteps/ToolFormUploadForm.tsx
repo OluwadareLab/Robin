@@ -18,7 +18,7 @@ import MyDropdown from '../_categoryInput';
 
 type ToolFormUploadFormProps = {
     /**
-     * @description optional cb to call when the tool data for the form is changed
+     *  optional cb to call when the tool data for the form is changed
      * @param data the data
      * @returns void
      */
@@ -34,7 +34,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     }
 
     /**
-     * @description check if the user can submit the form
+     *  check if the user can submit the form
      * @returns boolean
      */
     function canSubmit() {
@@ -64,21 +64,21 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     );
     const [files, setFiles] = useState<File[]>([]);
 
-    /** @description wrap the setter for tool data to pass data upwards to any listening parents */
+    /**  wrap the setter for tool data to pass data upwards to any listening parents */
     const setToolData = (data: ToolData[]) => {
         _setToolData(data);
         if (props.setToolDataCb) props.setToolDataCb(data);
     }
 
     /**
-     * @description on adding a new tool data input
+     *  on adding a new tool data input
      */
     const handleAddToolData = () => {
         setToolData([...toolData, new ToolData('')]);
     };
 
     /**
-    * @description on removing a tool data input
+    *  on removing a tool data input
     */
     const handleRemoveToolData = (toolIndex) => {
         const newData = [...toolData];
@@ -88,7 +88,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     };
 
     /**
-     * @description on adding a new resolution data input
+     *  on adding a new resolution data input
      */
     const handleAddResolution = (index: number) => {
         const newData = [...toolData];
@@ -100,7 +100,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     };
 
     /**
-     * @description on removing a resolution data input
+     *  on removing a resolution data input
      */
     const handleRemoveResolution = (toolIndex: number, resolutionIndex: number) => {
         const newData = [...toolData];
@@ -109,7 +109,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     };
 
     /**
-     * @description handle a change to the input of a name
+     *  handle a change to the input of a name
      * @param index the index of the tool
      * @param event the html event
      */
@@ -121,7 +121,7 @@ const ToolFormUploadForm = (props: ToolFormUploadFormProps) => {
     };
 
     /**
-     * @description handle a change to the input of a file
+     *  handle a change to the input of a file
      * @param index the index of the tool
      * @param event the html event
      */
@@ -163,7 +163,7 @@ Or if you are sure this file is formatted properly click cancel.
     };
 
     /**
-     * @description a simple utility function that checks a file if it has headers/labels as its first line.
+     *  a simple utility function that checks a file if it has headers/labels as its first line.
      * @param file 
      * @returns {boolean} whether there are headers
      */
@@ -196,7 +196,7 @@ Or if you are sure this file is formatted properly click cancel.
     }
 
     /**
-     * @description handle a change to the resolution of a tool
+     *  handle a change to the resolution of a tool
      * @param index the index of the tool
      * @param event the html event
      */
@@ -208,7 +208,7 @@ Or if you are sure this file is formatted properly click cancel.
     };
 
     /**
-    * @description handle a change to the category of a tool
+    *  handle a change to the category of a tool
     * @param index the index of the tool
     * @param event the html event
     */

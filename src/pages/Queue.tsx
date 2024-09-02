@@ -8,7 +8,7 @@ import { Job } from "../api/models/job.js";
 import Bookmark from "../components/bookmarkComponent/bookmark";
 
 /**
- * @description a enum of all possible statuses within the db
+ *  a enum of all possible statuses within the db
  */
 enum STATUSES {
   /** job info has been created but data has not been uploaded yet */

@@ -27,12 +27,12 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 export type lineChartProps = {
   /**
-   * @description the name of the y-axis
+   *  the name of the y-axis
    */
   yAxisTitle:string
 
   /**
-   * @description the name of the x-axis
+   *  the name of the x-axis
    */
   xAxisTitle:string
 
@@ -63,7 +63,7 @@ const bgClr = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*
 
 let k =0;
 /**
- * @description simple line chart
+ *  simple line chart
  * @param props 
  * @returns 
  */

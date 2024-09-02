@@ -4,11 +4,11 @@ import { EntryWithRemove } from "../userInputComponents/removablelistbtn/EntryWi
 
 //TODO: check if these need to be async or not.
 type ToolNameInputProps = {
-    /** @description the prop for the value of the input */
+    /**  the prop for the value of the input */
     name:string,
 
     /**
-     * @description the callback for when a the input is changed for the name field
+     *  the callback for when a the input is changed for the name field
      * might need to be async, I dont remember
      * @param e the html input change event
      * @returns nothing
@@ -16,7 +16,7 @@ type ToolNameInputProps = {
      */
     onInputChange: (e:React.ChangeEvent<HTMLInputElement>)=>void,
     /**
-     * @description the callback function for when the remove button is hit.
+     *  the callback function for when the remove button is hit.
      * might need to be async, I dont remember
      */
     onToolRemove:()=>void,
@@ -26,7 +26,7 @@ type ToolNameInputProps = {
 }
 
 /**
- * @description a simple wrapper for entry with remove to enter a tool name for the tool upload component
+ *  a simple wrapper for entry with remove to enter a tool name for the tool upload component
  * @returns react component for inputting a tool name
  */
 export const ToolNameInput = (props:ToolNameInputProps) =>{

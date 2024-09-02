@@ -9,7 +9,7 @@ type DownloadImgProps = {
 }
 
 /**
- * @description an element used to download a image of a graph in its current state
+ *  an element used to download a image of a graph in its current state
  * @param props {DownloadImgProps} MUST PASS REF
  * @returns 
  */

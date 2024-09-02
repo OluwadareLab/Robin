@@ -3,7 +3,7 @@ import { Form, Row } from "react-bootstrap"
 import { InstructionHeader } from "../misc/InstructionHeader"
 
 /**
- * @description props for the ToolFileInputProps compoenent
+ *  props for the ToolFileInputProps compoenent
  */
 type HiglassToggleProps = {
     checked:boolean,
@@ -12,7 +12,7 @@ type HiglassToggleProps = {
 }
  
 /**
- * @description the component for the toggle button to enable higlass, also renders anything contained inside once flipped
+ *  the component for the toggle button to enable higlass, also renders anything contained inside once flipped
  * @param props 
  * @returns The React component
  */

@@ -12,7 +12,7 @@ type RecoveryAndRemWithResolutionSwitchProps = {
 }
 
 /**
- * @description get the largest value from a dataset
+ *  get the largest value from a dataset
  * @param data 
  * @returns 
  */

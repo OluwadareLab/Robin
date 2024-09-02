@@ -28,5 +28,6 @@ module.exports = {
     propsParser: require('react-docgen-typescript').withDefaultConfig([]).parse,
     webpackConfig: webpackConfig,
     components: 'src/components/**/*.{js,jsx,ts,tsx}',
-    ignore: ['src/components/visualizationTools/**/*', './src/components/visualizationTools/HiGlass/**/*','src/components/tempTypes/**/*', "/**/_test_*"]
+    ignore: ['src/components/visualizationTools/**/*', './src/components/visualizationTools/HiGlass/**/*','src/components/tempTypes/**/*', "/**/_test_*"],
+    skipComponentsWithoutExample:true,
 }

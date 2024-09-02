@@ -20,7 +20,7 @@ type FileUploadProps = {
 }
 
 /**
- * @description a component for file uploading. can specify types with prop.fileTypes
+ *  a component for file uploading. can specify types with prop.fileTypes
  * @param {} props props.fileTypes as string ".type1 .type2 etc...."
  * @returns 
  */

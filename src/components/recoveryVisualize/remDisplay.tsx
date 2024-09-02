@@ -8,7 +8,7 @@ type recoveryComponentTypes = {
   barData, 
   clrs,
   regex
-  /** @description set to a string resolution to filter by or avg to take an average */
+  /**  set to a string resolution to filter by or avg to take an average */
   filterResolution?
 }
 

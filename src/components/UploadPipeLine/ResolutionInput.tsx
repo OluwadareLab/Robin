@@ -4,17 +4,17 @@ import { ResolutionData } from "../tempTypes/Types";
 
 
 type resolutionInputProps = {
-    /** @description the value resolution of the input */
+    /**  the value resolution of the input */
     resolution:ResolutionData,
     /**
-     * @description the function called when the user changes the resolution of this input
+     *  the function called when the user changes the resolution of this input
      */
     handleResolutionChange: (e:React.ChangeEvent<HTMLInputElement>)=>void;
 
 }
 
 /**
- * @description the component for resolution input display, just the label and input
+ *  the component for resolution input display, just the label and input
  * @param props 
  * @returns 
  */

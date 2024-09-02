@@ -12,9 +12,9 @@ type recoveryComponentTypes = {
   barData, 
   clrs,
   regex,
-  /** @description a jsx element to insert after the first graph (optional) */
+  /**  a jsx element to insert after the first graph (optional) */
   insertAfterFirstGraph?
-  /** @description set to a string resolution to filter by or avg to take an average */
+  /**  set to a string resolution to filter by or avg to take an average */
   filterResolution?
 }
 export function formatDataset(dataset){

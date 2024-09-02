@@ -46,7 +46,7 @@ export const BasicJobInfoInputs = (props:{setData?:(any)=>void}) => {
     )
 
     /**
-     * @description the handler for when the user submits the form
+     *  the handler for when the user submits the form
      * @param formData the form data they submitted
      */
     function onSubmitJobInfo(formEvent){

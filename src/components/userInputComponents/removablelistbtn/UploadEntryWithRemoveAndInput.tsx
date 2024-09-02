@@ -15,6 +15,11 @@ type UploadEntryWithRemoveAndTitleProps = {
 }
 
 let i = 0;
+/**
+ * @component
+ * @param props 
+ * @returns 
+ */
 export const UploadEntryWithRemoveAndInput = (props:UploadEntryWithRemoveAndTitleProps) => (
     <div className='form-group row mt-4'>
         <UploadEntryAndInput {...props}/>

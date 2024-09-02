@@ -6,7 +6,7 @@ import { UploadEntryAndInput } from "../userInputComponents/removablelistbtn/Upl
 import { ChromFile } from "../tempTypes/Types"
 
 /**
- * @description props for the ToolFileInputProps compoenent
+ *  props for the ToolFileInputProps compoenent
  */
 type HiglassUploadFormProps = {
     checked:boolean,

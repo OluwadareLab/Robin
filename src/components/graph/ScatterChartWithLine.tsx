@@ -29,7 +29,7 @@ ChartJS.register(
 
 let i = 0;
 /**
- * @description a primitive form of regression plot
+ *  a primitive form of regression plot
  * @deprecated
  * @param props 
  * @returns 

@@ -30,6 +30,11 @@ type EntryWithRemoveProps = {
 
 
 let i = 0;
+/**
+ * @component
+ * @param props 
+ * @returns 
+ */
 export const EntryWithRemove = (props: EntryWithRemoveProps) => (
     <div className='form-group row mt-4'>
         <div className='col-2'>

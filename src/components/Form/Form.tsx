@@ -9,7 +9,7 @@ interface FormProps {
     fields: FormFieldProps[]
 
     /**
-     * @description (optional) if turned off this will be a full form with <form> and submit button, if not it will just the input
+     *  (optional) if turned off this will be a full form with <form> and submit button, if not it will just the input
      * buttons to be put inside of another form
      */
     fakeForm?:boolean

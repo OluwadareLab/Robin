@@ -1,11 +1,11 @@
 import React from "react"
 
 /**
- * @description props for the ToolFileInputProps compoenent
+ *  props for the ToolFileInputProps compoenent
  */
 type ToolFileInputProps = {
     /**
-     * @description called when the user changes the value of the file of this input
+     *  called when the user changes the value of the file of this input
      * @param e the html input event
      * @returns void
      */
@@ -13,7 +13,7 @@ type ToolFileInputProps = {
 }
  
 /**
- * @description the compoenent for prompting the user to enter the tool file they would like to upload
+ *  the compoenent for prompting the user to enter the tool file they would like to upload
  * @param props 
  * @returns The React component
  */

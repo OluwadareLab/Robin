@@ -33,12 +33,12 @@ ChartJS.register(
 
 export type linierRegressionScatterPlotProps = {
   /**
-   * @description the name of the y-axis
+   *  the name of the y-axis
    */
   yAxisTitle: string
 
   /**
-   * @description the name of the x-axis
+   *  the name of the x-axis
    */
   xAxisTitle: string
 
@@ -52,7 +52,7 @@ export type linierRegressionScatterPlotProps = {
 
   radius?: Number
 
-  /** @description default true */
+  /**  default true */
   shouldAvg?: boolean
 }
 

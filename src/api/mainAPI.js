@@ -18,7 +18,7 @@ const upload = multer({ dest: config.dataFolderPath });
 
 
 /**
- * @description the sqlite3 database
+ *  the sqlite3 database
  */
 const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
 
@@ -28,7 +28,7 @@ const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
 //TODO: check if this line is needed
 createDb();
 
-/** @description the express api application */
+/**  the express api application */
 const app = express();
 
 //for cross orgin resource sharing
@@ -63,7 +63,7 @@ app.listen(config.apiPort);
 
 
 /**
- * @description sum all rows with the provided status with lower id than id provided
+ *  sum all rows with the provided status with lower id than id provided
  * @param {*} id 
  * @param {*} status 
  * @returns 
@@ -300,7 +300,7 @@ app.get(apiPaths.quePosition, async (req, response) => {
 })
 
 /**
- * @description a get request to /jobUploads returns the info on all uploaded files to that job
+ *  a get request to /jobUploads returns the info on all uploaded files to that job
  */
 app.get(apiPaths.jobUploads, async (req, response) => {
     try{
@@ -332,7 +332,7 @@ app.get(apiPaths.jobUploads, async (req, response) => {
  *=============================================**/
 
 /**
- * @description the put request to put jobInfo into the database,
+ *  the put request to put jobInfo into the database,
  * expects a request in the form of
  * {
  *  title:string
@@ -366,7 +366,7 @@ app.post(apiPaths.jobInfo, async (req, response) => {
 })
 
 /**
- * @description set the higlass togle status of a job
+ *  set the higlass togle status of a job
  */
 app.post(apiPaths.higlassToggle, async (req, response) => {
     const timeout = setTimeout(() => {
@@ -392,7 +392,7 @@ app.post(apiPaths.higlassToggle, async (req, response) => {
 })
 
 /**
- * @description set the higlass togle status of a job
+ *  set the higlass togle status of a job
  */
 app.post(apiPaths.reRunAsNewJob, async (req, response) => {
     const timeout = setTimeout(() => {
@@ -473,7 +473,7 @@ app.get(apiPaths.htmlFiles, async (req, response) =>{
 })
 
 /**
- * @description handle uploading data to correct spot
+ *  handle uploading data to correct spot
  */
 const uploadData = multer({
     storage: multer.diskStorage({
@@ -495,7 +495,7 @@ const uploadData = multer({
 })
 
 /**
- * @description handle uploading data to correct spot
+ *  handle uploading data to correct spot
  */
 const uploadJupyterFile= multer({
     storage: multer.diskStorage({
@@ -518,7 +518,7 @@ const uploadJupyterFile= multer({
 })
 
 /**
- * @description handle uploading data to correct spot
+ *  handle uploading data to correct spot
  */
 const uploadCoolerData = multer({
     storage: multer.diskStorage({
@@ -563,7 +563,7 @@ function handleFileUpload(req,response,STATUS=STATUSES.HAS_SOME_DATA){
 }
 
 /**
- * @description the post request to put jobData into the filesystem ,
+ *  the post request to put jobData into the filesystem ,
  * expects a request in the form of
  * {
  *  id:int
@@ -574,7 +574,7 @@ app.post(apiPaths.jobData, uploadData.array("files"), async (req, response, next
 })
 
 /**
- * @description the post request to put juypter files into the filesystem ,
+ *  the post request to put juypter files into the filesystem ,
  * expects a request in the form of
  * {
  *  id:int
@@ -597,7 +597,7 @@ app.post(apiPaths.jyupterUpload, uploadJupyterFile.array("files"), async (req, r
 })
 
 /**
- * @description the post request to put jobData into the filesystem ,
+ *  the post request to put jobData into the filesystem ,
  * expects a request in the form of
  * {
  *  id:int
@@ -626,7 +626,7 @@ app.post(apiPaths.uploadCoolFile, uploadCoolerData.array("files"), async (req, r
 })
 
 /**
- * @description the post finalise a job as ready for processing and submitted
+ *  the post finalise a job as ready for processing and submitted
  * expects a request in the form of
  * {
  *  id:int
@@ -760,7 +760,7 @@ export function getPropFromJob(jobId,prop){
 }
 
 /**
- * @description return weather higlass should be used for this job
+ *  return weather higlass should be used for this job
  * @param {number} jobId the id of the job in the db
  */
 export function getJobHiglassStatus(jobId){
@@ -842,7 +842,7 @@ function createDb() {
  */
 
 /**
- * @description get the path to a job's data folder
+ *  get the path to a job's data folder
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs data folder (string)
  */
@@ -851,7 +851,7 @@ function generateJobDataFolderPath(jobid){
 }
 
 /**
- * @description get the path to a job's jupyter folder
+ *  get the path to a job's jupyter folder
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs jupyter folder (string)
  */
@@ -863,7 +863,7 @@ function generateJobjupyterFolderPath(jobid){
 
 
 /**
- * @description get the path to a job's output folder
+ *  get the path to a job's output folder
  * @param {number} jobid the id of the job
  * @returns {string} the path to the jobs output folder (string)
  */

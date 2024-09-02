@@ -77,7 +77,7 @@ class Viewer extends React.Component {
   /**
    * Wrapper for triggering a public function of HiGlass
    *
-   * @description
+   * 
    * We need an extra wrapper because the HiGlass's might not be available by
    * the time we pass props to a component.
    *

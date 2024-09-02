@@ -13,7 +13,7 @@ ChartJS.register(
 var i = 0;
 
 type VennDiagramComponentProps = {
-  /** @description the id of the component (use if in lists otherwise allow auto id) */
+  /**  the id of the component (use if in lists otherwise allow auto id) */
   id?:number
 
   /** the labels of each element in the diagram */

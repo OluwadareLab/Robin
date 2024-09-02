@@ -14,7 +14,7 @@ type OverlapComponentProps = {
   /** the overlap data from the api */
   data: OverlapDataSet;
 
-  /** @description the current resolution to filter by defaults to the first resolution found */
+  /**  the current resolution to filter by defaults to the first resolution found */
   resolutionFilter?: string
 }
 let i = 0;
@@ -64,7 +64,7 @@ function parseString(inputString) {
 }
 
 /**
- * @description from a string composed of set inclusion, exclusion and intersection simbols return an array of the values that are IN 
+ *  from a string composed of set inclusion, exclusion and intersection simbols return an array of the values that are IN 
  * @param string 
  */
 const logicalParser = (string: string) => {
@@ -82,7 +82,7 @@ const logicalParser = (string: string) => {
   return stringUntilSetMinus.split(new RegExp(`${setIntersect}|${setInclusion}`, "gi")).map(e => e.replace(/\(|\)|"/gi, ""));
 }
 
-/** @description parse the data from an overlapDataObj*/
+/**  parse the data from an overlapDataObj*/
 const parseOverlapData = (obj: OverlapDataObj) => {
   let data: {
     label?: any; sets: string[], value: any
@@ -169,7 +169,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   }
 
   /**
-   * @description called whenever prop data changes. 
+   *  called whenever prop data changes. 
    * Sets filterResolution if they do not already have values.
    */
   function setDefaultFilterResolution(){
@@ -184,7 +184,7 @@ export const OverlapComponent = (props: OverlapComponentProps) => {
   }
 
   /**
-   * @description called whenever prop data changes. 
+   *  called whenever prop data changes. 
    * Sets graph display if they do not already have values.
    */
   function setDefaultGraph(data=data){

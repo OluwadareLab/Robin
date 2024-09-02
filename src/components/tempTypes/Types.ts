@@ -1,10 +1,14 @@
 /**
- * @description A class representing a Protien Reference file.
+ *  A class representing a Protien Reference file.
  */
 export class ReferenceFile {
+    /** the id? */
     id:number;
+    /** optional file obj */
     file?:File|undefined;
+    /** file name */
     fileName:string;
+    /** user defined name */
     userDefinedFileName:string;
 
     /**
@@ -66,7 +70,7 @@ export class ChromFile {
 }
 
 /**
- * @description a type for representing the overlap data for venn diagrams
+ *  a type for representing the overlap data for venn diagrams
  */
 export type OverlapDataObj = {
     /** the raw data read from the file, this is a csv in string form */
@@ -78,7 +82,7 @@ export type OverlapDataObj = {
   }
 
 /**
- * @description a array of overlapDataObjs
+ *  a array of overlapDataObjs
  */
 export type OverlapDataSet = OverlapDataObj[];
 
@@ -101,21 +105,21 @@ export type ResolutionFIle = {
 
 export class ToolData {
     /**
-     * @description the main title/identifer of this tool data.
+     *  the main title/identifer of this tool data.
      */
     name:string;
     /**
-     * @description (optional) the category of the data used for categorical regression
+     *  (optional) the category of the data used for categorical regression
      */
     category?: string;
     /**
-     * @description the resolution's file. 
+     *  the resolution's file. 
      * @deprecated dont use this prop, remove when you have time
      * TODO: remove this as it is not really used very much and is not useful.
      */
     file: File | undefined;
     /**
-     * @description An array of all the files assisiated with this tool, and their resolutions.
+     *  An array of all the files assisiated with this tool, and their resolutions.
      */
     resolutions: ResolutionData[];
 
@@ -129,7 +133,7 @@ export class ToolData {
     }
 
     /**
-     * @description set the cannotBeRemoved value and return self
+     *  set the cannotBeRemoved value and return self
      * @param bool 
      * @returns self
      */
@@ -139,7 +143,7 @@ export class ToolData {
     }
     
     /**
-     * @description set the cannotBeRemoved value on a resolution of index n and return self
+     *  set the cannotBeRemoved value on a resolution of index n and return self
      * @param bool 
      */
     setResolutionCannotBeRemoved(bool, n){
@@ -148,15 +152,15 @@ export class ToolData {
     }
 }
 /**
-* @description the data type that we get from the user filling out the form
+*  the data type that we get from the user filling out the form
 */
 export interface jobSetupFormData {
-   /** @description the value of the title input */
+   /**  the value of the title input */
    title: string;
-   /** @description the value of the description input */
+   /**  the value of the description input */
    description: string;
-   /** @description the value of the email input */
+   /**  the value of the email input */
    email?: string;
-   /**@description optinoal wether to use higlass */
+   /** optinoal wether to use higlass */
    higlassToggle?:number;
 }

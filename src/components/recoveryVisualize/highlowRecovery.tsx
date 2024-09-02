@@ -8,7 +8,7 @@ type HighLowRecoveryChartProps = {
   bottomTitle,
   barData,
   clrs,
-  /** @description a raect element to display if the data provided to the chart is invalid, defaults to nothing */
+  /**  a raect element to display if the data provided to the chart is invalid, defaults to nothing */
   displayIfEmpty?: ReactElement
 }
 
@@ -111,7 +111,7 @@ export const HighLowRecoveryChart = (props: HighLowRecoveryChartProps) => {
 
 
   /**
-   * @description a helper function that validates we have valid data to display the high low plot
+   *  a helper function that validates we have valid data to display the high low plot
    */
   const validData = () => {
     return (data.every(data => data.data))

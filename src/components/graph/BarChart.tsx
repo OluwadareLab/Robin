@@ -27,9 +27,9 @@ ChartJS.register(
 );
 
 export function BarChart(props: {
-    /** @description a array of objects each containing clr,name and data. RENAME:datasets*/
+    /**  a array of objects each containing clr,name and data. RENAME:datasets*/
     data:{
-      /** @description if provided override the color of this HTMLCLR */
+      /**  if provided override the color of this HTMLCLR */
       clr?: string;
       /** the name of this data point */
       "name":string;
@@ -38,19 +38,19 @@ export function BarChart(props: {
   }[]
     /** the labels to display */
     labels:string[]
-    /** @description the title of the chart */
+    /**  the title of the chart */
     title:string
-    /** @description an array of string html colors or undefined in which case auto color */
+    /**  an array of string html colors or undefined in which case auto color */
     clrs? :string[] | undefined
-    /** @description bar thickness*/
+    /**  bar thickness*/
     width?:number
       /**
-     * @description the name of the y-axis
+     *  the name of the y-axis
      */
     yAxisTitle:string
 
     /**
-     * @description the name of the x-axis
+     *  the name of the x-axis
      */
     xAxisTitle:string
 

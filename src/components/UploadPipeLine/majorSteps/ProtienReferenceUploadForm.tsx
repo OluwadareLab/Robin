@@ -14,7 +14,7 @@ import { Col } from "react-bootstrap"
 
 type ProtienReferenceUploadFormProps = {
     /**
-     * @description optional, if true a submit button will be rendered
+     *  optional, if true a submit button will be rendered
      */
     renderSubmitBtn?:boolean,
 
@@ -24,7 +24,7 @@ type ProtienReferenceUploadFormProps = {
     setRefFiles:(files:File[])=>void,
 
     /**
-     * @description optional ref to pass to store file names in
+     *  optional ref to pass to store file names in
      */
     setRefFileNames:(files:string[])=>void,
 
@@ -34,7 +34,7 @@ type ProtienReferenceUploadFormProps = {
 
 
 /**
- * @description the component for the protien reference form
+ *  the component for the protien reference form
  * @param props {ProtienReferenceUploadFormProps}
  * @returns 
  */

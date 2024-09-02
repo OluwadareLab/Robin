@@ -25,7 +25,7 @@ import "./aiAssistant.css"
 type AiAssistantComponentProps = {
   datasets: any[];
   clrs: any[]
-  /** @description wether to disable all edit mode on this page */
+  /**  wether to disable all edit mode on this page */
   demo: boolean;
 }
 
@@ -52,7 +52,7 @@ const msgBoxStyle = {
 }
 
 /**
- * @description get all data from a job and format it into a inteligable and sorted object
+ *  get all data from a job and format it into a inteligable and sorted object
  * @param jobId the id of the job
  * @returns 
  */
@@ -437,7 +437,7 @@ function ChatInterface(props) {
 
 
 
-  /** @description the main function to get a response from gpt */
+  /**  the main function to get a response from gpt */
   async function getResponseFromGPT(msg: string, id): string {
     try {
       const avaliblePythonModules = ["matplotlib"]
@@ -486,7 +486,7 @@ function ChatInterface(props) {
   }
 
 
-  /** @description handle when the user submits a message to the ai */
+  /**  handle when the user submits a message to the ai */
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!userCanSpeak) {

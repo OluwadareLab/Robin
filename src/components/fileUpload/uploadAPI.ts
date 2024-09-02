@@ -3,7 +3,7 @@ import { apiPaths } from "../../api/apiConfig";
 
 
 /**
- * @description a method to upload files to a job
+ *  a method to upload files to a job
  * @param id the id of the job
  * @param files, an array of the files to upload
  * @param fileNames, an optional array of the filenames if file names other their actual names should be used when sent.

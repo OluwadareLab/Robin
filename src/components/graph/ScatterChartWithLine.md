@@ -1,5 +1,3 @@
-## Deprecated
-
 ```jsx
 let i =0;
 /** a quick function to mock data*/

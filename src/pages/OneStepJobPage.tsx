@@ -77,7 +77,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     const [fileSets, setFilesets] = useState<fileSet[]>(storedFileSets?storedFileSets:[]);
     const [basicInfo, setBasicInfo] = useState<any>(storedBasicInfo?storedBasicInfo:{});
 
-    // /** @description a simple wrapper to update local storage with the result of the state */
+    // /**  a simple wrapper to update local storage with the result of the state */
     // const localStorageWrapper = (localStoreString,originalSetter) => ((value)=>{originalSetter(value);localStorage.setItem(localStoreString,JSON.stringify(value))});
     // //we wrap the form states setters to store their values to the local storage
     // const setProtienRefFiles = localStorageWrapper('storedProtienRefArr', _setProtienRefFiles);
@@ -174,7 +174,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     }
 
         /**
-     * @description the function to handle submitting the form itself
+     *  the function to handle submitting the form itself
      * @param e 
      */
         function submitJob(e:React.FormEvent<HTMLFormElement>){
@@ -191,7 +191,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
 
 
     /**
-     * @description the callback when the form fully submitted
+     *  the callback when the form fully submitted
      */
     function onSubmitted(){
         //submit job

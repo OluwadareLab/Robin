@@ -20,7 +20,7 @@ type FileUploadProps = {
    */
   id: number
 
-  /** @description an array of the files to be uploaded */
+  /**  an array of the files to be uploaded */
   toolData?: (ToolData)[]
 
   /** if provided this will ignore tool data and just use this list */
@@ -29,7 +29,7 @@ type FileUploadProps = {
   /** if provided overrides the names of file in the files arr */
   fileNames?: string[],
 
-  /** @description upload multiple sets of files that are either toolData or name and file */
+  /**  upload multiple sets of files that are either toolData or name and file */
   fileSets?: fileSet[]
   /** a callback to call when the upload is done */
   cb: (e: any) => void
@@ -53,7 +53,7 @@ const scrollableStyle = {
 };
 
 /**
- * @description a component for file uploading. can specify types with prop.fileTypes
+ *  a component for file uploading. can specify types with prop.fileTypes
  * @param {} props props.fileTypes as string ".type1 .type2 etc...."
  * @returns 
  */

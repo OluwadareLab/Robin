@@ -3,31 +3,31 @@ import { UploadEntryWithRemoveAndInput } from "../userInputComponents/removablel
 import { ReferenceFile } from "../tempTypes/Types";
 
 /**
- * @description types for the properties of A ProtienReferenceNameInput component
+ *  types for the properties of A ProtienReferenceNameInput component
  */
 type ProtienReferenceNameInputProps = {
 
     file:ReferenceFile
 
-    /** @description optional prop to change the label of the field */
+    /**  optional prop to change the label of the field */
     fieldLabelHeader?:string;
 
     /**
-     * @description the callback to be called when the file changes
+     *  the callback to be called when the file changes
      * @param e the html input event
      * @returns 
      */
     onFileInputChange:(e:React.ChangeEvent<HTMLInputElement>)=>void;
 
     /**
-     * @description the callback to be called when the name changes
+     *  the callback to be called when the name changes
      * @param e the html input event
      * @returns 
      */
     onNameChange:(e:React.ChangeEvent<HTMLInputElement>)=>void;
 
     /**
-     * @description the callback to be called when the remove changes
+     *  the callback to be called when the remove changes
      * @param e the html input event
      * @returns 
      */
