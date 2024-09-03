@@ -41,7 +41,7 @@ Robin can be run by using the provided docker compose file to launch the require
 
 
 ## Developer Documentation
-[General Documentation](https://github.com/OluwadareLab/Robin/blob/1fe34be81b1bb7cb65f8c2e97213f2fbfd76a286/DEV_README.md) The Developer readme meant to document anything a new developer looking to maintain the project might need to know.
+[General Documentation](https://github.com/OluwadareLab/Robin/blob/1fe34be81b1bb7cb65f8c2e97213f2fbfd76a286/DEV_README.md) The Developer readme meant to document anything a new developer looking to maintain the project might need to know.  
 [Component Documentation](http://biomlearn.uccs.edu/robin/styleguide/index.html). Robin uses React StyleGuidist for component documentation and isolated component development.    
 [Full Documentation](http://biomlearn.uccs.edu/robin/docs/). Generated from in code comments using typeDoc    
 The Component documentation contains all documentation for react components in the site, whereas the full documentation contains the auto generated documenation for all code in the project.    
