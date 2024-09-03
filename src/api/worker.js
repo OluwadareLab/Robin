@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Job } from './models/job.js';
 import cron from 'node-cron';
 import { STATUSES, maxParralellScripts, minFreeMemOnSystem } from './apiConfig.js';
-import { updateJobStatus, getAllJobsWithStatus, getJobStatus, getJobHiglassStatus, updateJobHiglassToggle, getAllJobsWithHiglassStatus } from './mainAPI.js'
+import { updateJobStatus, getAllJobsWithStatus, getJobStatus, getJobHiglassStatus, updateJobHiglassToggle, getAllJobsWithHiglassStatus, createDb } from './mainAPI.js'
 import * as nodemailer from 'nodemailer';
 import config, { paths } from '../config.mjs';
 import { url } from "./mongo.config.js";

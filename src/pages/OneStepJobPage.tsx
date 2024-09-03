@@ -69,7 +69,7 @@ export const OneStepJobUploadPage = (props:OneStepJobUploadPageProps)=>{
     // console.log(localStorage.getItem('storedProtienRefFileNames'));
     
     //form states
-    const [protienRefFiles, setProtienRefFiles] = useState<File[]>(storedProtienRefArr?storedProtienRefArr:[]);
+    const [protienRefFiles, setProtienRefFiles] = useState<string[]>(storedProtienRefArr?storedProtienRefArr:[]);
     const [protienRefFileNames, setProtienRefFileNames] = useState<string[]>(storedProtienRefFileNames?storedProtienRefFileNames:[]);
     const [toolData, setToolData] = useState<ToolData[]>(storedToolData?storedToolData:[]);
     const [useHiglass, setUseHiglass] = useState<boolean>(storedUseHiGlass);

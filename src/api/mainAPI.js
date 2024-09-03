@@ -20,7 +20,7 @@ const upload = multer({ dest: config.dataFolderPath });
 /**
  *  the sqlite3 database
  */
-const db = new sqlite3.Database(config.dataFolderPath + "/db.sqlite");
+const db = new sqlite3.Database(config.dataFolderPath + "/_db.sqlite");
 
 // mongoose.connect('mongodb://mongodb:27017').catch(error => console.log("mongooseErr:"+error));
 // console.log(url);
@@ -841,13 +841,8 @@ export function addJob(title, description, email = null, status = STATUSES.NO_DA
  * a function to create the db again
  */
 export function createDb() {
-    db.serialize(() => {
-        try {
-            //db.run("CREATE TABLE jobs (title TEXT, description TEXT, email TEXT, status TINYTEXT, date TIMESTAMP)");
-        } catch (error) {
-            console.log("Table already exists!");
-        }
-    });
+    console.log("create db")
+    db.run("CREATE TABLE IF NOT EXISTS jobs (title TEXT, description TEXT, email TEXT, status TINYTEXT, date TIMESTAMP, higlassToggle INTEGER)");
 }
 
 

@@ -55,5 +55,5 @@ RUN npm install
 WORKDIR /app/higlasDeps/
 RUN npm clean-install --legacy-peer-deps
 
-WORKDIR /storage/store/Robin_ComprehensiveLoopCaller/
+WORKDIR /storage/store/Robin/
 CMD [ "npm", "start" ]

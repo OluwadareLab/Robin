@@ -27,6 +27,7 @@ const setThemeInStorage = (theme) => {
  * @returns 
  */
 function App() {
+  console.log(process.env);
   useEffect(()=>{
     let theme=localStorage.getItem('theme');
     console.log(theme)

@@ -1,3 +1,4 @@
+console.log(process.env);
 const config = {    
     //used to enable more logging
     DEBUG:false,
@@ -28,10 +29,10 @@ const config = {
     /**
      *  full url of our higlass server
      */
-    higlassApiUrl:"http://biomlearn.uccs.edu/robinHighglassAPI/",
+    higlassApiUrl:process.env.REACT_APP_TEST_ENABLE=="1"?`http://${process.env.REACT_APP_HOST_SERVER}:${process.env.REACT_APP_HIGLASS_SERVER_PORT_HOST}`:"http://biomlearn.uccs.edu/robinHighglassAPI/",
 
     /** path for flask api */
-    flaskAPIUrl:"http://biomlearn.uccs.edu/robinFlaskAPI/",
+    flaskAPIUrl:process.env.REACT_APP_TEST_ENABLE=="1"?`http://${process.env.REACT_APP_HOST_SERVER}:${process.env.REACT_APP_FLASK_API_PORT_HOST}`:"http://biomlearn.uccs.edu/robinFlaskAPI/",
 
     /**
      *  full url of the api/v1 of our higlass server where tilesets can be retrieved from
@@ -42,16 +43,18 @@ const config = {
      *  the absolute path to the data folder
      * @todo, update this in prod
      */
-    dataFolderPath:"./data",
+    dataFolderPath:process.env.REACT_APP_DATA_PATH,
+
+    dbName:process.env.REACT_APP_DATABASE_NAME,
 
     /**  the api path */
-    apiPath:"http://biomlearn.uccs.edu/robinAPI/", //"http://127.0.0.1:8086",
+    apiPath:process.env.REACT_APP_TEST_ENABLE=="1"?`http://${process.env.REACT_APP_HOST_SERVER}:${process.env.REACT_APP_WEB_API_PORT_HOST}`:"http://biomlearn.uccs.edu/robinAPI/", //"http://127.0.0.1:8086",
 
-    /** the port the api should be hosted on */
-    apiPort:8086,
+    /** the port the api should be hosted on (INSIDE THE CONTAINER)*/
+    apiPort:process.env.REACT_APP_WEB_API_PORT_CONTAINER,
 
     /**  the path of the actual web server */
-    webPath:"http://biomlearn.uccs.edu/robin/", //http://localhost:3000",
+    webPath:process.env.REACT_APP_TEST_ENABLE=="1"?`http://${process.env.REACT_APP_HOST_SERVER}:${process.env.REACT_APP_WEB_PORT_HOST}`:"http://biomlearn.uccs.edu/robin/", //http://localhost:3000",
 
     /**  the link to the project's github */
     github:"https://github.com/OluwadareLab/Robin/",

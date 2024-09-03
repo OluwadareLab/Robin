@@ -79,5 +79,5 @@ RUN pip install flask-cors
 RUN pip install -U Flask
 RUN pip install python-dotenv
 
-WORKDIR /storage/store/Robin_ComprehensiveLoopCaller
+WORKDIR /storage/store/Robin/
 CMD [ "npm", "run", "start-api-worker" ]

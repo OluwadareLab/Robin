@@ -32,6 +32,7 @@ All of these are dockerized and communicate via docker.compose connecting their 
 11) webpack.config.js --old configuration
 12) .BABELRC --extra config for babel
 13) apache2ConfigForReverseProxy a file containing the apache2 reverse proxy setup
+14) .env is used for port config
 
 #### Project Structure
 src/: contains most all of the project
@@ -56,8 +57,6 @@ TODO: make a tool to parse the api doc comments into a proper api endpoint docum
 If this project does ever need to be removed from the docker and ported somewhere else, here is a list of things that may be somewhat hardcoded:
 1) The config.mjs file --contains configs 
 2) The apiCOnfig.js file --contains configs 
-3) The docker.compose file hardcodes ports
-4) the docker.compose file hardcodes some paths
 5) the dockerfile.client might have some hardcoded things
 6) the dockerfile.server might have some hardcoded things
 7) The callers.config.sh script contains info for the scripts that is hardcoded
@@ -68,10 +67,21 @@ If this project does ever need to be removed from the docker and ported somewher
 ## Things I dont remember what they do (if they do anything at all)
 1) babel.config.js --might not actually be used anymore see:craco.config.js
 2) webpack.config.js --might not actualyl be used anymore see:craco.config.js
-3) .env --at one point was used for higlass server password handling, i dont know if it still does anyhting
 4) /src/index.js -- I dont think this does anyhting
 5) /src/app.test.js
 6) /src/bootstrap/ --we have react-bootstrap so im not sure if this is used, but it might be used by docs
 7) /src/utils/ --a lot of this isnt used I think
 8) /src/components/visualizationTools/Aliro-0.21.1 --not used
 
+
+
+# Dev Server
+To launch a dev server edit the .env var TEST, this is a string that is appended to the end of the name of the containers.  
+So to launch a dev server change it to _dev and make sure the ports are free also in the .env file.  
+then change the config.mjs and apiconfig ports to match.
+
+
+## Data folder
+the data folder must container 2 subfolders. They can be empty they just need to be there
+1) "higlassTempData"
+2) "higlassTracks"
