@@ -26,6 +26,8 @@ type EntryWithRemoveProps = {
     /** if truthy, the remove button will not exist on this input. */
     cannotBeRemoved?: boolean,
 
+    id?:string,
+
 }
 
 
@@ -43,8 +45,8 @@ export const EntryWithRemove = (props: EntryWithRemoveProps) => (
         <div className='col-sm-8' >
             <input
                 required={props.fieldIsRequired ? true : false}
-                className='input-sm input-sm form-control'
-                id={'nameInput' + i}
+                className='input-sm input-sm form-control entryWithRemove'
+                id={props.id ? props.id :'nameInput' + i}
                 type="text"
                 name="name"
                 placeholder={props.placeholder}

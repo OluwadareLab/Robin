@@ -3,6 +3,21 @@ const config = {
     //used to enable more logging
     DEBUG:false,
 
+    /** @description path to the public folder */
+    publicFolderPath:"./public",
+
+    /** @description the path to the actuall .env file */
+    envFile:"./.env",
+
+    /** @description the path to the prod .env file */
+    prodEnvFile:"./.env_prod",
+
+    /** @description the path to the prod .env file */
+    testEnvFile:"./.env_test",
+
+    /** @description the folder that holds all the testcafe tests */
+    testFolder:"./test/tests",
+
     /** the name that displays on the browser tab */
     broswerName:"Robin",
 

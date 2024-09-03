@@ -47,7 +47,7 @@ export const FormField = (props: FormFieldProps) => {
     const type = props.inputType ? props.inputType : "text";
     const title = props.title ? props.title : "";
     const required = typeof(props.required) != 'undefined' ? props.required : true;
-    const id = `formInput_${title}`;
+    const id = `formInput_${title.replace(/\s/,"")}`;
     return (
         <div
             style={{padding: ".5% 0 .5% 0"}}
@@ -57,10 +57,10 @@ export const FormField = (props: FormFieldProps) => {
                     form-group 
                     ${required? "requiredField" : ""}`
                 } 
-                id={`div_${title}_group`}
+                id={`div_${title.replace(/\s/,"")}_group`}
             >
 
-                <div id={`div_${title}_label`} className="inter_bold">
+                <div id={`div_${title.replace(/\s/,"")}_label`} className="inter_bold">
                     <label 
                         htmlFor={`${id}`}
                         className="lb-sm"
@@ -70,7 +70,7 @@ export const FormField = (props: FormFieldProps) => {
                         
                     </label>
                 </div>
-                <div id={`div_${props.title}_input`}>
+                <div id={`div_${title.replace(/\s/,"")}_input`}>
                     <input 
                         name={props.name}
                         type = {type}

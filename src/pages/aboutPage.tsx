@@ -1,7 +1,7 @@
 import React from "react";
 
 export const AboutPage = () => <>
-    <div>
+    <div id ="AboutPage">
         <br />
         <ul>
             <li><p>Chromosome loop analysis has emerged in the interest of researchers in recent years.</p></li>

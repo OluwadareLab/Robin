@@ -23,7 +23,7 @@ export const ToolFileInput = (props:ToolFileInputProps) => {
         <div className='col-sm-6'>
             <input
                 required={true}
-                className='col-sm-2 form-control'
+                className='col-sm-2 form-control toolFileInput'
                 type="file"
                 name="file"
                 onChange={props.onFileChange}

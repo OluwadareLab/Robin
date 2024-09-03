@@ -12,6 +12,7 @@ type UploadEntryWithRemoveAndTitleProps = {
     value:string
     placeholder:string
     entryValue:string
+    id?:string
 }
 
 const i = 0;

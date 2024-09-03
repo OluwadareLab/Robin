@@ -184,7 +184,7 @@ export const FileUploadDisplay = (props: FileUploadProps) => {
         )}
 
         {!props.dontShowSubmitBtn ?
-          <button className="btn btn-lg btn-secondary cf" onClick={handleUpload} style={{ width: "25%" }}>
+          <button className="btn btn-lg btn-secondary cf fileUploadBtn" id="fileUploadBtn" onClick={handleUpload} style={{ width: "25%" }}>
             Upload And Submit
           </button>
           : ""}

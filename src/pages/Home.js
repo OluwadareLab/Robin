@@ -10,24 +10,24 @@ import HomeVideo from '../components/homePageVideo/HomeVideo';
 
 export const HomePage = () => {
     return (
-        <div className="home-page">
+        <div className="home-page" id="homePage">
             <Container>
                 <Row className="justify-content-center">
                     <Col md={8}>
                         <h1 className="text-center mt-5">{config.projectName}</h1>
                         <p className="lead text-center mt-3">
                             {config.projectDescription} <a
-                                href="https://uccs-bioinformatics.com/" rel="noopener noreferrer" target="_blank">Oluwadare Lab</a>.
+                                href="https://uccs-bioinformatics.com/" rel="noopener noreferrer" target="_blank" id="oLabLink">Oluwadare Lab</a>.
                         </p>
-                        <div className="text-center mt-4">
-                            <BtnLink title="Submit a Job" src="./jobSetup" />
+                        <div className="text-center mt-4" id="submitAJob">
+                            <BtnLink title="Submit a Job" src="./jobSetup"/>
                         </div>
                     </Col>
 
                 </Row>
                 <Row>
                     <h3 style={{ color: "#708090" }}>Documentation</h3>
-                    <a className='justify-content-center' target="_blank" href={paths.docs} rel="noreferrer">📒 The full user manual is available here.</a>
+                    <a className='justify-content-center' target="_blank" href={paths.docs} rel="noreferrer" id="documentationLink">📒 The full user manual is available here.</a>
                 </Row>
                 <Row>
                     <h3 style={{ color: "#708090" }}>AI Assistant Example</h3>

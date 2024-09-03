@@ -273,14 +273,14 @@ Or if you are sure this file is formatted properly click cancel.
                             {/* only display remove if resolution data obj allows it */}
                             {!resolution.cannotBeRemoved ?
                                 <Col>
-                                    <button type="button" className="btn btn-secondary" onClick={() => handleRemoveResolution(toolIndex, resolutionIndex)}>Remove</button>
+                                    <button type="button" className="btn btn-secondary removeRes" onClick={() => handleRemoveResolution(toolIndex, resolutionIndex)}>Remove</button>
                                 </Col> : <></>}
                         </Row>
                     ))}
-                    <button type="button" className='btn btn-secondary' onClick={() => handleAddResolution(toolIndex)}>Add Additional Resolution</button>
+                    <button type="button" className='btn btn-secondary' id="addNewRes" onClick={() => handleAddResolution(toolIndex)}>Add Additional Resolution</button>
                 </div>
             ))}
-            <button type="button" className="btn btn-primary" onClick={handleAddToolData}>Add New Tool Data</button>
+            <button type="button" className="btn btn-primary" onClick={handleAddToolData} id="addNewTool">Add New Tool Data</button>
         </div>
     );
 };

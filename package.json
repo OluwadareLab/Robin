@@ -63,6 +63,8 @@
     "sqlite3": "^5.1.7",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
+    "testcafe": "^3.6.2",
+    "testcafe-reporter-html": "^1.4.6",
     "tinycolor2": "^1.6.0",
     "url": "^0.11.3",
     "web-vitals": "^2.1.4"
@@ -74,7 +76,7 @@
     "start-api-worker": "node ./src/api/worker.js",
     "start-flask-api": "python3 ./src/api/flaskServer.py",
     "build": "webpack --mode=production --node-env=production",
-    "test": "react-scripts test",
+    "test": "node --env-file=.env ./test/test.mjs",
     "eject": "react-scripts eject",
     "start-docs": "GENERATE_SOURCEMAP=false npx styleguidist server",
     "build-docs": "npx styleguidist build && typedoc",

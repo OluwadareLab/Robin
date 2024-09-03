@@ -61,6 +61,7 @@ If this project does ever need to be removed from the docker and ported somewher
 6) the dockerfile.server might have some hardcoded things
 7) The callers.config.sh script contains info for the scripts that is hardcoded
 8) the callers folder should be reviewed if you are messing with project structure
+9) ABSULUTE_TEST_OUTPUT_PATH in the .env file is the absulute path you want test results to go to. this is hardcoded so that we 
 
 
 
@@ -72,6 +73,7 @@ If this project does ever need to be removed from the docker and ported somewher
 6) /src/bootstrap/ --we have react-bootstrap so im not sure if this is used, but it might be used by docs
 7) /src/utils/ --a lot of this isnt used I think
 8) /src/components/visualizationTools/Aliro-0.21.1 --not used
+9) there are references to mongodb/mongoose, it is no longer used
 
 
 
@@ -85,3 +87,10 @@ then change the config.mjs and apiconfig ports to match.
 the data folder must container 2 subfolders. They can be empty they just need to be there
 1) "higlassTempData"
 2) "higlassTracks"
+
+
+## updating docs
+update the docs by running
+```bash
+    npm run docs:build
+```

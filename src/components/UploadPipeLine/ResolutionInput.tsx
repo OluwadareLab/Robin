@@ -25,7 +25,7 @@ export const ResolutionInput = (props:resolutionInputProps) => {
             <div className='col-sm-2'>
                 <input
                     required={true}
-                    className='input-sm form-control'
+                    className='input-sm form-control resolutionInput'
                     id="resolutionInput"
                     type="number"
                     list="resolutions"

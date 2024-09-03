@@ -28,7 +28,7 @@ export const UploadEntryAndInput = (props: UploadEntryAndInputProps) => (
             <input
                 list={props.list}
                 required={props.fieldIsRequired ? true : false}
-                className='input-sm input-sm form-control'
+                className='input-sm input-sm form-control nameInput'
                 id={'nameInput' + i}
                 type="text"
                 name="name"
@@ -38,7 +38,7 @@ export const UploadEntryAndInput = (props: UploadEntryAndInputProps) => (
         </div><div className='col-sm-5'>
             <input
                 required={props.fieldIsRequired ? true : false}
-                className='input-sm input-sm form-control'
+                className='input-sm input-sm form-control fileInput'
                 id={'fileInput' + i}
                 type="file"
                 name="file"

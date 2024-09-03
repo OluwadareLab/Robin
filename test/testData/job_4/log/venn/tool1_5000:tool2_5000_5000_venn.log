@@ -1,0 +1,65 @@
+updating fileSet string to use absulute path of job
+./callers/overlap/vennCaller.sh: line 32: ./addBaseUrlToFileSetString.sh: Permission denied
+new fileList: 
+generating venn plots
+generating tool1_5000:tool2_5000 plots
+
+Attaching package: 'data.table'
+
+The following object is masked from 'package:GenomicRanges':
+
+    shift
+
+The following object is masked from 'package:IRanges':
+
+    shift
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, second
+
+Loading required package: grid
+Loading required package: futile.logger
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:GenomicRanges':
+
+    intersect, setdiff, union
+
+The following object is masked from 'package:GenomeInfoDb':
+
+    intersect
+
+The following objects are masked from 'package:IRanges':
+
+    collapse, desc, intersect, setdiff, slice, union
+
+The following objects are masked from 'package:S4Vectors':
+
+    first, intersect, rename, setdiff, setequal, union
+
+The following objects are masked from 'package:BiocGenerics':
+
+    combine, intersect, setdiff, union
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+script begins
+
+
+ ==>>> InpFileList :  awk: fatal: cannot open file `NA' for reading (No such file or directory)
+Error in if (HeaderList[i] == 1) { : argument is of length zero
+Execution halted
+ending tool1_5000:tool2_5000 plots
+deleting interaction's files to save space since they are no longer needed...

@@ -123,7 +123,7 @@ export const ChromatinLoopAnalysisResultsPage = (props: ChromatinLoopAnalysisRes
     </Container>
   const normalPage =
     <Tabs activeKey={activeTab} onSelect={handleTabSelect}>
-      <Tab key="Overlap" eventKey="Apa_Score" title="Overlap">
+      <Tab key="Overlap" eventKey="Overlap" title="Overlap">
         <OverlapComponent
           data={overlapData}
           clrs={clrs}
