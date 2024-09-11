@@ -1,6 +1,11 @@
 ## Developer Documentation
 This file includes all documenation that you might need to contiune development or maintaince.  
 
+### testing
+the results of the nightly tests:  
+http://biomlearn.uccs.edu/robin/testReports/report.html  
+see the ./test/ folder's readme for more info on how the tests work  
+
 ### Additional Documentation
 The other 3 types of documentation for this project are as follows:  
 1) [The React Styleguidist docs](http://biomlearn.uccs.edu/robin/styleguide/index.html), this is documentation for all components with the functional rendered component in an isolated env  

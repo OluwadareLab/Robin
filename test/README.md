@@ -9,5 +9,5 @@ the test folder contains a few things
 # run tests
 to run tests execute the below command
 ```bash
-    node ./test/test.mjs
+    npm run test
 ```

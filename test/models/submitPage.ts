@@ -38,52 +38,78 @@ export class SubmitPage extends Page {
         return Selector(`#ToolContainer-${n}`);
     }
 
-    async submitMockJob(title="generic Title", desc="generic description"){
+    /**
+     * @description fill out the nth tool box with data
+     * @param n 
+     * @param name 
+     * @param res 
+     * @param files 
+     */
+    async fillOutNthToolBox(n:number, name:string, res:string, files:string[]){
         await t
-            .click(this.jobTitleField)
-            .typeText(this.jobTitleField,title)
-            .click(this.jobDescField)
-            .typeText(this.jobDescField, desc)
+            .click(this.toolNameInputs.nth(n))
+            .typeText(this.toolNameInputs.nth(n), name)
 
-            .click(this.toolNameInputs.nth(0))
-            .typeText(this.toolNameInputs.nth(0), "tool1")
+            .click(this.toolResolutionInputs.nth(n))
+            .typeText(this.toolResolutionInputs.nth(n), res)
 
-            .click(this.toolResolutionInputs.nth(0))
-            .typeText(this.toolResolutionInputs.nth(0), "5000")
+            .setFilesToUpload(this.toolFileInputs.nth(n), files)
+            .click(this.toolFileInputs.nth(n))
+    }
 
-            .setFilesToUpload(this.toolFileInputs.nth(0), [
-                "../mockData/lasca/GM12878_5k.txt"
-            ])
-            .click(this.toolFileInputs.nth(0))
+    async fillOutNthProtienBox(n:number,name:string, files:string[]){
+        await t
+            .setFilesToUpload(this.protienFilesInputs.nth(n), files)
+            .click(this.protienFilesInputs.nth(n))
 
-
-            .click(this.toolNameInputs.nth(1))
-            .typeText(this.toolNameInputs.nth(1), "tool2")
-
-            .click(this.toolResolutionInputs.nth(1))
-            .typeText(this.toolResolutionInputs.nth(1), "5000")
-
-            .setFilesToUpload(this.toolFileInputs.nth(1), [
-                "../mockData/lasca/GM12878_5k.txt"
-            ])
-            .click(this.toolFileInputs.nth(1))
-
-
-            .setFilesToUpload(this.protienFilesInputs.nth(0), [
-                "../mockData/h3k27ac/h3k27ac_5k.txt"
-            ])
-            .click(this.protienFilesInputs.nth(0))
-
-            .click(this.protienNamesInputs.nth(0))
-            .typeText(this.protienNamesInputs.nth(0),"h3k27ac")
-
-
-            .click(this.higlassToggle)
-            .setNativeDialogHandler(() => true)
-            .click(this.submitBtn)
-            .expect(Selector("h3").filter(selector=>selector.innerHTML.includes("files")).visible).ok();
+            .click(this.protienNamesInputs.nth(n))
+            .typeText(this.protienNamesInputs.nth(n),name)
 
     }
 
+    /**
+     * @description type the title into the title field
+     * @param title 
+     */
+    async typeTitle(title){
+        await t
+            .click(this.jobTitleField)
+            .typeText(this.jobTitleField,title)
+    }
 
+    /**
+     * @description type the desc into the desc field
+     * @param desc 
+     */
+    async typeDesc(desc){
+        await t
+            .click(this.jobDescField)
+            .typeText(this.jobDescField, desc);
+
+    }
+
+    /** @description toggle higlass on or off */
+    async toggleHiglass(){
+        await t
+            .click(this.higlassToggle)
+    }
+
+    /** @description press submit and upload job and validate that it was submitted */
+    async pressSubmitJob(){
+        await t
+            .setNativeDialogHandler(() => true)
+            .click(this.submitBtn)
+            .expect(Selector("h3").filter(selector=>selector.innerHTML.includes("files")).visible).ok();
+    }
+
+    /** submit a job clicking on all the menus and filling out forms on the submit page */
+    async submitMockJob(title="generic Title", desc="generic description"){
+        await this.typeTitle(title);
+        await this.typeDesc(desc);
+        await this.fillOutNthToolBox(0,"tool1","5000",["../mockData/lasca/GM12878_5k.txt"]);
+        await this.fillOutNthToolBox(1,"tool2","5000",["../mockData/lasca/GM12878_5k.txt"]);
+        await this.fillOutNthProtienBox(0, "h3k27ac", ["../mockData/h3k27ac/h3k27ac_5k.txt"]);
+        await this.toggleHiglass();
+        await this.pressSubmitJob();
+    }
 }

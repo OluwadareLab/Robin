@@ -27,11 +27,11 @@ export const ViewAllJobsPage = () => {
 
     let id=0;
     return (
-        <>
+        <div id="jobsPage">
             <ol>
             {jobs.map((e:JobProps)=>{id++;return(<><JobDisplay {...e} id={id}/></>) })}
             </ol>
             
-        </>
+        </div>
     )
 }

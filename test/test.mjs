@@ -2,9 +2,8 @@ import config from "../src/config.mjs";
 import { execSync, exec } from "child_process";
 import createTestCafe from "testcafe"
 import * as fs from "fs"
-import { exit } from "process";
 import axios from "axios";
-import * as html from "testcafe-reporter-html" 
+
 const outputPath = `${process.env.ABSULUTE_TEST_OUTPUT_PATH}`;
 const testcafe = await createTestCafe('localhost', 1337, 1338);
 

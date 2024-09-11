@@ -93,27 +93,29 @@ export const JobDisplay = (props: JobProps) => {
         <Card.Text>Description: {props.description}</Card.Text>
         {props.date !== 'null' && props.date ? <Card.Text>Date: {props.date}</Card.Text> : ""}
         {props.email !== 'null' && props.email ? <Card.Text>Email: {props.email}</Card.Text> : ""}
-        {props.status === STATUSES.DONE ? <BtnLink src={`${paths.results}/${props.id}`} title="viewJob" /> : ""}
-        {props.status === STATUSES.FAIL ? <BtnLink src={`${paths.results}/${props.id}`} title="View Potentially Incorrect Results" /> : ""}
+        <div className='viewJobBtn'>{props.status === STATUSES.DONE ? <BtnLink src={`${paths.results}/${props.id}`} title="viewJob" /> : ""}</div>
+        <div className='viewIncorectJobBtn'>{props.status === STATUSES.FAIL ? <BtnLink src={`${paths.results}/${props.id}`} title="View Potentially Incorrect Results" /> : ""}</div>
         <Popup
-            trigger={<Button> Admin </Button>}
+            trigger={<Button className='adminBtn'> Admin </Button>}
             modal
             nested
         >
             {close => (
                 <Container style={{ backgroundColor: "white", margin: "50px", padding: 50, border: "5px solid #cfcece", width: "100%" }} >
                   <InstructionHeader title="admin controls and info"/>
-                    <Button variant="secondary" onClick={close}> Close </Button>
+                    <Button className='closeBtn' variant="secondary" onClick={close}> Close </Button>
 
                     <Row>
                       <Col>
-                        <Button onClick={()=>onClickRerunJob(props.id)}>Rerun As New Job</Button>
+                        <Button className='rerunBtn' onClick={()=>onClickRerunJob(props.id)}>Rerun As New Job</Button>
                       </Col>
                       <Col>
-                      <Button onClick={()=>onAddToJobQueue(props.id)}>Add to Job Queue</Button>
+                      <Button className='addToQueBtn' onClick={()=>onAddToJobQueue(props.id)}>Add to Job Queue</Button>
                       </Col>
                       <Col>
+                      <div className='forceViewBtn'>
                       <BtnLink src={`${paths.results}/${props.id}`} title="Force View Job" />
+                      </div>
                       </Col>
                       <Col>
                         <DownloadJsonButton
