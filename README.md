@@ -14,7 +14,7 @@ University of Colorado at Colorado Springs<br>
 Email: mfuller@uccs.edu<br>
 
 #### Corresponding:
-Oluwatosin Oluwadare, PhD<br>
+Oluwatosin Oluwadare<br>
 Department of Computer Science and Engineering, and Center for Computational Life Sciences<br>
 University of North Texas<br>
 Email: oluwatosin.oluwadare@unt.edu<br>
