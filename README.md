@@ -1,6 +1,6 @@
 # Robin:  An Advanced Tool for Comparative Loop Caller Result Analysis Leveraging Large Language Models
 ***
-#### [OluwadareLab, University of Colorado, Colorado Springs](https://uccs-bioinformatics.com/)
+#### [Oluwadare Lab, University of North Texas](https://oluwadarelab.com/)
 ***
 #### Developers:
 H. M. A. Mohit Chowdhury<br>
@@ -15,7 +15,7 @@ Email: mfuller@uccs.edu<br>
 
 #### Corresponding:
 Oluwatosin Oluwadare, PhD<br>
-Department of Computer Science and Engineering and Center for Computational Life Sciences<br>
+Department of Computer Science and Engineering, and Center for Computational Life Sciences<br>
 University of North Texas<br>
 Email: oluwatosin.oluwadare@unt.edu<br>
 ***
