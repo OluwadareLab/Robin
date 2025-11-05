@@ -15,9 +15,7 @@ Email: mfuller@uccs.edu<br>
 
 #### Corresponding:
 Oluwatosin Oluwadare, PhD<br>
-Department of Computer Science and Engineering<br>
-University of North Texas<br>
-Center for Computational Life Sciences<br>
+Department of Computer Science and Engineering and Center for Computational Life Sciences<br>
 University of North Texas<br>
 Email: oluwatosin.oluwadare@unt.edu<br>
 ***
