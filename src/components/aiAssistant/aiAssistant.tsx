@@ -212,7 +212,7 @@ export function setupDataSets(jobId: number): Promise<resultData> {
       if (config.DEBUG) console.log(tempRegressionPoints)
       if (config.DEBUG) console.log(tempLoopSizes)
       res(dataObj);
-    }).catch(err=>console.log("axios err:"+err));
+    }).catch(err => console.log("axios err:" + err));
   })
 
 }
@@ -298,7 +298,7 @@ function submitSnippet(answer, jobId, jobTitle) {
       const fileName = "example.txt";
       const file = new File([blob], fileName, { type: 'text/plain' });
       formData.append(`files`, file, `${jobTitle.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9]/g, '_')}.ipynb`);
-      axios.post(apiPaths.jyupterUpload, formData).catch(err=>console.log("axios err:"+err));;
+      axios.post(apiPaths.jyupterUpload, formData).catch(err => console.log("axios err:" + err));;
     }
   }
 }
@@ -310,7 +310,7 @@ type MessageContainerProps = {
   question: string;
 
   /** a variable that will change to signifty that a result has been saved */
-  updater:any
+  updater: any
 }
 /**
  * 
@@ -367,7 +367,7 @@ const MessageContainer = (props: MessageContainerProps) => {
     <Row>
       <Col>
         <Button onClick={() => {
-          if(waitingForResponse) {alert("Please wait for response"); return;}
+          if (waitingForResponse) { alert("Please wait for response"); return; }
           runCode(extractSnippetFromMarkdownText(message))
           setCodeHasBeenTested(true);
           setWaitingForResponse(true);
@@ -377,7 +377,7 @@ const MessageContainer = (props: MessageContainerProps) => {
         <Button variant={hasCodeBeenTested ? "primary" : "secondary"} onClick={() => {
           //user must test code first
           if (hasCodeBeenTested) {
-            if(waitingForJyupterResponse) {alert("Please wait for response. The list on the right will update with your result"); return;}
+            if (waitingForJyupterResponse) { alert("Please wait for response. The list on the right will update with your result"); return; }
             submitSnippet(message, params.id, props.question)
             setWaitingForJyupterResponse(true);
           } else {
@@ -499,7 +499,7 @@ function ChatInterface(props) {
     setTimeUserLastSpoke(Date.now());
     setUserCanSpeak(false);
 
-    
+
     if (inputText.trim()) {
       //add our msg to the log
       newMsgs = [...newMsgs, { text: inputText, sender: 'user', question: inputText }];
@@ -542,22 +542,170 @@ function ChatInterface(props) {
           onChange={(val, other) => setModel(val)}
         />
       </Row>
-      <Row md={8}>
-        <InstructionHeader title="select what part of the job's data your question pertains to." />
-        <CustomLegendWithSelection
-          max={50}
-          state={customLegendWithSelectionState}
-          setState={setCustomLegendWithSelectionState}
-          items={
-            Object.keys(dataSets).map(name => ({
-              "label": name,
-              "backgroundColor": props.clrs[k++]
-            }))
-          }
-          max={1}
-          onSelect={updateSelection}
-        />
-      </Row>
+      <Row md={8} className="align-items-center">
+        <Col>
+          <InstructionHeader title="select what part of the job's data your question pertains to." />
+          <CustomLegendWithSelection
+            max={50}
+            state={customLegendWithSelectionState}
+            setState={setCustomLegendWithSelectionState}
+            items={
+              // use idx instead of global k to avoid mutation issues
+              Object.keys(dataSets).map((name, idx) => ({
+                label: name,
+                backgroundColor: props.clrs[idx % props.clrs.length],
+              }))
+            }
+            max={1}
+            onSelect={updateSelection}
+          />
+        </Col>
+        <Col xs="auto" style={{ display: "flex", alignItems: "center" }}>
+          <Button
+            variant="outline-primary"
+            size="sm"
+            style={{
+              transition: "none",
+              backgroundColor: "#0d6efd",
+              color: "#fff",
+              borderColor: "#0d6efd",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              try {
+                const datasetNames = Object.keys(dataSets || {});
+                const selectedNames = datasetNames.filter(
+                  (name) => !!customLegendWithSelectionState[name]
+                );
+
+                if (!selectedNames || selectedNames.length === 0) {
+                  alert("Please select at least one dataset from the legend first.");
+                  return;
+                }
+
+                // --- Helper: sanitize strings, decode unicode, and format overlap data ---
+                const sanitizeContent = (value: any): any => {
+                  if (typeof value === "string") {
+                    // Check if this is overlap data format (CSV-like string)
+                    if (value.includes('"..set.."') || value.match(/"(\d+)","([^"]+)","([^"]+)","([^"]+)"/)) {
+                      // Parse CSV-like string data into structured array
+                      const lines = value.split('\n').filter(line => line.trim());
+                      const parsedData = [];
+
+                      for (let i = 0; i < lines.length; i++) {
+                        // Match pattern: "index","set_expression","count","percentage"
+                        const match = lines[i].match(/"(\d+)","([^"]+)","([^"]+)","([^"]+)"/);
+                        if (match) {
+                          // Clean and preserve all Unicode set operation symbols
+                          const setExpression = match[2]
+                            .replace(/<U\+2229>/g, '∩')  // intersection
+                            .replace(/<U\+2216>/g, '∖')  // set difference
+                            .replace(/<U\+222A>/g, '∪'); // union
+
+                          parsedData.push({
+                            index: parseInt(match[1]),
+                            set: setExpression,
+                            count: parseInt(match[3].trim()),
+                            percentage: parseFloat(match[4])
+                          });
+                        }
+                      }
+
+                      // Return parsed data if successful, otherwise return original
+                      return parsedData.length > 0 ? parsedData : value;
+                    }
+
+                    // Decode Unicode like <U+2229> → ∩
+                    let cleaned = value.replace(/<U\+([0-9A-F]{4})>/g, (_, code) =>
+                      String.fromCharCode(parseInt(code, 16))
+                    );
+
+                    // Trim any embedded newlines or carriage returns in numeric-looking strings
+                    if (/[0-9]/.test(cleaned) && /[\n\r]/.test(cleaned)) {
+                      cleaned = cleaned.replace(/[\n\r]+/g, " ").trim();
+                    }
+
+                    return cleaned;
+                  } else if (Array.isArray(value)) {
+                    return value.map((v) => sanitizeContent(v));
+                  } else if (typeof value === "object" && value !== null) {
+                    const cleanObj: Record<string, any> = {};
+                    for (const [k, v] of Object.entries(value)) {
+                      cleanObj[k] = sanitizeContent(v);
+                    }
+                    return cleanObj;
+                  }
+                  return value;
+                };
+
+                // --- Single file selected ---
+                if (selectedNames.length === 1) {
+                  const name = selectedNames[0];
+                  const data = sanitizeContent(dataSets[name]);
+
+                  let content: string;
+                  let mime: string;
+                  let ext: string;
+
+                  if (typeof data === "string") {
+                    // Detect CSV or TSV content
+                    if (data.includes(",") || data.includes("\t")) {
+                      content = data;
+                      mime = "text/csv";
+                      ext = "csv";
+                    } else {
+                      content = data;
+                      mime = "text/plain";
+                      ext = "txt";
+                    }
+                  } else {
+                    // JSON objects → stringify
+                    content = JSON.stringify(data, null, 2);
+                    mime = "application/json";
+                    ext = "json";
+                  }
+
+                  const blob = new Blob([content], { type: mime });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `${name.replace(/\s+/g, "_")}.${ext}`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  return;
+                }
+
+                // --- Multiple selected: merge as JSON ---
+                const combined: Record<string, any> = {};
+                selectedNames.forEach((name) => {
+                  combined[name] = sanitizeContent(dataSets[name]);
+                });
+
+                const combinedContent = JSON.stringify(combined, null, 2);
+                const blob = new Blob([combinedContent], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `selected_datasets.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              } catch (err) {
+                console.error("Download failed:", err);
+                alert(
+                  "Something went wrong while preparing the download. Check console for details."
+                );
+              }
+            }}
+          >
+            ⬇ Download Selected
+          </Button>
+        </Col>
+      </Row >
+
       <Container className="my-3">
         <Row>
           <Col className="mx-auto">
@@ -580,35 +728,35 @@ function ChatInterface(props) {
                   ))}
                   {/** show loading dots when the ai is thinking */}
                   {userCanSpeak ? "" :
-                  <Card.Text className={`p-2 bg-secondary`}>
-                    <div className="loader"/>
-                     </Card.Text>
-                 }
-              </div>
+                    <Card.Text className={`p-2 bg-secondary`}>
+                      <div className="loader" />
+                    </Card.Text>
+                  }
+                </div>
 
-              {!props.demo?<Row>
-                <Form onSubmit={handleSubmit} >
-                  <Form.Group className="d-flex">
-                    <Form.Control
-                      type="text"
-                      placeholder="Type your message here..."
-                      value={inputText}
-                      onChange={e => setInputText(e.target.value)}
-                    />
-                    <Button variant="primary" type="submit">Send</Button>
-                  </Form.Group>
-                </Form>
-              </Row>:<></>}
+                {!props.demo ? <Row>
+                  <Form onSubmit={handleSubmit} >
+                    <Form.Group className="d-flex">
+                      <Form.Control
+                        type="text"
+                        placeholder="Type your message here..."
+                        value={inputText}
+                        onChange={e => setInputText(e.target.value)}
+                      />
+                      <Button variant="primary" type="submit">Send</Button>
+                    </Form.Group>
+                  </Form>
+                </Row> : <></>}
 
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
 
-      {/* <TempJyupterUploader
+        {/* <TempJyupterUploader
         fileName={name} setFileName={setName} file={file} setFile={setFile} /> */}
 
-    </Container >
+      </Container >
     </>
   );
 }
@@ -619,42 +767,43 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
   const params = useParams();
   const jobId = params.id || config.exampleJobId || 1;
   const [messages, setMessages] = useState<msg[]>([]);
-  const [htmlFiles, setHtmlFiles] = useState<{ file: string, name: string, open:boolean, key:string }[]>([]);
+  const [htmlFiles, setHtmlFiles] = useState<{ file: string, name: string, open: boolean, key: string }[]>([]);
   const [forceUpdate, setForceUpdate] = useState<number>(0);
   const [accodianCtrl, setAccodianCtrl] = useState<string[]>([])
 
   const [ticking, setTicking] = useState(true),
-        [count, setCount] = useState(0)
-   
-   useEffect(() => {
-    const timer = setTimeout(() => ticking && setCount(count+1), config.aiFetchNewJyupterNotebookfilesFrequency)
+    [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const timer = setTimeout(() => ticking && setCount(count + 1), config.aiFetchNewJyupterNotebookfilesFrequency)
     return () => clearTimeout(timer)
-   }, [count, ticking])
+  }, [count, ticking])
 
   useEffect(() => {
     setTimeout(() => {
       axios.get(apiPaths.htmlFiles + "?id=" + jobId).then((response) => {
         console.log(response)
         if (response.data.files)
-          if (response.data.files.length > 0){
+          if (response.data.files.length > 0) {
             let l = 0;
             const newFiles = [
-              ...response.data.files.map(fileObj=>(
-              {...fileObj,
-                key:l.toString(),
-                open:!(htmlFiles.map(obj=>obj.name)).includes(fileObj.name),
-                temp:l++
-              }))
+              ...response.data.files.map(fileObj => (
+                {
+                  ...fileObj,
+                  key: l.toString(),
+                  open: !(htmlFiles.map(obj => obj.name)).includes(fileObj.name),
+                  temp: l++
+                }))
             ]
             setHtmlFiles(newFiles);
             console.log(htmlFiles)
-            newFiles.filter(fileObj=>fileObj.open).forEach(obj=>handleSelect(obj.key))
+            newFiles.filter(fileObj => fileObj.open).forEach(obj => handleSelect(obj.key))
             setForceUpdate(k += 3 * 2);
           }
-            
-        
-      }).catch(err=>console.log("axios err:"+err));
-      
+
+
+      }).catch(err => console.log("axios err:" + err));
+
     }, 5000);
   }, [count, messages])
 
@@ -681,8 +830,8 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           <ChatInterface
             demo={props.demo}
             clrs={props.clrs}
-            messages={props.demo ? [{text:"This example job is not editable.", sender: 'user'}] : messages}
-            setMessages={props.demo ? (foo)=>{} : setMessages}
+            messages={props.demo ? [{ text: "This example job is not editable.", sender: 'user' }] : messages}
+            setMessages={props.demo ? (foo) => { } : setMessages}
             updater={accodianCtrl}
           />
         </Col>
@@ -693,7 +842,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
             return (<div key={j++}>
               <Accordion defaultActiveKey={accodianCtrl} activeKey={accodianCtrl} onSelect={handleSelect}>
                 <AccordionItem eventKey={`${file.key}`}>
-                  <Accordion.Header>{file.name.replace(/_/g, " ").replace(".html","")}</Accordion.Header>
+                  <Accordion.Header>{file.name.replace(/_/g, " ").replace(".html", "")}</Accordion.Header>
                   <AccordionBody>
                     <div dangerouslySetInnerHTML={{ __html: file.file }} />
                   </AccordionBody>
@@ -704,7 +853,5 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           }
         </Col>
       </Row>
-
-
     </Container>)
 }

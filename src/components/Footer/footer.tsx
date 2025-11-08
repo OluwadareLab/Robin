@@ -1,27 +1,57 @@
 import React from 'react';
-import "./footer.css"
-import {GitHubLink} from './githubLink/githubLink'
+import "./footer.css";
+import { GitHubLink } from './githubLink/githubLink';
 import { Col, Row } from 'react-bootstrap';
-
-import uccsLogo from './../../images/UCCS_Logo.png';
 
 /** a simple footer for the website */
 export const Footer: React.FC = () => {
   return (
-    <footer className="footer" style={{marginTop:"auto"}} >
-      <Row>
-        <Col >
-          <div style={{ float: 'left' }}>
-            <img src={uccsLogo} alt="UCCS Logo" className="rounded" style={{ width: '27%', marginLeft:"px10"}} />
-          </div>
-          <div style={{ float: 'left', marginLeft: '10px' }}>
-            <span style={{ marginTop: '5px', fontSize: '14px' }}>
-              © {new Date().getFullYear()} <b><a target="_blank" href="https://uccs-bioinformatics.com/">Oluwadare Lab</a></b>
+    <footer className="footer" style={{ marginTop: "auto" }}>
+      <Row className="text-center align-items-center">
+        <Col>
+          {/* Left Section: Logos + Text */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <img
+                src="https://webassets.unt.edu/assets/branding/unt-stacked-logo.svg"
+                alt="UNT Logo"
+                className="rounded"
+                style={{ width: "10%", height: "auto" }}
+              />
+              <img
+                src="https://www.uccs.edu/themes/custom/mountainlion/logo.svg"
+                alt="UCCS Logo"
+                className="rounded"
+                style={{ width: "40%", height: "auto" }}
+              />
+            </div>
+
+            <span style={{ fontSize: "14px" }}>
+              © {new Date().getFullYear()}{" "}
+              <b>
+                <a
+                  target="_blank"
+                  href="https://oluwadarelab.com/"
+                  rel="noopener noreferrer"
+                >
+                  Oluwadare Lab
+                </a>
+              </b>
             </span>
           </div>
         </Col>
-        <Col >
-          <div style={{ float: 'right', width:"10%"}}>
+
+        {/* Right Section: GitHub link */}
+        <Col>
+          <div style={{ float: "right", width: "10%" }}>
             <GitHubLink />
           </div>
         </Col>
