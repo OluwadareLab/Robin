@@ -407,14 +407,12 @@ function ChatInterface(props) {
 
   const [file, setFile] = useState<File>();
 
-  const models = [
-    { label: "gpt-3.5-turbo", value: "gpt-3.5-turbo" },
-    { label: "gpt-4-turbo", value: "gpt-4-turbo" },
-    { label: "gpt-4", value: "gpt-4" },
-    { label: "gpt-4-32k", value: "gpt-4-32k" },
-  ]
+  // State for models
+  const [models, setModels] = useState<{ label: string; value: string }[]>([]);
+  const [model, setModel] = useState<{ label: string; value: string } | null>(null);
+  const [loadingModels, setLoadingModels] = useState<boolean>(false);
+  const [modelError, setModelError] = useState<string>("");
 
-  const [model, setModel] = useState<string>(models[0].value);
   const [dataSets, setDataSets] = useState({});
   const [customLegendWithSelectionState, setCustomLegendWithSelectionState] = useState({});
 
@@ -434,6 +432,65 @@ function ChatInterface(props) {
       dangerouslyAllowBrowser: true,
     });
   }, [apikey])
+
+  // Fetch available models when API key changes
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (!apikey || apikey.trim() === "") {
+        setModels([]);
+        setModel(null);
+        setModelError("");
+        return;
+      }
+
+      setLoadingModels(true);
+      setModelError("");
+
+      try {
+        const tempOpenai = new OpenAI({
+          apiKey: apikey,
+          dangerouslyAllowBrowser: true,
+        });
+
+        const response = await tempOpenai.models.list();
+
+        // Filter for GPT models and sort them
+        const gptModels = response.data
+          .filter(model => model.id.startsWith('gpt-'))
+          .sort((a, b) => {
+            // Prioritize GPT-4 models, then by name
+            if (a.id.startsWith('gpt-4') && !b.id.startsWith('gpt-4')) return -1;
+            if (!a.id.startsWith('gpt-4') && b.id.startsWith('gpt-4')) return 1;
+            return a.id.localeCompare(b.id);
+          })
+          .map(model => ({
+            label: model.id,
+            value: model.id
+          }));
+
+        if (gptModels.length > 0) {
+          setModels(gptModels);
+          // Set the first model as default (usually the best/latest one)
+          setModel(gptModels[0]);
+        } else {
+          setModels([]);
+          setModel(null);
+          setModelError("No GPT models found for this API key");
+        }
+      } catch (error) {
+        console.error("Error fetching models:", error);
+        setModels([]);
+        setModel(null);
+        setModelError("Failed to fetch models. Please check your API key.");
+      } finally {
+        setLoadingModels(false);
+      }
+    };
+
+    // Add a small delay to avoid too many API calls while typing
+    const timeoutId = setTimeout(fetchModels, 500);
+    return () => clearTimeout(timeoutId);
+  }, [apikey]);
 
 
 
@@ -530,9 +587,12 @@ function ChatInterface(props) {
           value={apikey}
           onChange={(e) => setApiKey(e.target.value)}
           type="text"
+          placeholder="Enter your OpenAI API key..."
         >
         </input>
         <label htmlFor='modelSelect'>Select AI Model:</label>
+        {loadingModels && <p style={{ color: '#666', fontSize: '0.9em' }}>Loading available models...</p>}
+        {modelError && <p style={{ color: 'red', fontSize: '0.9em' }}>{modelError}</p>}
         <Select
           id="modelSelect"
           name="modelSelector"
@@ -540,6 +600,8 @@ function ChatInterface(props) {
           value={model}
           className="onTop"
           onChange={(val, other) => setModel(val)}
+          isDisabled={loadingModels || models.length === 0}
+          placeholder={loadingModels ? "Loading models..." : models.length === 0 ? "Enter API key to load models" : "Select a model..."}
         />
       </Row>
       <Row md={8} className="align-items-center">
@@ -742,8 +804,15 @@ function ChatInterface(props) {
                         placeholder="Type your message here..."
                         value={inputText}
                         onChange={e => setInputText(e.target.value)}
+                        disabled={!model || loadingModels}
                       />
-                      <Button variant="primary" type="submit">Send</Button>
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        disabled={!model || loadingModels}
+                      >
+                        Send
+                      </Button>
                     </Form.Group>
                   </Form>
                 </Row> : <></>}
@@ -853,5 +922,7 @@ export function AiAssistantComponent(props: AiAssistantComponentProps) {
           }
         </Col>
       </Row>
+
+
     </Container>)
 }
