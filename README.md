@@ -4,7 +4,7 @@
 ***
 #### Developers:
 H. M. A. Mohit Chowdhury<br>
-Department of Computer Science and Engineering<br>
+Department of Computer Science and Engineering, and Center for Computational Life Sciences<br>
 University of North Texas<br>
 Email: h.m.a.mohitchowdhury@my.unt.edu<br>
 
