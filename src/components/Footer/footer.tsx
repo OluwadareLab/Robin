@@ -27,10 +27,10 @@ export const Footer: React.FC = () => {
                 style={{ width: "10%", height: "auto" }}
               />
               <img
-                src="https://www.uccs.edu/themes/custom/mountainlion/logo.svg"
+                src="https://brand.uccs.edu/sites/g/files/kjihxj1416/files/2022-06/UCCS%20Signature.svg"
                 alt="UCCS Logo"
                 className="rounded"
-                style={{ width: "40%", height: "auto" }}
+                style={{ width: "30%", height: "auto" }}
               />
             </div>
 
