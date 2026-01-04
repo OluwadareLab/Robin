@@ -59,7 +59,9 @@ Additional markdown files are placed throughout the project in any folder where 
 3. Fix errors and run your container again:
 
     ```docker compose run --rm web_api sh -c "rm -rf node_modules package-lock.json && npm install"```
+
     ```docker compose run --rm web sh -c "cd src/components/visualizationTools/HiGlass/higlass && npm install"```
+    
     ```docker compose up```
 
 
