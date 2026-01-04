@@ -50,10 +50,14 @@ Additional markdown files are placed throughout the project in any folder where 
 # Server Installation Guild (by H. M. A. Mohit Chowdhury)
 1. Build images from scratch:
 
-    ```docker compose build --no-cache```
+    ```
+        docker compose build --no-cache
+    ```
 2. Run docker containers:
 
-    ```docker compose up```
+    ```
+        docker compose up
+    ```
 
     Note: You may observe errors in logs. Follow step 3 to fix them
 3. Fix errors and run your container again:
