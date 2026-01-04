@@ -49,7 +49,8 @@ RUN mkdir /higlasDeps/
 COPY ./package.json /app/package.json
 COPY ./src/components/visualizationTools/HiGlass/higlass/package.json /app/higlasDeps/package.json
 COPY ./src/components/visualizationTools/HiGlass/higlass/package-lock.json /app/higlasDeps/package-lock.json
-RUN npm install
+RUN npm install --legacy-peer-deps \
+ && npm install react-sortable-hoc@2.0.0 --legacy-peer-deps
 
 #install nested higlass deps
 WORKDIR /app/higlasDeps/
