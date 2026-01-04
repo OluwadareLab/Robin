@@ -52,15 +52,3 @@ then upload it
 
 higlass-manage ingest --filetype vector --datatype vector ./test.txt
 
-# Server Installation Guild
-1. Build images from scratch
-    ```docker compose build --no-cache```
-2. Run docker containers
-    ```docker compose up```
-    Note: You may observe errors in logs. Follow step 3 to fix them
-3. Fix errors and run your container again
-    ```docker compose run --rm web_api sh -c "rm -rf node_modules package-lock.json && npm install"```
-    ```docker compose run --rm web sh -c "cd src/components/visualizationTools/HiGlass/higlass && npm install"```
-    ```docker compose up```
-
-

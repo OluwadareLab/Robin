@@ -43,7 +43,21 @@ Robin can be run by using the provided docker compose file to launch the require
 [Component Documentation](http://biomlearn.uccs.edu/robin/styleguide/index.html). Robin uses React StyleGuidist for component documentation and isolated component development.    
 [Full Documentation](http://biomlearn.uccs.edu/robin/docs/). Generated from in code comments using typeDoc    
 The Component documentation contains all documentation for react components in the site, whereas the full documentation contains the auto generated documenation for all code in the project.    
-Additional markdown files are placed throughout the project in any folder where its contents may need clarification.  
+Additional markdown files are placed throughout the project in any folder where its contents may need clarification. 
+
+
+
+# Server Installation Guild (by H. M. A. Mohit Chowdhury)
+1. Build images from scratch
+    ```docker compose build --no-cache```
+2. Run docker containers
+    ```docker compose up```
+    Note: You may observe errors in logs. Follow step 3 to fix them
+3. Fix errors and run your container again
+    ```docker compose run --rm web_api sh -c "rm -rf node_modules package-lock.json && npm install"```
+    ```docker compose run --rm web sh -c "cd src/components/visualizationTools/HiGlass/higlass && npm install"```
+    ```docker compose up```
+
 
 
 
