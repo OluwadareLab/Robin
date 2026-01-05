@@ -54,7 +54,7 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
 4. Allow execute permission to all the scripts and files:
 
     ```
-    chmod -R 777 ROBIN_COMPREHENSIVELOOPCALLER
+    chmod -R 777 Robin_ComprehensiveLoopCaller
     ```
 ***
 
