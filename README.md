@@ -32,23 +32,23 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
 2. Build images from scratch:
 
     ```
-        docker compose build --no-cache
+    docker compose build --no-cache
     ```
 3. Run docker containers:
 
     ```
-        docker compose up
+    docker compose up
     ```
 
     Note: You may observe errors in logs. Follow step 3 to fix them
 4. Fix errors and run your container again:
 
     ```
-        docker compose run --rm web_api sh -c "rm -rf node_modules package-lock.json && npm install"
+    docker compose run --rm web_api sh -c "rm -rf node_modules package-lock.json && npm install"
         
-        docker compose run --rm web sh -c "cd src/components/visualizationTools/HiGlass/higlass && npm install"
+    docker compose run --rm web sh -c "cd src/components/visualizationTools/HiGlass/higlass && npm install"
         
-        docker compose up
+    docker compose up
     ```
 ***
 
