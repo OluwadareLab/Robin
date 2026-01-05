@@ -50,9 +50,17 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
         
     docker compose up
     ```
+
+4. Allow execute permission to all the scripts and files:
+
+    ```
+    chmod -R 777 ROBIN_COMPREHENSIVELOOPCALLER
+    ```
 ***
 
-# Depricated
+
+
+<!-- # Depricated
 ## Runnning Robin
 Robin can be run by using the provided docker compose file to launch the required docker containers and link their ports together for you.
 #### docker compose start cmd
@@ -72,7 +80,7 @@ Robin can be run by using the provided docker compose file to launch the require
 [Component Documentation](http://biomlearn.uccs.edu/robin/styleguide/index.html). Robin uses React StyleGuidist for component documentation and isolated component development.    
 [Full Documentation](http://biomlearn.uccs.edu/robin/docs/). Generated from in code comments using typeDoc    
 The Component documentation contains all documentation for react components in the site, whereas the full documentation contains the auto generated documenation for all code in the project.    
-Additional markdown files are placed throughout the project in any folder where its contents may need clarification. 
+Additional markdown files are placed throughout the project in any folder where its contents may need clarification.  -->
 
 
 
