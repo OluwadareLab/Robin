@@ -52,7 +52,7 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
     ```
 ***
 
-#Depricated
+# Depricated
 ## Runnning Robin
 Robin can be run by using the provided docker compose file to launch the required docker containers and link their ports together for you.
 #### docker compose start cmd
