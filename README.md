@@ -24,8 +24,8 @@ Email: oluwatosin.oluwadare@unt.edu<br>
 All information about using Robin can be found here: http://biomlearn.uccs.edu/robinrd/tutorial.html
 ***
 
-# Server Installation Guild (by H. M. A. Mohit Chowdhury)
-1. Clone git repo with ssh. You can also choose HTTPS:
+# Server Installation Guide (by H. M. A. Mohit Chowdhury)
+1. Clone the git repo with SSH. You can also choose HTTPS:
     ```
     git clone --recurse-submodules git@github.com:OluwadareLab/Robin.git
     ```
@@ -34,7 +34,7 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
     ```
     docker compose build --no-cache
     ```
-3. Run docker containers:
+3. Run Docker containers:
 
     ```
     docker compose up
@@ -58,7 +58,7 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
     ```
 
 5. Fix HiGlass container:
-    * Enter higlass container
+    * Enter HiGlass container
         ```
         docker exec -it robin_comprehensiveloopcaller-higlass-1 bash
         ```
@@ -87,7 +87,7 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
         docker restart robin_comprehensiveloopcaller-higlass-1
         ```
 6. Add user for HiGlass:
-    * Enter into higlass container:
+    * Enter into HiGlass container:
         ```
         docker exec -it robin_comprehensiveloopcaller-higlass-1 bash
         ```
