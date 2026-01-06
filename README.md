@@ -56,6 +56,62 @@ All information about using Robin can be found here: http://biomlearn.uccs.edu/r
     ```
     chmod -R 777 Robin_ComprehensiveLoopCaller
     ```
+
+5. Fix HiGlass container:
+    * Enter higlass container
+        ```
+        docker exec -it robin_comprehensiveloopcaller-higlass-1 bash
+        ```
+    * See your ini file:
+        ```
+        ps aux | grep uwsgi
+        cat /home/higlass/projects/uwsgi.ini
+        ```
+    * Open server config file in edit mode:
+        ```
+        vim /home/higlass/projects/uwsgi.ini
+        ```
+    * Past the below configuration in *[base]*
+        ```
+        harakiri = 3600
+        http-timeout = 3600
+        socket-timeout = 3600
+        post-buffering = 65536
+        buffer-size = 65536
+        ignore-sigpipe = true
+        ignore-write-errors = true
+        disable-write-exception = true
+        ```
+    * Restart HiGlass container:
+        ```
+        docker restart robin_comprehensiveloopcaller-higlass-1
+        ```
+6. Add user for HiGlass:
+    * Enter into higlass container:
+        ```
+        docker exec -it robin_comprehensiveloopcaller-higlass-1 bash
+        ```
+    * Create admin user:
+        ```
+        cd higlass-server
+        python manage.py createsuperuser
+        ```
+        - Provide:
+            1. Username: `admin`
+            2. Password: `admin`
+        - Verify user:
+            ```
+            python manage.py shell
+            ```
+            ```
+            from django.contrib.auth.models import User
+            User.objects.all().values("username", "is_superuser")
+            ```
+            Note: You will see: `<QuerySet [{'username': 'admin', 'is_superuser': True}]>`
+            ```
+            exit()
+            ```
+
 ***
 
 

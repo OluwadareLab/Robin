@@ -49,14 +49,27 @@ clodius aggregate bedpe \
 rm $tempUpdatedFile
 mv $outfile $higlassTempDataPath/$outfile
 
-curl -u admin:admin \
-    -F "datafile=@/$higlassTempDataPath/$outfile" \
-    -F 'filetype=bed2ddb' \
-    -F 'datatype=2d-rectangle-domains' \
-    -F "name=$higlassName" \
-    -F "uid=$uid" \
-    -F 'coordSystem=mm10' \
-    http://higlass:80/api/v1/tilesets/
+# curl -u admin:admin \
+#     -F "datafile=@/$higlassTempDataPath/$outfile" \
+#     -F 'filetype=bed2ddb' \
+#     -F 'datatype=2d-rectangle-domains' \
+#     -F "name=$higlassName" \
+#     -F "uid=$uid" \
+#     -F 'coordSystem=hg19' \
+#     http://higlass:80/api/v1/tilesets/
+
+curl --http1.1 \
+     --no-keepalive \
+     --max-time 3600 \
+     -u admin:admin \
+     -F "datafile=@/$higlassTempDataPath/$outfile.hitile" \
+     -F 'datatype=vector' \
+     -F 'filetype=hitile' \
+     -F "name=$higlassName" \
+     -F "uid=$uid" \
+     -F 'coordSystem=hg19' \
+     http://higlass/api/v1/tilesets/
+
 
 # docker exec higlass-server-for-robin python higlass-server/manage.py \
 #   ingest_tileset \
